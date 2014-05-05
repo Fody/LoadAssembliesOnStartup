@@ -28,7 +28,8 @@ namespace LoadAssembliesOnStartup.Test
         #region Constructors
         static AssemblyWeaver()
         {
-            var directory = Path.GetDirectoryName(typeof(AssemblyWeaver).GetAssemblyEx().Location);
+            var directory = GetTargetAssemblyDirectory();
+            
             BeforeAssemblyPath = Path.Combine(directory, "LoadAssembliesOnStartup.TestAssembly.dll");
             AfterAssemblyPath = BeforeAssemblyPath.Replace(".dll", "2.dll");
 
@@ -53,6 +54,16 @@ namespace LoadAssembliesOnStartup.Test
         #endregion
 
         #region Methods
+        private static string GetTargetAssemblyDirectory()
+        {
+            // Fix unit tests on build server
+            var originalDirectory = Path.GetDirectoryName(typeof(AssemblyWeaver).GetAssemblyEx().Location);
+            var buildServerDirectory = Path.GetFullPath(string.Format(@"{0}\..\..\output\Test", originalDirectory));
+
+            var finalDirectory =  Directory.Exists(buildServerDirectory) ? buildServerDirectory : originalDirectory;
+            return finalDirectory;
+        }
+
         public static void Initialize()
         {
 
