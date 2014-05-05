@@ -77,7 +77,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LoadAssembliesOnStartup\LoadAssembliesOnStartup.csproj">
+    <ProjectReference Include="..\LoadAssembliesOnStartup.Fody\LoadAssembliesOnStartup.Fody.csproj">
       <Project>{801b49cf-35d8-4be3-baef-fa024a42a66c}</Project>
       <Name>LoadAssembliesOnStartup</Name>
     </ProjectReference>
