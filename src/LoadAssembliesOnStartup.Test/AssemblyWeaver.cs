@@ -28,7 +28,7 @@ namespace LoadAssembliesOnStartup.Test
         #region Constructors
         static AssemblyWeaver()
         {
-            var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var directory = Path.GetDirectoryName(typeof(AssemblyWeaver).GetAssemblyEx().Location);
             BeforeAssemblyPath = Path.Combine(directory, "LoadAssembliesOnStartup.TestAssembly.dll");
             AfterAssemblyPath = BeforeAssemblyPath.Replace(".dll", "2.dll");
 
