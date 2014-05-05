@@ -29,7 +29,14 @@ namespace LoadAssembliesOnStartup.Test
         static AssemblyWeaver()
         {
             var directory = GetTargetAssemblyDirectory();
-            
+
+            var currentDomain = AppDomain.CurrentDomain;
+            currentDomain.AssemblyResolve += (sender, e) =>
+            {
+                var finalFile = Path.Combine(directory, string.Format("{0}.dll", e.Name));
+                return Assembly.LoadFrom(finalFile);
+            };
+
             BeforeAssemblyPath = Path.Combine(directory, "LoadAssembliesOnStartup.TestAssembly.dll");
             AfterAssemblyPath = BeforeAssemblyPath.Replace(".dll", "2.dll");
 
