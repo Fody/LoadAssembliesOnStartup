@@ -57,6 +57,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Core\MsCoreReferenceFinder.cs" />
     <Compile Include="Core\WeavingException.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="FodyEnvironment.cs" />
     <Compile Include="ModuleWeaver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
