@@ -7,8 +7,8 @@
     <ProjectGuid>{801B49CF-35D8-4BE3-BAEF-FA024A42A66C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LoadAssembliesOnStartup</RootNamespace>
-    <AssemblyName>LoadAssembliesOnStartup</AssemblyName>
+    <RootNamespace>LoadAssembliesOnStartup.Fody</RootNamespace>
+    <AssemblyName>LoadAssembliesOnStartup.Fody</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

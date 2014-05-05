@@ -3,17 +3,14 @@
 //   Copyright (c) 2008 - 2013 Catel development team. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-namespace LoadAssembliesOnStartup
+namespace LoadAssembliesOnStartup.Fody
 {
     using System;
     using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection;
     using System.Xml.Linq;
-    using LoadAssembliesOnStartup.Weaving;
+    using Weaving;
     using Mono.Cecil;
     using Mono.Cecil.Cil;
-    using Weaving;
 
     public class ModuleWeaver
     {

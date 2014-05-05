@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace LoadAssembliesOnStartup
+namespace LoadAssembliesOnStartup.Fody
 {
     using System.Collections.Generic;
     using System.Linq;

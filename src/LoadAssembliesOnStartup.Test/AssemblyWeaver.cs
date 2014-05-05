@@ -12,6 +12,7 @@ namespace LoadAssembliesOnStartup.Test
     using System.IO;
     using System.Reflection;
     using Catel.Reflection;
+    using Fody;
     using Mono.Cecil;
 
     public static class AssemblyWeaver

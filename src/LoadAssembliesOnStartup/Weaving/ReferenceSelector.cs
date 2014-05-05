@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace LoadAssembliesOnStartup.Weaving
+namespace LoadAssembliesOnStartup.Fody.Weaving
 {
     using System;
     using System.Collections.Generic;
