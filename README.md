@@ -1,9 +1,21 @@
 LoadAssembliesOnStartup
 =======================
 
-![GitHubLink](design/logo/logo_64.png)
+![Icon](design/logo/logo_64.png)
+
+### This is an add-in for [Fody](https://github.com/Fody/Fody/) 
 
 Loads all the references on startup by actually using the types in the module initializer.
+
+### NuGet package
+
+Available here: <a href="http://nuget.org/packages/LoadAssembliesOnStartup.Fody" target="_blank">http://nuget.org/packages/LoadAssembliesOnStartup.Fody</a>
+
+To Install from the Nuget Package Manager Console 
+    
+    PM> Install-Package LoadAssembliesOnStartup.Fody
+
+## How it works
 
 By default, assemblies are only loaded on-demand. This means that the first time a type is actually used, the .NET runtime will load the assembly.
 
@@ -19,7 +31,58 @@ it is possible to let this plugin take care of this. It will add the following c
 
 	var preloadType = typeof(ReferenceType);
 
+This will ensure that an assembly is actually being loaded into the AppDomain (which is **not** the same as Assembly.LoadFrom).
 
-# Icon #
+## Configuration options
+
+All config options are accessible by modifying the `LoadAssembliesOnStartup` node in *FodyWeavers.xml*.
+
+### ExcludeAssemblies
+
+A list of assembly names to exclude from the default action of "embed all Copy Local references".
+
+Do not include `.exe` or `.dll` in the names.
+
+Can not be defined with `IncludeAssemblies`.
+
+Can take two forms. 
+
+As an element with items delimited by a newline.
+
+    <LoadAssembliesOnStartup>
+        <ExcludeAssemblies>
+            Foo
+            Bar
+        </ExcludeAssemblies>
+    </LoadAssembliesOnStartup>
+    
+Or as a attribute with items delimited by a pipe `|`.
+
+    <LoadAssembliesOnStartup ExcludeAssemblies='Foo|Bar' />
+        
+### IncludeAssemblies
+
+A list of assembly names to include from the default action of "embed all Copy Local references".
+
+Do not include `.exe` or `.dll` in the names.
+
+Can not be defined with `ExcludeAssemblies`.
+
+Can take two forms. 
+
+As an element with items delimited by a newline.
+
+    <LoadAssembliesOnStartup>
+        <IncludeAssemblies>
+            Foo
+            Bar
+        </IncludeAssemblies>
+    </LoadAssembliesOnStartup>
+    
+Or as a attribute with items delimited by a pipe `|`.
+
+    <LoadAssembliesOnStartup IncludeAssemblies='Foo|Bar' />
+
+## Icon
 
 Explosion by Gustav Salomonsson from The Noun Project

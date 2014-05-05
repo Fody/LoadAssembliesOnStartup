@@ -6,8 +6,6 @@
 
 namespace LoadAssembliesOnStartup.Fody.Weaving
 {
-    using System;
-    using System.IO;
     using System.Linq;
     using Mono.Cecil;
     using Mono.Cecil.Cil;
@@ -21,13 +19,15 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         #region Fields
         private readonly ModuleDefinition _moduleDefinition;
         private readonly MsCoreReferenceFinder _msCoreReferenceFinder;
+        private readonly Configuration _configuration;
         #endregion
 
         #region Constructors
-        public LoadTypesWeaver(ModuleDefinition moduleDefinition, MsCoreReferenceFinder msCoreReferenceFinder)
+        public LoadTypesWeaver(ModuleDefinition moduleDefinition, MsCoreReferenceFinder msCoreReferenceFinder, Configuration configuration)
         {
             _moduleDefinition = moduleDefinition;
             _msCoreReferenceFinder = msCoreReferenceFinder;
+            _configuration = configuration;
         }
         #endregion
 
@@ -47,7 +47,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             var instructions = body.Instructions;
 
             int counter = 1;
-            var referenceSelector = new ReferenceSelector(_moduleDefinition);
+            var referenceSelector = new ReferenceSelector(_moduleDefinition, _configuration);
             foreach (var assembly in referenceSelector.GetIncludedReferences())
             {
                 var firstType = assembly.MainModule.Types.FirstOrDefault(x => x.IsClass && x.IsPublic);
