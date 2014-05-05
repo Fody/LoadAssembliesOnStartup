@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata minClientVersion="2.8">
+    <id>LoadAssembliesOnStartup.Fody</id>
+    <version>[VERSION]</version>
+	<title>LoadAssembliesOnStartup.Fody</title>
+    <authors>GeertvanHorrik,simoncropp</authors>
+    <owners>GeertvanHorrik,simoncropp</owners>
+	
+	<developmentDependency>true</developmentDependency>
+	
+	<description>
+	  Fody add-in for forcing referenced assemblies to be loaded on startup. This allows other modules to register
+      types without actually having to using their types directly.
+	</description>
+	<summary>
+	</summary>
+	
+	<tags>fody aop weaving references reference load startup force</tags>
+	
+	<language>en-US</language>
+	<projectUrl>https://github.com/Fody/LoadAssembliesOnStartup</projectUrl>	
+	<licenseUrl>https://raw.githubusercontent.com/Fody/LoadAssembliesOnStartup/develop/LICENSE</licenseUrl>
+	<iconUrl>https://raw.githubusercontent.com/Fody/LoadAssembliesOnStartup/develop/design/logo/logo_64.png</iconUrl>
+	
+	<dependencies>
+		<dependency id="Fody" />
+	</dependencies>	
+  </metadata>
+</package>
