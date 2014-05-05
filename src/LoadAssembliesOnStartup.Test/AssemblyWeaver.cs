@@ -34,6 +34,9 @@ namespace LoadAssembliesOnStartup.Test
             currentDomain.AssemblyResolve += (sender, e) =>
             {
                 var finalFile = Path.Combine(directory, string.Format("{0}.dll", e.Name));
+
+                Console.WriteLine("Loading assembly '{0}' from '{1}'", e.Name, finalFile);
+
                 return Assembly.LoadFrom(finalFile);
             };
 
