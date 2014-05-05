@@ -44,7 +44,7 @@ namespace LoadAssembliesOnStartup
                 return;
             }
 
-            var type = (TypeDefinition)GetCoreTypeReference("System.Type");
+            var type = GetCoreTypeReference("System.Type").Resolve();
             GetTypeFromHandle = _moduleWeaver.ModuleDefinition.Import(type.Methods.First(m => m.Name == "GetTypeFromHandle"));
         }
 

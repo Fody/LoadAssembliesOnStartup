@@ -7,13 +7,12 @@
 
 namespace LoadAssembliesOnStartup.Test
 {
-
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using Catel.Reflection;
-using Mono.Cecil;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+    using Catel.Reflection;
+    using Mono.Cecil;
 
     public static class AssemblyWeaver
     {
@@ -29,8 +28,8 @@ using Mono.Cecil;
         #region Constructors
         static AssemblyWeaver()
         {
-            BeforeAssemblyPath = typeof(AssemblyWeaver).GetAssemblyEx().Location;
-            //BeforeAssemblyPath =  Path.GetFullPath("Catel.Fody.TestAssembly.dll");
+            var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            BeforeAssemblyPath = Path.Combine(directory, "LoadAssembliesOnStartup.TestAssembly.dll");
             AfterAssemblyPath = BeforeAssemblyPath.Replace(".dll", "2.dll");
 
             Console.WriteLine("Weaving assembly on-demand from '{0}' to '{1}'", BeforeAssemblyPath, AfterAssemblyPath);
@@ -54,6 +53,11 @@ using Mono.Cecil;
         #endregion
 
         #region Methods
+        public static void Initialize()
+        {
+
+        }
+
         private static void LogError(string error)
         {
             Errors.Add(error);

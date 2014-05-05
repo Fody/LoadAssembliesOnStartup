@@ -28,12 +28,12 @@ namespace LoadAssembliesOnStartup.Test
         {
             if (fullName == "System")
             {
-                var codeBase = typeof (Debug).Assembly.CodeBase.Replace("file:///", "");
+                var codeBase = typeof (Debug).Assembly.CodeBase.Replace("file:///", string.Empty);
                 return AssemblyDefinition.ReadAssembly(codeBase);
             }
             else
             {
-                var codeBase = typeof (string).Assembly.CodeBase.Replace("file:///", "");
+                var codeBase = typeof (string).Assembly.CodeBase.Replace("file:///", string.Empty);
                 return AssemblyDefinition.ReadAssembly(codeBase);
             }
         }

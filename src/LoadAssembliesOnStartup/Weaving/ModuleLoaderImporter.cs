@@ -28,16 +28,19 @@ namespace LoadAssembliesOnStartup
             {
                 throw new WeavingException("Found no module class!");
             }
+
             var cctor = moduleClass.Methods.FirstOrDefault(x => x.Name == ".cctor");
             if (cctor == null)
             {
-                cctor = new MethodDefinition(".cctor", attributes, msCoreReferenceFinder.GetCoreTypeReference("Void"));
+                cctor = new MethodDefinition(".cctor", attributes, moduleDefinition.Import(msCoreReferenceFinder.GetCoreTypeReference("Void")));
                 cctor.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
                 moduleClass.Methods.Add(cctor);
             }
 
+            var importedMethodToCall = moduleDefinition.Import(methodToCall);
+
             var insertLocation = Math.Max(cctor.Body.Instructions.Count - 2, 0);
-            cctor.Body.Instructions.Insert(insertLocation, Instruction.Create(OpCodes.Call, methodToCall));
+            cctor.Body.Instructions.Insert(insertLocation, Instruction.Create(OpCodes.Call, importedMethodToCall));
         }
         #endregion
     }
