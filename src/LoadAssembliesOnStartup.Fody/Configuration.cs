@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace LoadAssembliesOnStartup
+namespace LoadAssembliesOnStartup.Fody
 {
     public class Configuration
     {

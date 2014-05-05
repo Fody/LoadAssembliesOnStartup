@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LoadAssembliesOnStartup.Weaving
+namespace LoadAssembliesOnStartup.Fody.Weaving
 {
     using System;
     using System.IO;
@@ -37,6 +37,7 @@ namespace LoadAssembliesOnStartup.Weaving
             var loadMethod = new MethodDefinition("LoadTypesOnStartup", MethodAttributes.Assembly | MethodAttributes.Static | MethodAttributes.HideBySig, _moduleDefinition.Import(_msCoreReferenceFinder.GetCoreTypeReference("Void")));
 
             var type = _msCoreReferenceFinder.GetCoreTypeReference("Type").Resolve();
+            var typeImported = _moduleDefinition.Import(type);
             var getTypeFromHandleMethod = type.Methods.First(x => string.Equals(x.Name, "GetTypeFromHandle"));
             var getTypeFromHandle = _moduleDefinition.Import(getTypeFromHandleMethod);
 
@@ -56,12 +57,12 @@ namespace LoadAssembliesOnStartup.Weaving
                     // ==
                     //L_000a: call class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)
 
-                    var importedFirstType = _moduleDefinition.Import(firstType);
+                    var firstTypeImported = _moduleDefinition.Import(firstType);
 
-                    var variable = new VariableDefinition(string.Format("typeToLoad{0}", counter++), importedFirstType);
+                    var variable = new VariableDefinition(string.Format("typeToLoad{0}", counter++), typeImported);
                     body.Variables.Add(variable);
 
-                    instructions.Add(Instruction.Create(OpCodes.Ldtoken, importedFirstType));
+                    instructions.Add(Instruction.Create(OpCodes.Ldtoken, firstTypeImported));
                     instructions.Add(Instruction.Create(OpCodes.Call, getTypeFromHandle));
                     instructions.Add(Instruction.Create(OpCodes.Stloc, variable));
                 }

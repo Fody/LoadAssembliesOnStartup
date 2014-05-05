@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace LoadAssembliesOnStartup
+namespace LoadAssembliesOnStartup.Fody.Weaving
 {
     using System;
     using System.Linq;
