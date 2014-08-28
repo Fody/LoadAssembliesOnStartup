@@ -37,9 +37,9 @@ namespace LoadAssembliesOnStartup.Fody
         {
             try
             {
-//#if DEBUG
-//                Debugger.Launch();
-//#endif
+#if DEBUG
+                Debugger.Launch();
+#endif
 
                 InitializeEnvironment();
 
