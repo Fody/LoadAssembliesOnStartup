@@ -102,7 +102,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 return !contains;
             }
 
-            return false;
+            return true;
         }
         #endregion
     }
