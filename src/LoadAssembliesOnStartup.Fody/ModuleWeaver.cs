@@ -32,14 +32,15 @@ namespace LoadAssembliesOnStartup.Fody
 
         public IAssemblyResolver AssemblyResolver { get; set; }
         public ModuleDefinition ModuleDefinition { get; set; }
+        public string References { get; set; }
 
         public void Execute()
         {
             try
             {
-#if DEBUG
-                Debugger.Launch();
-#endif
+//#if DEBUG
+//                Debugger.Launch();
+//#endif
 
                 InitializeEnvironment();
 
@@ -51,7 +52,7 @@ namespace LoadAssembliesOnStartup.Fody
                 msCoreReferenceFinder.Execute();
 
                 // Create method that imports the types
-                var loadTypesWeaver = new LoadTypesWeaver(ModuleDefinition, msCoreReferenceFinder, configuration);
+                var loadTypesWeaver = new LoadTypesWeaver(ModuleDefinition, msCoreReferenceFinder, configuration, this);
                 var loadTypesMethod = loadTypesWeaver.Execute();
 
                 // Call method on assembly init

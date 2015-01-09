@@ -20,14 +20,17 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         private readonly ModuleDefinition _moduleDefinition;
         private readonly MsCoreReferenceFinder _msCoreReferenceFinder;
         private readonly Configuration _configuration;
+        private readonly ModuleWeaver _moduleWeaver;
         #endregion
 
         #region Constructors
-        public LoadTypesWeaver(ModuleDefinition moduleDefinition, MsCoreReferenceFinder msCoreReferenceFinder, Configuration configuration)
+        public LoadTypesWeaver(ModuleDefinition moduleDefinition, MsCoreReferenceFinder msCoreReferenceFinder, 
+            Configuration configuration, ModuleWeaver moduleWeaver)
         {
             _moduleDefinition = moduleDefinition;
             _msCoreReferenceFinder = msCoreReferenceFinder;
             _configuration = configuration;
+            _moduleWeaver = moduleWeaver;
         }
         #endregion
 
@@ -47,7 +50,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             var instructions = body.Instructions;
 
             int counter = 1;
-            var referenceSelector = new ReferenceSelector(_moduleDefinition, _configuration);
+            var referenceSelector = new ReferenceSelector(_moduleWeaver, _moduleDefinition, _configuration);
             foreach (var assembly in referenceSelector.GetIncludedReferences())
             {
                 var firstType = assembly.MainModule.Types.FirstOrDefault(x => x.IsClass && x.IsPublic);

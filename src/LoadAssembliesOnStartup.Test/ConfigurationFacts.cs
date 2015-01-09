@@ -107,5 +107,16 @@ Bar
             Assert.AreEqual("Foo", config.IncludeAssemblies[0]);
             Assert.AreEqual("Bar", config.IncludeAssemblies[1]);
         }
+
+        [TestMethod]
+        public void ExcludeOptimizedAssemblies()
+        {
+            var xElement = XElement.Parse(@"
+<LoadAssembliesOnStartup ExcludeOptimizedAssemblies='true' />");
+
+            var config = new Configuration(xElement);
+
+            Assert.AreEqual(true, config.ExcludeOptimizedAssemblies);
+        }
     }
 }
