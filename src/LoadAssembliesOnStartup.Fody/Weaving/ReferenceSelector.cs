@@ -23,17 +23,20 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             "Catel.Fody.Attributes",
             //"Obsolete",
             //"PropertyChanged"
+            "Microsoft.CSharp",
         });
         #endregion
 
         #region Fields
+        private readonly ModuleWeaver _moduleWeaver;
         private readonly ModuleDefinition _moduleDefinition;
         private readonly Configuration _configuration;
         #endregion
 
         #region Constructors
-        public ReferenceSelector(ModuleDefinition moduleDefinition, Configuration configuration)
+        public ReferenceSelector(ModuleWeaver moduleWeaver, ModuleDefinition moduleDefinition, Configuration configuration)
         {
+            _moduleWeaver = moduleWeaver;
             _moduleDefinition = moduleDefinition;
             _configuration = configuration;
         }
@@ -57,7 +60,41 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 var assembly = resolver.Resolve(referenceName);
                 if (assembly != null)
                 {
+                    FodyEnvironment.LogInfo(string.Format("Including reference '{0}'", referenceName));
+
                     includedReferences.Add(assembly);
+                }
+            }
+
+            if (!_configuration.ExcludeOptimizedAssemblies)
+            {
+                var splittedReferences = _moduleWeaver.References.Split(';');
+                foreach (var splittedReference in splittedReferences)
+                {
+                    var assemblyDefinition = AssemblyDefinition.ReadAssembly(splittedReference);
+
+                    var isIncluded = (from reference in includedReferences
+                        where string.Equals(reference.FullName, assemblyDefinition.FullName)
+                        select reference).Any();
+
+                    if (!isIncluded)
+                    {
+                        var referenceName = assemblyDefinition.Name.Name;
+
+                        if (!ShouldReferenceBeIncluded(assemblyDefinition.Name))
+                        {
+                            continue;
+                        }
+
+                        var assembly = resolver.Resolve(referenceName);
+                        if (assembly != null)
+                        {
+                            FodyEnvironment.LogInfo(string.Format("Including reference '{0}', it was optimized away by the compiler but still adding it",
+                                referenceName));
+
+                            includedReferences.Add(assembly);
+                        }
+                    }
                 }
             }
 

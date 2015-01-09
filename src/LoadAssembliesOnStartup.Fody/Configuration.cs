@@ -32,6 +32,7 @@ namespace LoadAssembliesOnStartup.Fody
 
             ReadList(config, "ExcludeAssemblies", ExcludeAssemblies);
             ReadList(config, "IncludeAssemblies", IncludeAssemblies);
+            ReadBool(config, "ExcludeOptimizedAssemblies", x => ExcludeOptimizedAssemblies = x);
 
             if (IncludeAssemblies.Any() && ExcludeAssemblies.Any())
             {
@@ -42,6 +43,7 @@ namespace LoadAssembliesOnStartup.Fody
         public bool OptOut { get; private set; }
         public List<string> IncludeAssemblies { get; private set; }
         public List<string> ExcludeAssemblies { get; private set; }
+        public bool ExcludeOptimizedAssemblies { get; private set; }
 
         public static void ReadList(XElement config, string nodeName, List<string> list)
         {
@@ -61,6 +63,23 @@ namespace LoadAssembliesOnStartup.Fody
                                             .NonEmpty())
                 {
                     list.Add(item);
+                }
+            }
+        }
+
+        public static void ReadBool(XElement config, string nodeName, Action<bool> setter)
+        {
+            var attribute = config.Attribute(nodeName);
+            if (attribute != null)
+            {
+                bool value;
+                if (bool.TryParse(attribute.Value, out value))
+                {
+                    setter(value);
+                }
+                else
+                {
+                    throw new WeavingException(string.Format("Could not parse '{0}' from '{1}'.", nodeName, attribute.Value));
                 }
             }
         }
