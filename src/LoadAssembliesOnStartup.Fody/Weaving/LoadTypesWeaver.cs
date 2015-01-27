@@ -71,8 +71,9 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         // L_0001: ldstr "Loading assembly TestAssemblyToReference"
                         //L_0006: call void [System]System.Diagnostics.Debug::WriteLine(string)
 
-                        instructions.Add(Instruction.Create(OpCodes.Ldstr, string.Format("Loading assembly {0}", assembly.Name)));
-                        instructions.Add(Instruction.Create(OpCodes.Call, debugWriteLineMethod));
+                        // Temporarily disabled because we first need to investigate if this is ever useful
+                        //instructions.Add(Instruction.Create(OpCodes.Ldstr, string.Format("Loading assembly {0}", assembly.Name)));
+                        //instructions.Add(Instruction.Create(OpCodes.Call, debugWriteLineMethod));
                     }
 
                     // var type = typeof(FirstTypeInAssembly);
