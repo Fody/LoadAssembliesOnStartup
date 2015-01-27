@@ -10,6 +10,8 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
     using Mono.Cecil;
     using Mono.Cecil.Cil;
     using Mono.Cecil.Rocks;
+    using MethodAttributes = Mono.Cecil.MethodAttributes;
+    using TypeAttributes = Mono.Cecil.TypeAttributes;
 
     public class LoadTypesWeaver
     {
@@ -24,7 +26,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         #endregion
 
         #region Constructors
-        public LoadTypesWeaver(ModuleDefinition moduleDefinition, MsCoreReferenceFinder msCoreReferenceFinder, 
+        public LoadTypesWeaver(ModuleDefinition moduleDefinition, MsCoreReferenceFinder msCoreReferenceFinder,
             Configuration configuration, ModuleWeaver moduleWeaver)
         {
             _moduleDefinition = moduleDefinition;
@@ -37,6 +39,12 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         #region Methods
         public MethodDefinition Execute()
         {
+            var debugWriteLineMethod = FindDebugWriteLineMethod();
+            if (debugWriteLineMethod == null)
+            {
+                FodyEnvironment.LogInfo("Can't find Debug.WriteLine, won't be writing debug info during assembly loading");
+            }
+
             var loadMethod = new MethodDefinition("LoadTypesOnStartup", MethodAttributes.Assembly | MethodAttributes.Static | MethodAttributes.HideBySig, _moduleDefinition.Import(_msCoreReferenceFinder.GetCoreTypeReference("Void")));
 
             var type = _msCoreReferenceFinder.GetCoreTypeReference("Type").Resolve();
@@ -49,13 +57,25 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             var instructions = body.Instructions;
 
-            int counter = 1;
+            var counter = 1;
             var referenceSelector = new ReferenceSelector(_moduleWeaver, _moduleDefinition, _configuration);
             foreach (var assembly in referenceSelector.GetIncludedReferences())
             {
                 var firstType = assembly.MainModule.Types.FirstOrDefault(x => x.IsClass && x.IsPublic);
                 if (firstType != null)
                 {
+                    FodyEnvironment.LogInfo(string.Format("Adding code to force load assembly '{0}'", assembly.Name));
+
+                    if (debugWriteLineMethod != null)
+                    {
+                        // L_0001: ldstr "Loading assembly TestAssemblyToReference"
+                        //L_0006: call void [System]System.Diagnostics.Debug::WriteLine(string)
+
+                        // Temporarily disabled because we first need to investigate if this is ever useful
+                        //instructions.Add(Instruction.Create(OpCodes.Ldstr, string.Format("Loading assembly {0}", assembly.Name)));
+                        //instructions.Add(Instruction.Create(OpCodes.Call, debugWriteLineMethod));
+                    }
+
                     // var type = typeof(FirstTypeInAssembly);
                     // ==
                     //L_000a: call class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)
@@ -83,6 +103,27 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             _moduleDefinition.Types.Add(typeDefinition);
 
             return loadMethod;
+        }
+
+        private MethodReference FindDebugWriteLineMethod()
+        {
+            var debugTypeReference = _msCoreReferenceFinder.GetCoreTypeReference("Debug").Resolve();
+            if (debugTypeReference == null)
+            {
+                return null;
+            }
+
+            var debugWriteLineMethod = (from method in debugTypeReference.Methods
+                                        where string.Equals(method.Name, "WriteLine") &&
+                                              method.Parameters.Count == 1 &&
+                                              string.Equals(method.Parameters[0].ParameterType.Name, "String")
+                                        select method).FirstOrDefault();
+            if (debugWriteLineMethod == null)
+            {
+                return null;
+            }
+
+            return _moduleDefinition.Import(debugWriteLineMethod);
         }
         #endregion
     }

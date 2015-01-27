@@ -21,8 +21,9 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             "mscorlib",
             "Anotar",
             "Catel.Fody.Attributes",
-            //"Obsolete",
-            //"PropertyChanged"
+            "MethodTimer",
+            "Obsolete",
+            "PropertyChanged",
             "Microsoft.CSharp",
         });
         #endregion

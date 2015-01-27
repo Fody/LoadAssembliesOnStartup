@@ -38,9 +38,12 @@ namespace LoadAssembliesOnStartup.Fody
         {
             try
             {
-//#if DEBUG
-//                Debugger.Launch();
-//#endif
+#if DEBUG
+                if (!Debugger.IsAttached)
+                {
+                    Debugger.Launch();
+                }
+#endif
 
                 InitializeEnvironment();
 
