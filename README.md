@@ -91,6 +91,32 @@ To disable all the optimized assemblies (default .NET compiler behavior), use th
 
 	<LoadAssembliesOnStartup ExcludeOptimizedAssemblies='true' />
 
+### WrapInTryCatch
+
+By default, this weaver calls the `typeof(SomeType)` without any exception handling. While in general, this is good, it might happen that an assembly cannot be loaded. This can either be solved by adding it to the `ExcludeAssemblies` list *or* setting the `WrapInTryCatch` property to true:
+
+	<LoadAssembliesOnStartup WrapInTryCatch='true' />
+
+Then the weaved code will look like:
+
+	try
+	{
+		typeof(FirstTypeFromReference1);
+	}
+	catch (Exception
+	{
+	}
+
+
+	try
+	{
+		typeof(FirstTypeFromReference2);
+	}
+	catch (Exception
+	{
+	}
+
+
 ## Icon
 
 Explosion by Gustav Salomonsson from The Noun Project

@@ -22,16 +22,37 @@ namespace LoadAssembliesOnStartup.TestAssembly
 
         public static void ExampleCallForIlInspection()
         {
-            Debug.WriteLine("Loading assembly TestAssemblyToReference");
+            //Debug.WriteLine("Loading assembly TestAssemblyToReference");
             var typeToLoad1 = typeof(ClassThatShouldBeRegistered);
+
+#if !DEBUG
+            Console.WriteLine(typeToLoad1);
+#endif
         }
 
         public static void ExampleCallForIlInspectionWithTryCatch()
         {
             try
             {
-                Debug.WriteLine("Loading assembly TestAssemblyToReference");
+                //Debug.WriteLine("Loading assembly TestAssemblyToReference");
                 var typeToLoad1 = typeof(ClassThatShouldBeRegistered);
+
+#if !DEBUG
+                Console.WriteLine(typeToLoad1);
+#endif
+            }
+            catch (Exception)
+            {
+            }
+
+            try
+            {
+                //Debug.WriteLine("Loading assembly TestAssemblyToReference");
+                var typeToLoad2 = typeof(ClassThatShouldBeRegistered);
+
+#if !DEBUG
+                Console.WriteLine(typeToLoad2);
+#endif
             }
             catch (Exception)
             {

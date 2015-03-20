@@ -69,7 +69,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             if (!_configuration.ExcludeOptimizedAssemblies)
             {
-                var splittedReferences = _moduleWeaver.References.Split(';');
+                var splittedReferences = _moduleWeaver.References.Split(new [] { ";" }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var splittedReference in splittedReferences)
                 {
                     var assemblyDefinition = AssemblyDefinition.ReadAssembly(splittedReference);
