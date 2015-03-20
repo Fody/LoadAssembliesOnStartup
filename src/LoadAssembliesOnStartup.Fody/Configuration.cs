@@ -33,6 +33,7 @@ namespace LoadAssembliesOnStartup.Fody
             ReadList(config, "ExcludeAssemblies", ExcludeAssemblies);
             ReadList(config, "IncludeAssemblies", IncludeAssemblies);
             ReadBool(config, "ExcludeOptimizedAssemblies", x => ExcludeOptimizedAssemblies = x);
+            ReadBool(config, "WrapInTryCatch", x => WrapInTryCatch = x);
 
             if (IncludeAssemblies.Any() && ExcludeAssemblies.Any())
             {
@@ -44,6 +45,7 @@ namespace LoadAssembliesOnStartup.Fody
         public List<string> IncludeAssemblies { get; private set; }
         public List<string> ExcludeAssemblies { get; private set; }
         public bool ExcludeOptimizedAssemblies { get; private set; }
+        public bool WrapInTryCatch { get; private set; }
 
         public static void ReadList(XElement config, string nodeName, List<string> list)
         {

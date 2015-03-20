@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace LoadAssembliesOnStartup.Test
+namespace LoadAssembliesOnStartup.Tests
 {
     using System.Xml.Linq;
     using Catel.Test;
@@ -117,6 +117,17 @@ Bar
             var config = new Configuration(xElement);
 
             Assert.AreEqual(true, config.ExcludeOptimizedAssemblies);
+        }
+
+        [TestMethod]
+        public void WrapInTryCatch()
+        {
+            var xElement = XElement.Parse(@"
+<LoadAssembliesOnStartup WrapInTryCatch='true' />");
+
+            var config = new Configuration(xElement);
+
+            Assert.AreEqual(true, config.WrapInTryCatch);
         }
     }
 }

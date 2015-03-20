@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30324.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Fody", "LoadAssembliesOnStartup.Fody\LoadAssembliesOnStartup.Fody.csproj", "{801B49CF-35D8-4BE3-BAEF-FA024A42A66C}"
 EndProject
@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitVersion", "GitVersion", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "design", "design", "{3A80F707-B129-4AB6-9C9E-D900885130B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Test", "LoadAssembliesOnStartup.Test\LoadAssembliesOnStartup.Test.csproj", "{E23F5CF5-5C34-4D3A-8FD0-F167C12DE9CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Tests", "LoadAssembliesOnStartup.Tests\LoadAssembliesOnStartup.Tests.csproj", "{E23F5CF5-5C34-4D3A-8FD0-F167C12DE9CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{1CF1A83D-E73A-405F-9970-9827C7C3335D}"
 EndProject

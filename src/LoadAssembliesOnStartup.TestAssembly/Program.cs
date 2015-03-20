@@ -7,6 +7,7 @@
 
 namespace LoadAssembliesOnStartup.TestAssembly
 {
+    using System;
     using System.Diagnostics;
     using Catel.IoC;
     using TestAssemblyToReference.Services;
@@ -23,6 +24,18 @@ namespace LoadAssembliesOnStartup.TestAssembly
         {
             Debug.WriteLine("Loading assembly TestAssemblyToReference");
             var typeToLoad1 = typeof(ClassThatShouldBeRegistered);
+        }
+
+        public static void ExampleCallForIlInspectionWithTryCatch()
+        {
+            try
+            {
+                Debug.WriteLine("Loading assembly TestAssemblyToReference");
+                var typeToLoad1 = typeof(ClassThatShouldBeRegistered);
+            }
+            catch (Exception)
+            {
+            }
         }
         #endregion
 
