@@ -5,12 +5,13 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace LoadAssembliesOnStartup.Test
+namespace LoadAssembliesOnStartup.Tests
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
+    using System.Xml.Linq;
     using Catel.Reflection;
     using Fody;
     using Mono.Cecil;
@@ -55,6 +56,7 @@ namespace LoadAssembliesOnStartup.Test
                 ModuleDefinition = moduleDefinition,
                 AssemblyResolver = new MockAssemblyResolver(),
                 LogError = LogError,
+                Config = XElement.Parse(@"<LoadAssembliesOnStartup WrapInTryCatch='true' />")
             };
 
             weavingTask.Execute();

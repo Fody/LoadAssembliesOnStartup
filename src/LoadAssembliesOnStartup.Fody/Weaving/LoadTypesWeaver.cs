@@ -6,6 +6,7 @@
 
 namespace LoadAssembliesOnStartup.Fody.Weaving
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Mono.Cecil;
     using Mono.Cecil.Cil;
@@ -56,10 +57,16 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             body.SimplifyMacros();
 
             var instructions = body.Instructions;
+            if (instructions.Count == 0)
+            {
+                instructions.Add(Instruction.Create(OpCodes.Ret));
+            }
 
             var counter = 1;
             var referenceSelector = new ReferenceSelector(_moduleWeaver, _moduleDefinition, _configuration);
-            foreach (var assembly in referenceSelector.GetIncludedReferences())
+
+            // Note: we are looping reversed to easily add try/catch mechanism
+            foreach (var assembly in referenceSelector.GetIncludedReferences().Reverse())
             {
                 var firstType = assembly.MainModule.Types.FirstOrDefault(x => x.IsClass && x.IsPublic);
                 if (firstType != null)
@@ -83,11 +90,47 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                     var firstTypeImported = _moduleDefinition.Import(firstType);
 
                     var variable = new VariableDefinition(string.Format("typeToLoad{0}", counter++), typeImported);
-                    body.Variables.Add(variable);
+                    body.Variables.Insert(0, variable);
 
-                    instructions.Add(Instruction.Create(OpCodes.Ldtoken, firstTypeImported));
-                    instructions.Add(Instruction.Create(OpCodes.Call, getTypeFromHandle));
-                    instructions.Add(Instruction.Create(OpCodes.Stloc, variable));
+                    var instructionsToAdd = new[]
+                    {
+                        Instruction.Create(OpCodes.Ldtoken, firstTypeImported),
+                        Instruction.Create(OpCodes.Call, getTypeFromHandle),
+                        Instruction.Create(OpCodes.Stloc, variable)
+                    };
+
+                    instructions.Insert(0, instructionsToAdd);
+
+                    if (_configuration.WrapInTryCatch)
+                    {
+                        var firstInstructionAfterInjectedSet = instructions[instructionsToAdd.Length];
+
+                        // Pop means empty catch
+                        var emptyCatchInstructions = new[]
+                        {
+                            Instruction.Create(OpCodes.Leave_S, firstInstructionAfterInjectedSet),
+                            Instruction.Create(OpCodes.Pop),
+                            Instruction.Create(OpCodes.Leave_S, firstInstructionAfterInjectedSet)
+                        };
+
+                        instructions.Insert(instructionsToAdd.Length, emptyCatchInstructions);
+
+                        var tryStartInstruction = instructionsToAdd.First();
+                        var tryEndInstruction = emptyCatchInstructions.Skip(1).First();
+                        var handlerStartInstruction = emptyCatchInstructions.Skip(1).First();
+                        var handlerEndInstruction = firstInstructionAfterInjectedSet;
+
+                        var handler = new ExceptionHandler(ExceptionHandlerType.Catch)
+                        {
+                            TryStart = tryStartInstruction,
+                            TryEnd = tryEndInstruction,
+                            HandlerStart = handlerStartInstruction,
+                            HandlerEnd = handlerEndInstruction,
+                            CatchType = _moduleDefinition.Import(_msCoreReferenceFinder.GetCoreTypeReference("Exception"))
+                        };
+
+                        body.ExceptionHandlers.Insert(0, handler);
+                    }
                 }
             }
 

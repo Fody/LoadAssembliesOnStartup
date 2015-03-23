@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace LoadAssembliesOnStartup.Test
+namespace LoadAssembliesOnStartup.Tests
 {
     using System;
     using System.Diagnostics;

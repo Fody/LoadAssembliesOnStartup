@@ -83,6 +83,11 @@ namespace LoadAssembliesOnStartup.Fody
             FodyEnvironment.LogWarningPoint = LogWarningPoint;
             FodyEnvironment.LogError = LogError;
             FodyEnvironment.LogErrorPoint = LogErrorPoint;
+
+            if (string.IsNullOrEmpty(References))
+            {
+                References = string.Empty;
+            }
         }
     }
 }
