@@ -23,7 +23,7 @@ When using <a href="https://github.com/Fody/ModuleInit" target="_blank">ModuleIn
 
 To prevent hacks such as the one displayed below:
 
-	// Note: this is a hack, force loading of external assembly
+	// Note: this is a hack, force loading of external assembly 
 	var dummyType = typeof(MyExternalAssemblyType);
 	Console.WriteLine(dummyType.FullName); 
 
