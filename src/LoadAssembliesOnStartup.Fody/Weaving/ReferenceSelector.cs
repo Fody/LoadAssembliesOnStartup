@@ -9,7 +9,6 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using Mono.Cecil;
 
@@ -61,7 +60,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 var assembly = resolver.Resolve(referenceName);
                 if (assembly != null)
                 {
-                    FodyEnvironment.LogInfo(string.Format("Including reference '{0}'", referenceName));
+                    FodyEnvironment.LogInfo($"Including reference '{referenceName}'");
 
                     includedReferences.Add(assembly);
                 }
@@ -90,8 +89,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         var assembly = resolver.Resolve(referenceName);
                         if (assembly != null)
                         {
-                            FodyEnvironment.LogInfo(string.Format("Including reference '{0}', it was optimized away by the compiler but still adding it",
-                                referenceName));
+                            FodyEnvironment.LogInfo($"Including reference '{referenceName}', it was optimized away by the compiler but still adding it");
 
                             includedReferences.Add(assembly);
                         }
@@ -111,18 +109,18 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             {
                 if (assemblyNameLowered.Contains(knownIgnoredAssembly.ToLower()))
                 {
-                    FodyEnvironment.LogInfo(string.Format("Ignoring '{0}' because it is a known assembly to be ignored", assemblyName));
+                    FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is a known assembly to be ignored");
                     return false;
                 }
             }
 
             if (_configuration.IncludeAssemblies.Any())
             {
-                bool contains = _configuration.IncludeAssemblies.Any(x => string.Equals(assemblyNameLowered, x.ToLower()));
+                var contains = _configuration.IncludeAssemblies.Any(x => string.Equals(assemblyNameLowered, x.ToLower()));
 
                 if (!contains)
                 {
-                    FodyEnvironment.LogInfo(string.Format("Ignoring '{0}' because it is not in the included list", assemblyName));
+                    FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is not in the included list");
                 }
 
                 return contains;
@@ -134,7 +132,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
                 if (contains)
                 {
-                    FodyEnvironment.LogInfo(string.Format("Ignoring '{0}' because it is in the excluded list", assemblyName));
+                    FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is in the excluded list");
                 }
 
                 return !contains;

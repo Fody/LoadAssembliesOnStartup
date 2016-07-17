@@ -38,13 +38,6 @@ namespace LoadAssembliesOnStartup.Fody
         {
             try
             {
-#if DEBUG
-                if (!Debugger.IsAttached)
-                {
-                    Debugger.Launch();
-                }
-#endif
-
                 InitializeEnvironment();
 
                 // Read config

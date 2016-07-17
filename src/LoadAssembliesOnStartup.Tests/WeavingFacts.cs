@@ -8,7 +8,6 @@
 namespace LoadAssembliesOnStartup.Tests
 {
     using System;
-    using Catel.IoC;
     using Catel.Reflection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

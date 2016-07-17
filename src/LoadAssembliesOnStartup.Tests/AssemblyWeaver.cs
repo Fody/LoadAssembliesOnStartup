@@ -35,7 +35,7 @@ namespace LoadAssembliesOnStartup.Tests
             var currentDomain = AppDomain.CurrentDomain;
             currentDomain.AssemblyResolve += (sender, e) =>
             {
-                var finalFile = Path.Combine(directory, string.Format("{0}.dll", e.Name));
+                var finalFile = Path.Combine(directory, $"{e.Name}.dll");
 
                 Console.WriteLine("Loading assembly '{0}' from '{1}'", e.Name, finalFile);
 
@@ -71,7 +71,7 @@ namespace LoadAssembliesOnStartup.Tests
         {
             // Fix unit tests on build server
             var originalDirectory = Path.GetDirectoryName(typeof(AssemblyWeaver).GetAssemblyEx().Location);
-            var buildServerDirectory = Path.GetFullPath(string.Format(@"{0}\..\..\output\Test", originalDirectory));
+            var buildServerDirectory = Path.GetFullPath($@"{originalDirectory}\..\..\output\Test");
 
             var finalDirectory =  Directory.Exists(buildServerDirectory) ? buildServerDirectory : originalDirectory;
             return finalDirectory;

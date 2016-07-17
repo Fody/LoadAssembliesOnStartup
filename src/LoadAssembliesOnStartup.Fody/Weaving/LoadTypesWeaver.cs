@@ -6,7 +6,6 @@
 
 namespace LoadAssembliesOnStartup.Fody.Weaving
 {
-    using System.Collections.Generic;
     using System.Linq;
     using Mono.Cecil;
     using Mono.Cecil.Cil;
@@ -71,7 +70,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 var firstType = assembly.MainModule.Types.FirstOrDefault(x => x.IsClass && x.IsPublic);
                 if (firstType != null)
                 {
-                    FodyEnvironment.LogInfo(string.Format("Adding code to force load assembly '{0}'", assembly.Name));
+                    FodyEnvironment.LogInfo($"Adding code to force load assembly '{assembly.Name}'");
 
                     if (debugWriteLineMethod != null)
                     {
@@ -89,7 +88,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
                     var firstTypeImported = _moduleDefinition.Import(firstType);
 
-                    var variable = new VariableDefinition(string.Format("typeToLoad{0}", counter++), typeImported);
+                    var variable = new VariableDefinition($"typeToLoad{counter++}", typeImported);
                     body.Variables.Insert(0, variable);
 
                     var instructionsToAdd = new[]

@@ -8,7 +8,6 @@
 namespace LoadAssembliesOnStartup.TestAssembly
 {
     using System;
-    using System.Diagnostics;
     using Catel.IoC;
     using TestAssemblyToReference.Services;
     using TestAssemblyToReferenceWithIgnores.Services;
@@ -16,9 +15,6 @@ namespace LoadAssembliesOnStartup.TestAssembly
     public class Program
     {
         #region Methods
-        private static void Main(string[] args)
-        {
-        }
 
         public static void ExampleCallForIlInspection()
         {
