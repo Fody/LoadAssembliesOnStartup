@@ -9,14 +9,16 @@ namespace LoadAssembliesOnStartup.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Reflection;
     using System.Xml.Linq;
     using Catel.Reflection;
     using Fody;
     using Mono.Cecil;
+    using TestAssembly;
 
-    public static class AssemblyWeaver
+    public class AssemblyWeaver
     {
         #region Constants
         public static Assembly Assembly;
@@ -25,11 +27,18 @@ namespace LoadAssembliesOnStartup.Tests
         public static string AfterAssemblyPath;
 
         public static List<string> Errors = new List<string>();
+
+        private static AssemblyWeaver _instance;
         #endregion
 
         #region Constructors
-        static AssemblyWeaver()
+        public AssemblyWeaver(List<string> referenceAssemblyPaths = null)
         {
+            if (referenceAssemblyPaths == null)
+            {
+                referenceAssemblyPaths = new List<string>();
+            }
+
             var directory = GetTargetAssemblyDirectory();
 
             var currentDomain = AppDomain.CurrentDomain;
@@ -42,25 +51,48 @@ namespace LoadAssembliesOnStartup.Tests
                 return Assembly.LoadFrom(finalFile);
             };
 
-            BeforeAssemblyPath = Path.Combine(directory, "LoadAssembliesOnStartup.TestAssembly.dll");
+            //Force ref since MSTest is a POS
+            var type = typeof(DummyDependencyInjectionClass);
+
+            BeforeAssemblyPath = type.GetAssemblyEx().Location;
+            //BeforeAssemblyPath =  Path.GetFullPath("Catel.Fody.TestAssembly.dll");
             AfterAssemblyPath = BeforeAssemblyPath.Replace(".dll", "2.dll");
 
-            Console.WriteLine("Weaving assembly on-demand from '{0}' to '{1}'", BeforeAssemblyPath, AfterAssemblyPath);
-
-            File.Copy(BeforeAssemblyPath, AfterAssemblyPath, true);
-
-            var moduleDefinition = ModuleDefinition.ReadModule(AfterAssemblyPath);
-
-            var weavingTask = new ModuleWeaver
+            var oldPdb = Path.ChangeExtension(BeforeAssemblyPath, "pdb");
+            var newPdb = Path.ChangeExtension(AfterAssemblyPath, "pdb");
+            if (File.Exists(oldPdb))
             {
-                ModuleDefinition = moduleDefinition,
-                AssemblyResolver = new MockAssemblyResolver(),
-                LogError = LogError,
-                Config = XElement.Parse(@"<LoadAssembliesOnStartup WrapInTryCatch='true' />")
+                File.Copy(oldPdb, newPdb, true);
+            }
+
+            Debug.WriteLine("Weaving assembly on-demand from '{0}' to '{1}'", BeforeAssemblyPath, AfterAssemblyPath);
+
+            var assemblyResolver = new MockAssemblyResolver();
+            foreach (var referenceAssemblyPath in referenceAssemblyPaths)
+            {
+                //var directoryName = Path.GetDirectoryName(referenceAssemblyPath);
+                //assemblyResolver.AddSearchDirectory(directoryName);
+            }
+
+            var readerParameters = new ReaderParameters
+            {
+                AssemblyResolver = assemblyResolver,
+                ReadSymbols = File.Exists(oldPdb),
             };
 
-            weavingTask.Execute();
-            moduleDefinition.Write(AfterAssemblyPath);
+            using (var moduleDefinition = ModuleDefinition.ReadModule(BeforeAssemblyPath, readerParameters))
+            {
+                var weavingTask = new ModuleWeaver
+                {
+                    ModuleDefinition = moduleDefinition,
+                    AssemblyResolver = assemblyResolver,
+                    LogError = LogError,
+                    Config = XElement.Parse(@"<LoadAssembliesOnStartup WrapInTryCatch='true' />")
+                };
+
+                weavingTask.Execute();
+                moduleDefinition.Write(AfterAssemblyPath);
+            }
 
             Assembly = Assembly.LoadFile(AfterAssemblyPath);
         }
@@ -79,7 +111,12 @@ namespace LoadAssembliesOnStartup.Tests
 
         public static void Initialize()
         {
+            if (_instance != null)
+            {
+                return;
+            }
 
+            _instance = new AssemblyWeaver();
         }
 
         private static void LogError(string error)

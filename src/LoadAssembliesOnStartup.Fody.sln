@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Fody", "LoadAssembliesOnStartup.Fody\LoadAssembliesOnStartup.Fody.csproj", "{801B49CF-35D8-4BE3-BAEF-FA024A42A66C}"
 EndProject
@@ -10,19 +10,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{E7EFD58C-46F7-496E-8FF1-9E8DFFBBA14B}"
 	ProjectSection(SolutionItems) = preProject
 		..\lib\repositories.config = ..\lib\repositories.config
-		..\lib\RestorePackages.bat = ..\lib\RestorePackages.bat
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{E55563DE-6716-47C4-9E72-D88F7214CBF5}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{685A9168-0CFB-4F0C-AEF8-F02308B7DAFE}"
-	ProjectSection(SolutionItems) = preProject
-		..\tools\NuGet\NuGet.exe = ..\tools\NuGet\NuGet.exe
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitVersion", "GitVersion", "{A6F0260F-C548-4623-946F-C171B5CE9CC3}"
-	ProjectSection(SolutionItems) = preProject
-		..\tools\GitVersion\GitVersion.exe = ..\tools\GitVersion\GitVersion.exe
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Tests", "LoadAssembliesOnStartup.Tests\LoadAssembliesOnStartup.Tests.csproj", "{E23F5CF5-5C34-4D3A-8FD0-F167C12DE9CF}"
@@ -67,8 +54,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{801B49CF-35D8-4BE3-BAEF-FA024A42A66C} = {94444851-DCB1-45E1-813D-84BE58DDC23B}
-		{685A9168-0CFB-4F0C-AEF8-F02308B7DAFE} = {E55563DE-6716-47C4-9E72-D88F7214CBF5}
-		{A6F0260F-C548-4623-946F-C171B5CE9CC3} = {E55563DE-6716-47C4-9E72-D88F7214CBF5}
 		{E23F5CF5-5C34-4D3A-8FD0-F167C12DE9CF} = {1CF1A83D-E73A-405F-9970-9827C7C3335D}
 		{1CF1A83D-E73A-405F-9970-9827C7C3335D} = {94444851-DCB1-45E1-813D-84BE58DDC23B}
 		{2107A58E-8545-4610-A0C2-BE322E080E86} = {1CF1A83D-E73A-405F-9970-9827C7C3335D}

@@ -88,7 +88,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
                     var firstTypeImported = _moduleDefinition.Import(firstType);
 
-                    var variable = new VariableDefinition($"typeToLoad{counter++}", typeImported);
+                    var variable = new VariableDefinition(typeImported);
                     body.Variables.Insert(0, variable);
 
                     var instructionsToAdd = new[]

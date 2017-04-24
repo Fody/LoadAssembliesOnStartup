@@ -5,43 +5,38 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace LoadAssembliesOnStartup.Tests
+using System;
+using System.Diagnostics;
+using Mono.Cecil;
+using System.Collections.Generic;
+
+public class MockAssemblyResolver : DefaultAssemblyResolver
 {
-    using System;
-    using System.Diagnostics;
-    using Mono.Cecil;
+    private readonly Dictionary<string, AssemblyDefinition> _cache = new Dictionary<string, AssemblyDefinition>();
 
-    public class MockAssemblyResolver : IAssemblyResolver
+    public override AssemblyDefinition Resolve(AssemblyNameReference name)
     {
-        #region IAssemblyResolver Members
-        public AssemblyDefinition Resolve(AssemblyNameReference name)
-        {
-            return AssemblyDefinition.ReadAssembly(name.Name + ".dll");
-        }
+        var fullName = name.FullName;
 
-        public AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
+        lock (_cache)
         {
-            throw new NotImplementedException();
-        }
-
-        public AssemblyDefinition Resolve(string fullName)
-        {
-            if (fullName == "System")
+            AssemblyDefinition definition = null;
+            if (!_cache.TryGetValue(fullName, out definition))
             {
-                var codeBase = typeof (Debug).Assembly.CodeBase.Replace("file:///", string.Empty);
-                return AssemblyDefinition.ReadAssembly(codeBase);
-            }
-            else
-            {
-                var codeBase = typeof (string).Assembly.CodeBase.Replace("file:///", string.Empty);
-                return AssemblyDefinition.ReadAssembly(codeBase);
-            }
-        }
+                if (name.Name == "System")
+                {
+                    var codeBase = typeof(Debug).Assembly.CodeBase.Replace("file:///", "");
+                    definition = AssemblyDefinition.ReadAssembly(codeBase);
+                }
+                else
+                {
+                    definition = base.Resolve(name);
+                }
 
-        public AssemblyDefinition Resolve(string fullName, ReaderParameters parameters)
-        {
-            throw new NotImplementedException();
+                _cache[fullName] = definition;
+            }
+
+            return definition;
         }
-        #endregion
     }
 }

@@ -50,17 +50,15 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             var resolver = _moduleDefinition.AssemblyResolver;
             foreach (var assemblyReference in _moduleDefinition.AssemblyReferences)
             {
-                var referenceName = assemblyReference.Name;
-
                 if (!ShouldReferenceBeIncluded(assemblyReference))
                 {
                     continue;
                 }
 
-                var assembly = resolver.Resolve(referenceName);
+                var assembly = resolver.Resolve(assemblyReference);
                 if (assembly != null)
                 {
-                    FodyEnvironment.LogInfo($"Including reference '{referenceName}'");
+                    FodyEnvironment.LogInfo($"Including reference '{assemblyReference.Name}'");
 
                     includedReferences.Add(assembly);
                 }
@@ -79,7 +77,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
                     if (!isIncluded)
                     {
-                        var referenceName = assemblyDefinition.Name.Name;
+                        var referenceName = assemblyDefinition.Name;
 
                         if (!ShouldReferenceBeIncluded(assemblyDefinition.Name))
                         {
@@ -89,7 +87,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         var assembly = resolver.Resolve(referenceName);
                         if (assembly != null)
                         {
-                            FodyEnvironment.LogInfo($"Including reference '{referenceName}', it was optimized away by the compiler but still adding it");
+                            FodyEnvironment.LogInfo($"Including reference '{referenceName.Name}', it was optimized away by the compiler but still adding it");
 
                             includedReferences.Add(assembly);
                         }
