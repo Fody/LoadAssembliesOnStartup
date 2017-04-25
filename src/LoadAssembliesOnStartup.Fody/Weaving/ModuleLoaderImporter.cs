@@ -32,12 +32,12 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             var cctor = moduleClass.Methods.FirstOrDefault(x => x.Name == ".cctor");
             if (cctor == null)
             {
-                cctor = new MethodDefinition(".cctor", attributes, moduleDefinition.Import(msCoreReferenceFinder.GetCoreTypeReference("Void")));
+                cctor = new MethodDefinition(".cctor", attributes, moduleDefinition.ImportReference(msCoreReferenceFinder.GetCoreTypeReference("Void")));
                 cctor.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
                 moduleClass.Methods.Add(cctor);
             }
 
-            var importedMethodToCall = moduleDefinition.Import(methodToCall);
+            var importedMethodToCall = moduleDefinition.ImportReference(methodToCall);
 
             var insertLocation = Math.Max(cctor.Body.Instructions.Count - 2, 0);
             cctor.Body.Instructions.Insert(insertLocation, Instruction.Create(OpCodes.Call, importedMethodToCall));

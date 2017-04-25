@@ -24,7 +24,7 @@
 	<iconUrl>https://raw.githubusercontent.com/Fody/LoadAssembliesOnStartup/develop/design/logo/logo_64.png</iconUrl>
 	
 	<dependencies>
-		<dependency id="Fody" />
-	</dependencies>	
+		<dependency id="Fody" version="2.0.2" />
+	</dependencies>
   </metadata>
 </package>
