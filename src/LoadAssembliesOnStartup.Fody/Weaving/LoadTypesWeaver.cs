@@ -45,12 +45,12 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 FodyEnvironment.LogInfo("Can't find Debug.WriteLine, won't be writing debug info during assembly loading");
             }
 
-            var loadMethod = new MethodDefinition("LoadTypesOnStartup", MethodAttributes.Assembly | MethodAttributes.Static | MethodAttributes.HideBySig, _moduleDefinition.Import(_msCoreReferenceFinder.GetCoreTypeReference("Void")));
+            var loadMethod = new MethodDefinition("LoadTypesOnStartup", MethodAttributes.Assembly | MethodAttributes.Static | MethodAttributes.HideBySig, _moduleDefinition.ImportReference(_msCoreReferenceFinder.GetCoreTypeReference("Void")));
 
             var type = _msCoreReferenceFinder.GetCoreTypeReference("Type").Resolve();
-            var typeImported = _moduleDefinition.Import(type);
+            var typeImported = _moduleDefinition.ImportReference(type);
             var getTypeFromHandleMethod = type.Methods.First(x => string.Equals(x.Name, "GetTypeFromHandle"));
-            var getTypeFromHandle = _moduleDefinition.Import(getTypeFromHandleMethod);
+            var getTypeFromHandle = _moduleDefinition.ImportReference(getTypeFromHandleMethod);
 
             var body = loadMethod.Body;
             body.SimplifyMacros();
@@ -61,7 +61,6 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 instructions.Add(Instruction.Create(OpCodes.Ret));
             }
 
-            var counter = 1;
             var referenceSelector = new ReferenceSelector(_moduleWeaver, _moduleDefinition, _configuration);
 
             // Note: we are looping reversed to easily add try/catch mechanism
@@ -86,7 +85,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                     // ==
                     //L_000a: call class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)
 
-                    var firstTypeImported = _moduleDefinition.Import(firstType);
+                    var firstTypeImported = _moduleDefinition.ImportReference(firstType);
 
                     var variable = new VariableDefinition(typeImported);
                     body.Variables.Insert(0, variable);
@@ -125,7 +124,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                             TryEnd = tryEndInstruction,
                             HandlerStart = handlerStartInstruction,
                             HandlerEnd = handlerEndInstruction,
-                            CatchType = _moduleDefinition.Import(_msCoreReferenceFinder.GetCoreTypeReference("Exception"))
+                            CatchType = _moduleDefinition.ImportReference(_msCoreReferenceFinder.GetCoreTypeReference("Exception"))
                         };
 
                         body.ExceptionHandlers.Insert(0, handler);
@@ -139,7 +138,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             //.class public abstract auto ansi sealed beforefieldinit LoadAssembliesOnStartup extends [mscorlib]System.Object
             var typeDefinition = new TypeDefinition(string.Empty, "LoadAssembliesOnStartup", TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Abstract | TypeAttributes.AutoClass | TypeAttributes.AnsiClass | TypeAttributes.Sealed | TypeAttributes.BeforeFieldInit,
-                _moduleDefinition.Import(_msCoreReferenceFinder.GetCoreTypeReference("System.Object")));
+                _moduleDefinition.ImportReference(_msCoreReferenceFinder.GetCoreTypeReference("System.Object")));
 
             typeDefinition.Methods.Add(loadMethod);
             _moduleDefinition.Types.Add(typeDefinition);
@@ -165,7 +164,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 return null;
             }
 
-            return _moduleDefinition.Import(debugWriteLineMethod);
+            return _moduleDefinition.ImportReference(debugWriteLineMethod);
         }
         #endregion
     }

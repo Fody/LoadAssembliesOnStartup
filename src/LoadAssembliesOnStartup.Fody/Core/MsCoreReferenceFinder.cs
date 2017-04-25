@@ -45,7 +45,7 @@ namespace LoadAssembliesOnStartup.Fody
             }
 
             var type = GetCoreTypeReference("System.Type").Resolve();
-            GetTypeFromHandle = _moduleWeaver.ModuleDefinition.Import(type.Methods.First(m => m.Name == "GetTypeFromHandle"));
+            GetTypeFromHandle = _moduleWeaver.ModuleDefinition.ImportReference(type.Methods.First(m => m.Name == "GetTypeFromHandle"));
         }
 
         public TypeReference GetCoreTypeReference(string typeName)
@@ -55,7 +55,7 @@ namespace LoadAssembliesOnStartup.Fody
                 var types = GetTypes();
                 var type = types.FirstOrDefault(x => string.Equals(x.Name, typeName) || string.Equals(x.FullName, typeName));
 
-                _typeReferences[typeName] = (type != null) ? _moduleWeaver.ModuleDefinition.Import(type) : null;
+                _typeReferences[typeName] = (type != null) ? _moduleWeaver.ModuleDefinition.ImportReference(type) : null;
             }
 
             return _typeReferences[typeName];
