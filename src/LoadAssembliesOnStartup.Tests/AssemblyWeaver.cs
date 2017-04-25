@@ -88,6 +88,7 @@ namespace LoadAssembliesOnStartup.Tests
                     AssemblyResolver = assemblyResolver,
                     LogError = LogError,
                     Config = XElement.Parse(@"<LoadAssembliesOnStartup WrapInTryCatch='true' />")
+                    //Config = XElement.Parse(@"<LoadAssembliesOnStartup WrapInTryCatch='true' IncludeAssemblies='' />")
                 };
 
                 weavingTask.Execute();

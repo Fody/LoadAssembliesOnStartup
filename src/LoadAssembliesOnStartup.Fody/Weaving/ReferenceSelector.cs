@@ -115,7 +115,6 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             if (_configuration.IncludeAssemblies.Any())
             {
                 var contains = _configuration.IncludeAssemblies.Any(x => string.Equals(assemblyNameLowered, x.ToLower()));
-
                 if (!contains)
                 {
                     FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is not in the included list");
@@ -127,7 +126,6 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             if (_configuration.ExcludeAssemblies.Any())
             {
                 var contains = _configuration.ExcludeAssemblies.Any(x => string.Equals(assemblyNameLowered, x.ToLower()));
-
                 if (contains)
                 {
                     FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is in the excluded list");
@@ -136,7 +134,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 return !contains;
             }
 
-            return true;
+            return _configuration.OptOut;
         }
         #endregion
     }
