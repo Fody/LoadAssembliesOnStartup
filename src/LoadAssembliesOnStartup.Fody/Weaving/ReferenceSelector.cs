@@ -20,6 +20,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             "mscorlib",
             "Anotar",
             "Catel.Fody.Attributes",
+            "Costura",
             "MethodTimer",
             "Obsolete",
             "PropertyChanged",
