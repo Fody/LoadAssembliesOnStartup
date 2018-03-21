@@ -1,74 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{801B49CF-35D8-4BE3-BAEF-FA024A42A66C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LoadAssembliesOnStartup.Fody</RootNamespace>
+    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
     <AssemblyName>LoadAssembliesOnStartup.Fody</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <RootNamespace>LoadAssembliesOnStartup.Fody</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <PackageId>LoadAssembliesOnStartup.Fody</PackageId>
+    <PackageVersion>3.0.0-alpha0001</PackageVersion>
+    <Description>Fody add-in for forcing referenced assemblies to be loaded on startup. This allows other modules to register types without actually having to using their types directly.</Description>
+    <PackageTags>load;assemblies;references;reference;force;startup;fody;ilweaving;weaving</PackageTags>
+
+    <!-- The properties below come from the FodyPackaging.props, see explanation at end of file -->
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);IncludeFodyFiles</TargetsForTfmSpecificContentInPackage>
+    <DisableFody>true</DisableFody>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <WeaverDirPath>..\$(PackageId)\bin\$(Configuration)\</WeaverDirPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\output\debug\LoadAssembliesOnStartup.Fody\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\output\release\LoadAssembliesOnStartup.Fody\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Mono.Cecil, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\FodyCecil.2.0.2\lib\net40\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\FodyCecil.2.0.2\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\FodyCecil.2.0.2\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\..\lib\FodyCecil.2.0.2\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Fody" Version="2.4.6" PrivateAssets="None" />
+    <PackageReference Include="FodyHelpers" Version="2.4.6" PrivateAssets="All" />
+    <PackageReference Update="NETStandard.Library" Version="2.0.1" />  
   </ItemGroup>
+
+<!-- 
+  Note: the code below comes from https://raw.githubusercontent.com/Fody/Fody/master/FodyPackaging/build/FodyPackaging.targets 
+  but is needed because we use 'Catel.Fody.Attributes' instead of 'Catel' as attributes project name  
+-->
+
+  <Target Name="IncludeFodyFiles">
+    <ItemGroup>
+      <NetClassicFilesToInclude Include="$(WeaverDirPath)\net4*\$(PackageId).dll" />
+      <NetClassicFilesToInclude Include="$(WeaverDirPath)\net4*\$(PackageId).pdb" />
+      <NetStandardFilesToInclude Include="$(WeaverDirPath)\netstandard2*\$(PackageId).dll" />
+      <NetStandardFilesToInclude Include="$(WeaverDirPath)\netstandard2*\$(PackageId).pdb" />
+    </ItemGroup>
+    <CreateItem Include="@(NetClassicFilesToInclude)" AdditionalMetadata="PackagePath=netclassicweaver">
+      <Output TaskParameter="Include" ItemName="TfmSpecificPackageFile" />
+    </CreateItem>
+    <CreateItem Include="@(NetStandardFilesToInclude)" AdditionalMetadata="PackagePath=netstandardweaver">
+      <Output TaskParameter="Include" ItemName="TfmSpecificPackageFile" />
+    </CreateItem>
+  </Target>
+
   <ItemGroup>
-    <Compile Include="..\SolutionAssemblyInfo.cs">
-      <Link>SolutionAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Configuration.cs" />
-    <Compile Include="Core\MsCoreReferenceFinder.cs" />
-    <Compile Include="Core\WeavingException.cs" />
-    <Compile Include="Extensions\Extensions.cs" />
-    <Compile Include="FodyEnvironment.cs" />
-    <Compile Include="ModuleWeaver.cs" />
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Weaving\LoadTypesWeaver.cs" />
-    <Compile Include="Weaving\ModuleLoaderImporter.cs" />
-    <Compile Include="Weaving\ReferenceSelector.cs" />
+    <!-- this project targets netstandard2.0 (unnecessarily) and has the below ref to work around this bug https://github.com/Microsoft/msbuild/issues/2661 -->
+    <ProjectReference Include="..\$(PackageId)\$(PackageId).csproj" PrivateAssets="All" Condition="$(TargetFramework)=='fake'" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

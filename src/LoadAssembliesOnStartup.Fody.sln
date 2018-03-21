@@ -3,14 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Fody", "LoadAssembliesOnStartup.Fody\LoadAssembliesOnStartup.Fody.csproj", "{801B49CF-35D8-4BE3-BAEF-FA024A42A66C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoadAssembliesOnStartup.Fody", "LoadAssembliesOnStartup.Fody\LoadAssembliesOnStartup.Fody.csproj", "{801B49CF-35D8-4BE3-BAEF-FA024A42A66C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{94444851-DCB1-45E1-813D-84BE58DDC23B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{E7EFD58C-46F7-496E-8FF1-9E8DFFBBA14B}"
-	ProjectSection(SolutionItems) = preProject
-		..\lib\repositories.config = ..\lib\repositories.config
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Tests", "LoadAssembliesOnStartup.Tests\LoadAssembliesOnStartup.Tests.csproj", "{E23F5CF5-5C34-4D3A-8FD0-F167C12DE9CF}"
 EndProject
@@ -21,6 +16,19 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.TestAssemblyToReference", "LoadAssembliesOnStartup.TestAssemblyToReference\LoadAssembliesOnStartup.TestAssemblyToReference.csproj", "{75DC8CCA-B289-4EF0-BAF2-7FA95D8B2DE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.TestAssemblyToReferenceWithIgnores", "LoadAssembliesOnStartup.TestAssemblyToReferenceWithIgnores\LoadAssembliesOnStartup.TestAssemblyToReferenceWithIgnores.csproj", "{ACD018C2-CFBE-4AF3-92E8-53BAED5A2C06}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{EB61F600-4861-47A2-8FB6-D465E362DCB6}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.build.project.props = Directory.build.project.props
+		Directory.build.props = Directory.build.props
+		Directory.build.shared.explicit.props = Directory.build.shared.explicit.props
+		Directory.build.shared.implicit.props = Directory.build.shared.implicit.props
+		Directory.build.targets = Directory.build.targets
+		LoadAssembliesOnStartup.Fody.sln.DotSettings = LoadAssembliesOnStartup.Fody.sln.DotSettings
+		nuget.config = nuget.config
+		Settings.StyleCop = Settings.StyleCop
+		SolutionAssemblyInfo.cs = SolutionAssemblyInfo.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,5 +67,8 @@ Global
 		{2107A58E-8545-4610-A0C2-BE322E080E86} = {1CF1A83D-E73A-405F-9970-9827C7C3335D}
 		{75DC8CCA-B289-4EF0-BAF2-7FA95D8B2DE7} = {1CF1A83D-E73A-405F-9970-9827C7C3335D}
 		{ACD018C2-CFBE-4AF3-92E8-53BAED5A2C06} = {1CF1A83D-E73A-405F-9970-9827C7C3335D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D70B5D99-B2F0-4EFE-A415-34E449D96EFC}
 	EndGlobalSection
 EndGlobal
