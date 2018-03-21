@@ -45,7 +45,8 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 FodyEnvironment.LogInfo("Can't find Debug.WriteLine, won't be writing debug info during assembly loading");
             }
 
-            var loadMethod = new MethodDefinition("LoadTypesOnStartup", MethodAttributes.Assembly | MethodAttributes.Static | MethodAttributes.HideBySig, _moduleDefinition.ImportReference(_msCoreReferenceFinder.GetCoreTypeReference("Void")));
+            var voidType = _msCoreReferenceFinder.GetCoreTypeReference("Void");
+            var loadMethod = new MethodDefinition("LoadTypesOnStartup", MethodAttributes.Assembly | MethodAttributes.Static | MethodAttributes.HideBySig, _moduleDefinition.ImportReference(voidType));
 
             var type = _msCoreReferenceFinder.GetCoreTypeReference("Type").Resolve();
             var typeImported = _moduleDefinition.ImportReference(type);
