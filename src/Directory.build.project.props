@@ -1,0 +1,14 @@
+<Project>
+  <!-- 
+    This file applies to all projects automatically, this file contains all the project specific data
+  -->
+
+  <PropertyGroup>
+    <Authors>geertvanhorrik,simoncropp</Authors>
+    <PackageIconUrl>https://github.com/Fody/LoadAssembliesOnStartup/raw/develop/design/logo/logo_64.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/Fody/LoadAssembliesOnStartup</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/Fody/LoadAssembliesOnStartup/blob/develop/LICENSE</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/Fody/LoadAssembliesOnStartup</RepositoryUrl>
+  </PropertyGroup>
+   
+</Project>

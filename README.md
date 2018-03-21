@@ -1,11 +1,16 @@
+[![Chat on Gitter](https://img.shields.io/gitter/room/fody/fody.svg?style=flat)](https://gitter.im/Fody/Fody)
+[![NuGet Status](http://img.shields.io/nuget/v/LoadAssembliesOnStartup.Fody.svg?style=flat)](https://www.nuget.org/packages/LoadAssembliesOnStartup.Fody/)
+
 LoadAssembliesOnStartup
 =======================
 
 ![Icon](design/logo/logo_64.png)
 
+
 ### This is an add-in for [Fody](https://github.com/Fody/Fody/) 
 
 Loads all the references on startup by actually using the types in the module initializer.
+
 
 ### NuGet package
 
@@ -14,6 +19,7 @@ Available here: <a href="http://nuget.org/packages/LoadAssembliesOnStartup.Fody"
 To Install from the Nuget Package Manager Console 
     
     PM> Install-Package LoadAssembliesOnStartup.Fody
+
 
 ## How it works
 
@@ -33,9 +39,11 @@ it is possible to let this plugin take care of this. It will add the following c
 
 This will ensure that an assembly is actually being loaded into the AppDomain (which is **not** the same as Assembly.LoadFrom).
 
+
 ## Configuration options
 
 All config options are accessible by modifying the `LoadAssembliesOnStartup` node in *FodyWeavers.xml*.
+
 
 ### ExcludeAssemblies
 
@@ -59,7 +67,8 @@ As an element with items delimited by a newline.
 Or as a attribute with items delimited by a pipe `|`.
 
     <LoadAssembliesOnStartup ExcludeAssemblies='Foo|Bar' />
-        
+
+
 ### IncludeAssemblies
 
 A list of assembly names to include from the default action of "embed all Copy Local references".
@@ -83,6 +92,7 @@ Or as a attribute with items delimited by a pipe `|`.
 
     <LoadAssembliesOnStartup IncludeAssemblies='Foo|Bar' />
 
+
 ### ExcludeOptimizedAssemblies
 
 By default, this weaver will include references that are optimized away by the compiler. This can happen when you only use interfaces from a reference. Types can still be excluded using the `ExcludeAssemblies` option.
@@ -90,6 +100,7 @@ By default, this weaver will include references that are optimized away by the c
 To disable all the optimized assemblies (default .NET compiler behavior), use the option below:
 
 	<LoadAssembliesOnStartup ExcludeOptimizedAssemblies='true' />
+
 
 ### WrapInTryCatch
 

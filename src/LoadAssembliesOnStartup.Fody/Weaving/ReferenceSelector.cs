@@ -44,6 +44,10 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Gets the included references.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<AssemblyDefinition> GetIncludedReferences()
         {
             var includedReferences = new List<AssemblyDefinition>();
