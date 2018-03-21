@@ -6,38 +6,65 @@
 namespace LoadAssembliesOnStartup.Fody
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Xml.Linq;
+    using global::Fody;
     using Weaving;
     using Mono.Cecil;
     using Mono.Cecil.Cil;
 
-    public class ModuleWeaver
+    public class ModuleWeaver : BaseModuleWeaver
     {
         public ModuleWeaver()
         {
             // Init logging delegates to make testing easier
-            LogInfo = s => { };
-            LogWarning = s => { };
-            LogError = s => { };
+            LogDebug = s => { Debug.WriteLine(s); };
+            LogInfo = s => { Debug.WriteLine(s); };
+            LogWarning = s => { Debug.WriteLine(s); };
+            LogWarningPoint = (s, p) => { Debug.WriteLine(s); };
+            LogError = s => { Debug.WriteLine(s); };
+            LogErrorPoint = (s, p) => { Debug.WriteLine(s); };
         }
 
-        public XElement Config { get; set; }
-
-        public Action<string> LogInfo { get; set; }
-        public Action<string> LogWarning { get; set; }
-        public Action<string, SequencePoint> LogWarningPoint { get; set; }
-        public Action<string> LogError { get; set; }
-        public Action<string, SequencePoint> LogErrorPoint { get; set; }
-
         public IAssemblyResolver AssemblyResolver { get; set; }
-        public ModuleDefinition ModuleDefinition { get; set; }
-        public string References { get; set; }
 
-        public void Execute()
+        public override bool ShouldCleanReference => true;
+
+        public override IEnumerable<string> GetAssembliesForScanning()
+        {
+            var assemblies = new List<string>();
+
+            // For now just return all references
+            assemblies.Add("netstandard");
+            assemblies.AddRange(ModuleDefinition.AssemblyReferences.Select(x => x.Name));
+
+            return assemblies;
+        }
+
+        public override void Execute()
         {
             try
             {
+#if DEBUG
+                if (!Debugger.IsAttached)
+                {
+                    Debugger.Launch();
+
+                    //FodyEnvironment.LogDebug = CreateLoggingCallback(LogDebug);
+                    //FodyEnvironment.LogInfo = CreateLoggingCallback(LogInfo);
+                    //FodyEnvironment.LogWarning = CreateLoggingCallback(LogWarning);
+                    //FodyEnvironment.LogError = CreateLoggingCallback(LogError);
+                }
+#endif
+
+                // First of all, set the assembly resolver
+                if (AssemblyResolver == null)
+                {
+                    AssemblyResolver = ModuleDefinition.AssemblyResolver;
+                }
+
                 InitializeEnvironment();
 
                 // Read config

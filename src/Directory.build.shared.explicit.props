@@ -10,6 +10,7 @@
     <Page Remove="Platforms\**\*.xaml" />
     <!-- This is here so that the conditionally included files below are all visible in VS -->
     <None Include="Platforms\**\*.*;Resources\**\*.*" />
+    <Resource Include="Resources\Images\*.png" />
   </ItemGroup>
 
   <ItemGroup>

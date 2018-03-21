@@ -148,13 +148,19 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
         private MethodReference FindDebugWriteLineMethod()
         {
-            var debugTypeReference = _msCoreReferenceFinder.GetCoreTypeReference("Debug").Resolve();
+            var debugTypeReference = _msCoreReferenceFinder.GetCoreTypeReference("Debug");
             if (debugTypeReference == null)
             {
                 return null;
             }
 
-            var debugWriteLineMethod = (from method in debugTypeReference.Methods
+            var resolvedDebugTypeReference = debugTypeReference.Resolve();
+            if (resolvedDebugTypeReference == null)
+            {
+                return null;
+            }
+
+            var debugWriteLineMethod = (from method in resolvedDebugTypeReference.Methods
                                         where string.Equals(method.Name, "WriteLine") &&
                                               method.Parameters.Count == 1 &&
                                               string.Equals(method.Parameters[0].ParameterType.Name, "String")
