@@ -65,10 +65,15 @@ namespace LoadAssembliesOnStartup.Fody
                     AssemblyResolver = ModuleDefinition.AssemblyResolver;
                 }
 
+                // Clear cache because static members will be re-used over multiple builds over multiple systems
+                CacheHelper.ClearAllCaches();
+
                 InitializeEnvironment();
 
                 // Read config
                 var configuration = new Configuration(Config);
+
+                LogInfo($"LoadAssembliesOnStartup.Fody v{GetType().Assembly.GetName().Version}");
 
                 // Set up the basics
                 var msCoreReferenceFinder = new MsCoreReferenceFinder(this, ModuleDefinition.AssemblyResolver);

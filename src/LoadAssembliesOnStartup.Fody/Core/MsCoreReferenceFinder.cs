@@ -7,32 +7,33 @@
 
 namespace LoadAssembliesOnStartup.Fody
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Mono.Cecil;
 
     public class MsCoreReferenceFinder
     {
-        #region Fields
-        private readonly IAssemblyResolver _assemblyResolver;
+        public const string CompilerGeneratedAttributeTypeName = "System.Runtime.CompilerServices.CompilerGeneratedAttribute";
+        public const string GeneratedCodeAttributeTypeName = "System.CodeDom.Compiler.GeneratedCodeAttribute";
+        public const string DebuggerNonUserCodeAttributeTypeName = "System.Diagnostics.DebuggerNonUserCodeAttribute";
+
         private readonly ModuleWeaver _moduleWeaver;
+        private readonly IAssemblyResolver _assemblyResolver;
 
         private readonly IDictionary<string, TypeReference> _typeReferences = new Dictionary<string, TypeReference>();
-        #endregion
 
-        #region Constructors
+        public MethodReference GetTypeFromHandle;
+        public TypeReference GeneratedCodeAttribute;
+        public TypeReference CompilerGeneratedAttribute;
+        public TypeReference DebuggerNonUserCodeAttribute;
+
         public MsCoreReferenceFinder(ModuleWeaver moduleWeaver, IAssemblyResolver assemblyResolver)
         {
             _moduleWeaver = moduleWeaver;
             _assemblyResolver = assemblyResolver;
         }
-        #endregion
 
-        #region Properties
-        public MethodReference GetTypeFromHandle { get; private set; }
-        #endregion
-
-        #region Methods
         public void Execute()
         {
             var msCoreLibDefinition = _assemblyResolver.Resolve(new AssemblyNameReference("mscorlib", null));
@@ -46,6 +47,10 @@ namespace LoadAssembliesOnStartup.Fody
 
             var type = GetCoreTypeReference("System.Type").Resolve();
             GetTypeFromHandle = _moduleWeaver.ModuleDefinition.ImportReference(type.Methods.First(m => m.Name == "GetTypeFromHandle"));
+
+            GeneratedCodeAttribute = GetCoreTypeReference(GeneratedCodeAttributeTypeName);
+            CompilerGeneratedAttribute = GetCoreTypeReference(CompilerGeneratedAttributeTypeName);
+            DebuggerNonUserCodeAttribute = GetCoreTypeReference(DebuggerNonUserCodeAttributeTypeName);
         }
 
         public TypeReference GetCoreTypeReference(string typeName)
@@ -63,13 +68,20 @@ namespace LoadAssembliesOnStartup.Fody
 
         private IEnumerable<TypeReference> GetTypes()
         {
-            var msCoreLibDefinition = _assemblyResolver.Resolve(new AssemblyNameReference("mscorlib", null));
+            var msCoreLibDefinition = _assemblyResolver.Resolve("mscorlib");
             var msCoreTypes = msCoreLibDefinition.MainModule.Types.Cast<TypeReference>().ToList();
 
             var objectDefinition = msCoreTypes.FirstOrDefault(x => string.Equals(x.Name, "Object"));
             if (objectDefinition == null)
             {
-                msCoreTypes.AddRange(GetWinRtTypes());
+                if (msCoreLibDefinition.IsNetStandardLibrary())
+                {
+                    msCoreTypes.AddRange(GetNetStandardTypes());
+                }
+                else
+                {
+                    msCoreTypes.AddRange(GetWinRtTypes());
+                }
             }
             else
             {
@@ -81,7 +93,7 @@ namespace LoadAssembliesOnStartup.Fody
 
         private IEnumerable<TypeReference> GetDotNetTypes()
         {
-            var systemDefinition = _assemblyResolver.Resolve(new AssemblyNameReference("System", null));
+            var systemDefinition = _assemblyResolver.Resolve("System");
             var systemTypes = systemDefinition.MainModule.Types;
 
             return systemTypes;
@@ -89,11 +101,27 @@ namespace LoadAssembliesOnStartup.Fody
 
         private IEnumerable<TypeReference> GetWinRtTypes()
         {
-            var systemRuntime = _assemblyResolver.Resolve(new AssemblyNameReference("System.Runtime", null));
+            var systemRuntime = _assemblyResolver.Resolve("System.Runtime");
             var systemRuntimeTypes = systemRuntime.MainModule.Types;
 
             return systemRuntimeTypes;
         }
-        #endregion
+
+        private IEnumerable<TypeReference> GetNetStandardTypes()
+        {
+            // Load all assemblies, it's slower but then we are sure we have all types
+            var allTypes = new List<TypeReference>();
+
+            foreach (var assembly in _moduleWeaver.ModuleDefinition.AssemblyReferences)
+            {
+                var resolvedAssembly = _assemblyResolver.Resolve(assembly);
+                if ((resolvedAssembly != null) && resolvedAssembly.IsNetStandardLibrary())
+                {
+                    allTypes.AddRange(resolvedAssembly.MainModule.Types);
+                }
+            }
+
+            return allTypes;
+        }
     }
 }
