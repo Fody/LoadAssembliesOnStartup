@@ -4,6 +4,7 @@
   -->
   
   <PropertyGroup>
+    <NoWarn>$(NoWarn);CS1591;CS1998</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
