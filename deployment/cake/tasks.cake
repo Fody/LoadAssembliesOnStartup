@@ -12,7 +12,24 @@ Task("RestorePackages")
 	{
 		Information("Restoring packages for {0}", solution);
 		
-		NuGetRestore(solution);
+        var nuGetRestoreSettings = new NuGetRestoreSettings();
+
+        if (!string.IsNullOrWhiteSpace(nuGetPackageSources))
+        {
+            var sources = new List<string>();
+
+            foreach (var splitted in nuGetPackageSources.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                sources.Add(splitted);
+            }
+            
+            if (sources.Count > 0)
+            {
+                nuGetRestoreSettings.Source = sources;
+            }
+        }
+
+        NuGetRestore(solution, nuGetRestoreSettings);
 	}
 });
 
