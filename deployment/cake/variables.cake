@@ -10,6 +10,7 @@ var solutionName = GetContinuaCIVariable("SolutionName", string.Format("{0}.sln"
 var configurationName = GetContinuaCIVariable("ConfigurationName", "Release");
 var outputRootDirectory = GetContinuaCIVariable("OutputRootDirectory", string.Format("./output/{0}", configurationName));
 
+var nuGetPackageSources = GetContinuaCIVariable("NuGetPackageSources", string.Empty);
 var repositoryUrl = GetContinuaCIVariable("RepositoryUrl", defaultRepositoryUrl);
 var repositoryBranchName = GetContinuaCIVariable("RepositoryBranchName", string.Empty);
 var repositoryCommitId = GetContinuaCIVariable("RepositoryCommitId", string.Empty);

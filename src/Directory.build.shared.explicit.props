@@ -10,6 +10,7 @@
     <Page Remove="Platforms\**\*.xaml" />
     <!-- This is here so that the conditionally included files below are all visible in VS -->
     <None Include="Platforms\**\*.*;Resources\**\*.*" />
+    <Resource Include="Resources\Fonts\*.ttf" />
     <Resource Include="Resources\Images\*.png" />
   </ItemGroup>
 
@@ -32,7 +33,7 @@
 
   <!-- .NET Standard 2.0 -->
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <DefineConstants>NETSTANDARD;NETSTANDARD2_0;NS;NS20</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETSTANDARD;NETSTANDARD2_0;NS;NS20</DefineConstants>
   </PropertyGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
@@ -43,15 +44,15 @@
 
   <!-- .NET 4.6 -->
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <DefineConstants>NET;NET46;NET460</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET;NET46;NET460</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <DefineConstants>NET;NET46;NET461</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET;NET46;NET461</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net462' ">
-    <DefineConstants>NET;NET46;NET462</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET;NET46;NET462</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' OR '$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'net462'">
@@ -62,7 +63,7 @@
 
   <!-- .NET 4.7 -->
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net47' ">
-    <DefineConstants>NET;NET47;NET470</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET;NET47;NET470</DefineConstants>
   </PropertyGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net47' ">
@@ -73,7 +74,7 @@
   
   <!-- UAP 10.0 -->
   <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
-    <DefineConstants>UAP;NETFX_CORE</DefineConstants>
+    <DefineConstants>$(DefineConstants);UAP;NETFX_CORE</DefineConstants>
   </PropertyGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
