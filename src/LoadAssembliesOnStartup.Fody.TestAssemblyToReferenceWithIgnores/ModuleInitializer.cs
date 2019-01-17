@@ -1,5 +1,5 @@
 ﻿using Catel.IoC;
-using LoadAssembliesOnStartup.TestAssemblyToReferenceWithIgnores.Services;
+using LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores.Services;
 
 /// <summary>
 /// Used by the ModuleInit. All code inside the Initialize method is ran as soon as the assembly is loaded.

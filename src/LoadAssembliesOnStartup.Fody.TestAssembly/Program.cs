@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace LoadAssembliesOnStartup.TestAssembly
+namespace LoadAssembliesOnStartup.Fody.TestAssembly
 {
     using System;
     using Catel.IoC;

@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace LoadAssembliesOnStartup.Tests
+namespace LoadAssembliesOnStartup.Fody.Tests
 {
     using System;
     using Catel.Reflection;
@@ -17,10 +17,10 @@ namespace LoadAssembliesOnStartup.Tests
         [TestCase]
         public void HasRegisteredTypesInIncludedReferences()
         {
-            AssemblyWeaver.Initialize();
-
             // Load program to load assembly
-            var programType = AssemblyWeaver.Assembly.GetType("LoadAssembliesOnStartup.TestAssembly.Program");
+            var assembly = AssemblyWeaver.Instance.Assembly;
+
+            var programType = assembly.GetType("LoadAssembliesOnStartup.Fody.TestAssembly.Program");
             var programInstance = Activator.CreateInstance(programType);
 
             var propertyInfo = programType.GetPropertyEx("IsRightAssemblyLoaded", true, true);

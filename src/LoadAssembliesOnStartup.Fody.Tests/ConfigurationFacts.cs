@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-namespace LoadAssembliesOnStartup.Tests
+namespace LoadAssembliesOnStartup.Fody.Tests
 {
     using System.Xml.Linq;
     using Catel.Tests;
