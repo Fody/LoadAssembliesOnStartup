@@ -120,6 +120,11 @@ To include system assemblies, use the option below:
 
 	<LoadAssembliesOnStartup ExcludeSystemAssemblies='false' />
 
+The following wildcards will be used:
+
+- Mono.*
+- System.*
+
 
 ### ExcludeOptimizedAssemblies
 

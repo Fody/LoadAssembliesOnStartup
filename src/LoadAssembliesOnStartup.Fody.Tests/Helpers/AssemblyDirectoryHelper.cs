@@ -1,13 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AssemblyDirectoryHelper.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2017 Catel development team. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace LoadAssembliesOnStartup.Fody.Tests
+﻿namespace LoadAssembliesOnStartup.Fody.Tests
 {
     using System;
+    using Catel.IO;
 
     internal static class AssemblyDirectoryHelper
     {
@@ -15,6 +9,11 @@ namespace LoadAssembliesOnStartup.Fody.Tests
         {
             var directory = AppDomain.CurrentDomain.BaseDirectory;
             return directory;
+        }
+
+        public static string Resolve(string fileName)
+        {
+            return Path.Combine(GetCurrentDirectory(), fileName);
         }
     }
 }

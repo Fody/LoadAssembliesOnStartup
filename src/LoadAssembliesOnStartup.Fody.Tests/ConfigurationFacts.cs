@@ -109,6 +109,28 @@ Bar
         }
 
         [TestCase]
+        public void ExcludeSystemAssemblies()
+        {
+            var xElement = XElement.Parse(@"
+<LoadAssembliesOnStartup ExcludeSystemAssemblies='false' />");
+
+            var config = new Configuration(xElement);
+
+            Assert.AreEqual(false, config.ExcludeSystemAssemblies);
+        }
+
+        [TestCase]
+        public void ExcludePrivateAssemblies()
+        {
+            var xElement = XElement.Parse(@"
+<LoadAssembliesOnStartup ExcludePrivateAssemblies='false' />");
+
+            var config = new Configuration(xElement);
+
+            Assert.AreEqual(false, config.ExcludePrivateAssemblies);
+        }
+
+        [TestCase]
         public void ExcludeOptimizedAssemblies()
         {
             var xElement = XElement.Parse(@"

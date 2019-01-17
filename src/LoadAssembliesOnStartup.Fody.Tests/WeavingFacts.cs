@@ -18,13 +18,35 @@ namespace LoadAssembliesOnStartup.Fody.Tests
         public void HasRegisteredTypesInIncludedReferences()
         {
             // Load program to load assembly
-            var assembly = AssemblyWeaver.Instance.Assembly;
+            var assemblyInfo = AssemblyWeaver.Instance.GetAssembly(@"<LoadAssembliesOnStartup />");
 
-            var programType = assembly.GetType("LoadAssembliesOnStartup.Fody.TestAssembly.Program");
+            var programType = assemblyInfo.Assembly.GetType("LoadAssembliesOnStartup.Fody.TestAssembly.Program");
             var programInstance = Activator.CreateInstance(programType);
 
             var propertyInfo = programType.GetPropertyEx("IsRightAssemblyLoaded", true, true);
             Assert.IsTrue((bool)propertyInfo.GetValue(null, null));
+        }
+
+        [Test]
+        public void ExcludesSystemAssemblies()
+        {
+            var assemblyInfo = AssemblyWeaver.Instance.GetAssembly(@"<LoadAssembliesOnStartup ExcludeSystemAssemblies='true' />");
+
+            ApprovalHelper.AssertIlCode(assemblyInfo.AfterAssemblyPath, nameof(ExcludesSystemAssemblies));
+        }
+
+        [Test]
+        public void IncludesSystemAssemblies()
+        {
+            var assemblyInfo = AssemblyWeaver.Instance.GetAssembly(@"<LoadAssembliesOnStartup ExcludeSystemAssemblies='false' />");
+
+            ApprovalHelper.AssertIlCode(assemblyInfo.AfterAssemblyPath, nameof(ExcludesSystemAssemblies));
+        }
+
+        [Test]
+        public void ExcludesPrivateAssemblies()
+        {
+            // Not sure yet how to test...
         }
 
         //[TestCase]
