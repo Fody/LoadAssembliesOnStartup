@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:attribute name="ExcludeAssemblies" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>A list of assembly names to exclude from loading at startup, delimited with line breaks. This will process all assemblies except these assemblies.</xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+
+  <xs:attribute name="IncludeAssemblies" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>A list of assembly names to include from loading at startup, delimited with line breaks. This will process only these these assemblies.</xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+
+  <xs:attribute name="ExcludeOptimizedAssemblies" type="xs:boolean">
+    <xs:annotation>
+      <xs:documentation>Exclude assemblies that are optimized away by the compiler. The default value is <c>false</c>, so optimized assemblies will still be included.</xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+
+  <xs:attribute name="WrapInTryCatch" type="xs:boolean">
+    <xs:annotation>
+      <xs:documentation>Wrap the assembly loading in a try - catch. The default value is <c>false</c>.</xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+</xs:complexType>
