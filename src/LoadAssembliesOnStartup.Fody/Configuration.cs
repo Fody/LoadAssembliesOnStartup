@@ -17,6 +17,8 @@ namespace LoadAssembliesOnStartup.Fody
         public Configuration(XElement config)
         {
             OptOut = true;
+            ExcludePrivateAssemblies = true;
+            ExcludeSystemAssemblies = true;
             IncludeAssemblies = new List<string>();
             ExcludeAssemblies = new List<string>();
 
@@ -32,6 +34,8 @@ namespace LoadAssembliesOnStartup.Fody
 
             ReadList(config, nameof(ExcludeAssemblies), ExcludeAssemblies);
             ReadList(config, nameof(IncludeAssemblies), IncludeAssemblies);
+            ReadBool(config, nameof(ExcludePrivateAssemblies), x => ExcludePrivateAssemblies = x);
+            ReadBool(config, nameof(ExcludeSystemAssemblies), x => ExcludeSystemAssemblies = x);
             ReadBool(config, nameof(ExcludeOptimizedAssemblies), x => ExcludeOptimizedAssemblies = x);
             ReadBool(config, nameof(WrapInTryCatch), x => WrapInTryCatch = x);
 

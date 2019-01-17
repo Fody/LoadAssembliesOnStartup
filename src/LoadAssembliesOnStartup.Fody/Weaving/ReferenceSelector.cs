@@ -26,6 +26,12 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             "PropertyChanged",
             "Microsoft.CSharp",
         });
+
+        private static readonly List<string> SystemAssemblyPrefixes = new List<string>(new[]
+        {
+            "Mono.",
+            "System."
+        });
         #endregion
 
         #region Fields
@@ -137,6 +143,33 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 }
 
                 return !contains;
+            }
+
+            if (_configuration.ExcludeSystemAssemblies)
+            {
+                foreach (var systemAssemblyPrefix in SystemAssemblyPrefixes)
+                {
+                    // Special case: System.dll, we don't want to include "System" to the prefixes, that would be too strict
+                    if (assemblyName.IndexOf(systemAssemblyPrefix, StringComparison.OrdinalIgnoreCase) == 0 ||
+                        assemblyName.Equals("System", StringComparison.OrdinalIgnoreCase))
+                    {
+                        FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is a system assembly");
+                        return false;
+                    }
+                 }
+            }
+
+            if (_configuration.ExcludePrivateAssemblies)
+            {
+                // TODO: How to determine private assemblies, do we have access to the csproj?
+                //foreach (var systemAssemblyPrefix in SystemAssemblyPrefixes)
+                //{
+                //    if (assemblyNameLowered.IndexOf(systemAssemblyPrefix, StringComparison.OrdinalIgnoreCase) == 0)
+                //    {
+                //        FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is a system assembly");
+                //        return false;
+                //    }
+                //}
             }
 
             return _configuration.OptOut;
