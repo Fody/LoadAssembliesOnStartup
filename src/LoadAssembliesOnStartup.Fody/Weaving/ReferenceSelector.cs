@@ -161,6 +161,10 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             if (_configuration.ExcludePrivateAssemblies)
             {
+                //if (IsPrivateReference(assemblyName))
+                //{
+
+                //}
                 // TODO: How to determine private assemblies, do we have access to the csproj?
                 //foreach (var systemAssemblyPrefix in SystemAssemblyPrefixes)
                 //{
@@ -174,6 +178,11 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             return _configuration.OptOut;
         }
+
+        //private bool IsPrivateReference()
+        //{
+
+        //}
         #endregion
     }
 }

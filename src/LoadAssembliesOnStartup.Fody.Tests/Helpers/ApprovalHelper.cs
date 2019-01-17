@@ -13,9 +13,9 @@
     public static class ApprovalHelper
     {
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void AssertIlCode(string assemblyFileName, [CallerFilePath]string expectedResourceName = "")
+        public static void AssertIlCode(string assemblyFileName, [CallerMemberName]string callerMemberName = "")
         {
-            var slug = expectedResourceName.GetSlug();
+            var slug = callerMemberName.GetSlug();
 
             var assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyFileName);
             var loadAssembliesOnStartupTypeDefinition = assemblyDefinition.MainModule.GetType("LoadAssembliesOnStartup");

@@ -50,7 +50,7 @@ namespace LoadAssembliesOnStartup.Fody
 #if DEBUG
                 if (!Debugger.IsAttached)
                 {
-                    Debugger.Launch();
+                    //Debugger.Launch();
 
                     //FodyEnvironment.LogDebug = CreateLoggingCallback(LogDebug);
                     //FodyEnvironment.LogInfo = CreateLoggingCallback(LogInfo);

@@ -16,6 +16,15 @@ namespace LoadAssembliesOnStartup.Fody.TestAssembly
     {
         #region Methods
 
+        public static void MyFileSystemTest()
+        {
+            var typeToLoad = typeof(Orc.FileSystem.DirectoryService);
+
+#if !DEBUG
+            Console.WriteLine(typeToLoad);
+#endif
+        }
+
         public static void ExampleCallForIlInspection()
         {
             //Debug.WriteLine("Loading assembly TestAssemblyToReference");
