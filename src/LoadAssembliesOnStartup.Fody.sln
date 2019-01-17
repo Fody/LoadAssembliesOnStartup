@@ -7,15 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoadAssembliesOnStartup.Fod
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{94444851-DCB1-45E1-813D-84BE58DDC23B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Tests", "LoadAssembliesOnStartup.Tests\LoadAssembliesOnStartup.Tests.csproj", "{E23F5CF5-5C34-4D3A-8FD0-F167C12DE9CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Fody.Tests", "LoadAssembliesOnStartup.Fody.Tests\LoadAssembliesOnStartup.Fody.Tests.csproj", "{E23F5CF5-5C34-4D3A-8FD0-F167C12DE9CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{1CF1A83D-E73A-405F-9970-9827C7C3335D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.TestAssembly", "LoadAssembliesOnStartup.TestAssembly\LoadAssembliesOnStartup.TestAssembly.csproj", "{2107A58E-8545-4610-A0C2-BE322E080E86}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Fody.TestAssembly", "LoadAssembliesOnStartup.Fody.TestAssembly\LoadAssembliesOnStartup.Fody.TestAssembly.csproj", "{2107A58E-8545-4610-A0C2-BE322E080E86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.TestAssemblyToReference", "LoadAssembliesOnStartup.TestAssemblyToReference\LoadAssembliesOnStartup.TestAssemblyToReference.csproj", "{75DC8CCA-B289-4EF0-BAF2-7FA95D8B2DE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Fody.TestAssemblyToReference", "LoadAssembliesOnStartup.Fody.TestAssemblyToReference\LoadAssembliesOnStartup.Fody.TestAssemblyToReference.csproj", "{75DC8CCA-B289-4EF0-BAF2-7FA95D8B2DE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.TestAssemblyToReferenceWithIgnores", "LoadAssembliesOnStartup.TestAssemblyToReferenceWithIgnores\LoadAssembliesOnStartup.TestAssemblyToReferenceWithIgnores.csproj", "{ACD018C2-CFBE-4AF3-92E8-53BAED5A2C06}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores", "LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores\LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores.csproj", "{ACD018C2-CFBE-4AF3-92E8-53BAED5A2C06}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{EB61F600-4861-47A2-8FB6-D465E362DCB6}"
 	ProjectSection(SolutionItems) = preProject
