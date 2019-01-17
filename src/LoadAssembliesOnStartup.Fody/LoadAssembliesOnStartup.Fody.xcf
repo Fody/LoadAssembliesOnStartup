@@ -18,6 +18,22 @@
     </xs:annotation>
   </xs:attribute>
 
+  <xs:attribute name="ExcludePrivateAssemblies" type="xs:boolean">
+    <xs:annotation>
+      <xs:documentation>
+        Exclude private assemblies in modern SDK projects (e.g. PackageReference PrivateAssets='all' />). The default value is <c>true</c>.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+
+  <xs:attribute name="ExcludeSystemAssemblies" type="xs:boolean">
+    <xs:annotation>
+      <xs:documentation>
+        Exclude system assemblies (e.g. System.Runtime.Serialization). The default value is <c>true</c>.
+      </xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+  
   <xs:attribute name="WrapInTryCatch" type="xs:boolean">
     <xs:annotation>
       <xs:documentation>Wrap the assembly loading in a try - catch. The default value is <c>false</c>.</xs:documentation>
