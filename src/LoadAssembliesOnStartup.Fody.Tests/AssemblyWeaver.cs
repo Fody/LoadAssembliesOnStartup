@@ -86,11 +86,16 @@ public class AssemblyWeaver
 
             using (var moduleDefinition = ModuleDefinition.ReadModule(assemblyInfo.BeforeAssemblyPath, readerParameters))
             {
+                var projectName = Path.GetFileName(assemblyInfo.BeforeAssemblyPath).Replace(".dll", string.Empty);
+                var relativeCsProjectFilePath = Path.Combine(Directory.GetParent(assemblyInfo.BeforeAssemblyPath).FullName, "..", "..", "..", "..", "src", projectName, $"{projectName}.csproj");
+                var csProjectFilePath = Path.GetFullPath(relativeCsProjectFilePath);
+
                 var weavingTask = new ModuleWeaver
                 {
                     Config = XElement.Parse(configString),
                     ModuleDefinition = moduleDefinition,
                     AssemblyResolver = assemblyResolver,
+                    ProjectFilePath = csProjectFilePath,
                     LogError = (x) =>
                     {
                         assemblyInfo.Errors.Add(x);

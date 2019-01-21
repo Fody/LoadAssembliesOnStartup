@@ -103,6 +103,7 @@ namespace LoadAssembliesOnStartup.Fody
             FodyEnvironment.AssemblyResolver = AssemblyResolver;
 
             FodyEnvironment.Config = Config;
+            FodyEnvironment.LogDebug = LogDebug;
             FodyEnvironment.LogInfo = LogInfo;
             FodyEnvironment.LogWarning = LogWarning;
             FodyEnvironment.LogWarningPoint = LogWarningPoint;
