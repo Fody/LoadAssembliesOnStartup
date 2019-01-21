@@ -24,13 +24,13 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                                                 | MethodAttributes.RTSpecialName;
 
             var moduleClass = moduleDefinition.Types.FirstOrDefault(x => x.Name == "<Module>");
-            if (moduleClass == null)
+            if (moduleClass is null)
             {
                 throw new WeavingException("Found no module class!");
             }
 
             var cctor = moduleClass.Methods.FirstOrDefault(x => x.Name == ".cctor");
-            if (cctor == null)
+            if (cctor is null)
             {
                 cctor = new MethodDefinition(".cctor", attributes, moduleDefinition.ImportReference(msCoreReferenceFinder.GetCoreTypeReference("Void")));
                 cctor.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));

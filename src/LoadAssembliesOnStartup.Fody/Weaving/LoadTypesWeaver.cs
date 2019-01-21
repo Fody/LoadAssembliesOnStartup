@@ -40,7 +40,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         public MethodDefinition Execute()
         {
             var debugWriteLineMethod = FindDebugWriteLineMethod();
-            if (debugWriteLineMethod == null)
+            if (debugWriteLineMethod is null)
             {
                 FodyEnvironment.LogInfo("Can't find Debug.WriteLine, won't be writing debug info during assembly loading");
             }
@@ -150,13 +150,13 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         private MethodReference FindDebugWriteLineMethod()
         {
             var debugTypeReference = _msCoreReferenceFinder.GetCoreTypeReference("Debug");
-            if (debugTypeReference == null)
+            if (debugTypeReference is null)
             {
                 return null;
             }
 
             var resolvedDebugTypeReference = debugTypeReference.Resolve();
-            if (resolvedDebugTypeReference == null)
+            if (resolvedDebugTypeReference is null)
             {
                 return null;
             }
@@ -166,7 +166,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                                               method.Parameters.Count == 1 &&
                                               string.Equals(method.Parameters[0].ParameterType.Name, "String")
                                         select method).FirstOrDefault();
-            if (debugWriteLineMethod == null)
+            if (debugWriteLineMethod is null)
             {
                 return null;
             }

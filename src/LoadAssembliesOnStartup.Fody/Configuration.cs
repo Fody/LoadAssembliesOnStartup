@@ -22,7 +22,7 @@ namespace LoadAssembliesOnStartup.Fody
             IncludeAssemblies = new List<string>();
             ExcludeAssemblies = new List<string>();
 
-            if (config == null)
+            if (config is null)
             {
                 return;
             }

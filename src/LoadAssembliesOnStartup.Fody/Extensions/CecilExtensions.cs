@@ -105,7 +105,7 @@ namespace LoadAssembliesOnStartup.Fody
             }
 
             var genericInstanceType = typeReference as GenericInstanceType;
-            if (genericInstanceType == null)
+            if (genericInstanceType is null)
             {
                 return null;
             }
@@ -173,7 +173,7 @@ namespace LoadAssembliesOnStartup.Fody
             }
 
             var resolvedAssembly = moduleDefinition.ResolveAssembly(assemblyName);
-            if (resolvedAssembly == null)
+            if (resolvedAssembly is null)
             {
                 return null;
             }
@@ -185,7 +185,7 @@ namespace LoadAssembliesOnStartup.Fody
                 var type = (from typeDefinition in allTypes
                             where typeDefinition.FullName == typeName
                             select typeDefinition).FirstOrDefault();
-                if (type == null)
+                if (type is null)
                 {
                     type = (from typeDefinition in allTypes
                             where typeDefinition.Name == typeName
@@ -205,7 +205,7 @@ namespace LoadAssembliesOnStartup.Fody
         public static PropertyReference GetProperty(this TypeReference typeReference, string propertyName)
         {
             var typeDefinition = typeReference as TypeDefinition;
-            if (typeDefinition == null)
+            if (typeDefinition is null)
             {
                 typeDefinition = typeReference.Resolve();
             }
@@ -236,7 +236,7 @@ namespace LoadAssembliesOnStartup.Fody
         public static MethodReference GetMethodAndImport(this ModuleDefinition module, string methodName)
         {
             var method = GetMethod(module, methodName);
-            if (method == null)
+            if (method is null)
             {
                 return method;
             }
@@ -366,7 +366,7 @@ namespace LoadAssembliesOnStartup.Fody
             do
             {
                 var currentBase = current.BaseType;
-                if (currentBase == null)
+                if (currentBase is null)
                 {
                     break;
                 }

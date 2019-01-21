@@ -17,7 +17,7 @@ namespace LoadAssembliesOnStartup.Fody
         public static bool IsNextInstructionOpCode(this IList<Instruction> instructions, int index, params OpCode[] opCodes)
         {
             var instruction = (instructions.Count > index + 1) ? instructions[index + 1] : null;
-            if (instruction == null)
+            if (instruction is null)
             {
                 return false;
             }

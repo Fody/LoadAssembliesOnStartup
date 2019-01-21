@@ -60,7 +60,7 @@ namespace LoadAssembliesOnStartup.Fody
 #endif
 
                 // First of all, set the assembly resolver
-                if (AssemblyResolver == null)
+                if (AssemblyResolver is null)
                 {
                     AssemblyResolver = ModuleDefinition.AssemblyResolver;
                 }
