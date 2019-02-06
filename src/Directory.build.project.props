@@ -7,7 +7,7 @@
     <Authors>geertvanhorrik,simoncropp</Authors>
     <PackageIconUrl>https://github.com/Fody/LoadAssembliesOnStartup/raw/develop/design/logo/logo_64.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/Fody/LoadAssembliesOnStartup</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/Fody/LoadAssembliesOnStartup/blob/develop/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/Fody/LoadAssembliesOnStartup</RepositoryUrl>
   </PropertyGroup>
    
