@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net46;net47</TargetFrameworks>
+    <TargetFrameworks>net462</TargetFrameworks>
     <AssemblyName>LoadAssembliesOnStartup.Fody.TestAssembly</AssemblyName>
     <RootNamespace>LoadAssembliesOnStartup.Fody.TestAssembly</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
