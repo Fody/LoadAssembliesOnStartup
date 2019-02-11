@@ -11,7 +11,7 @@
         public void HasRegisteredTypesInIncludedReferences()
         {
             // Load program to load assembly
-            var assemblyInfo = AssemblyWeaver.Instance.GetAssembly(@"<LoadAssembliesOnStartup />");
+            var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("IncludedReferences", @"<LoadAssembliesOnStartup />");
 
             var programType = assemblyInfo.Assembly.GetType("LoadAssembliesOnStartup.Fody.TestAssembly.Program");
             var programInstance = Activator.CreateInstance(programType);

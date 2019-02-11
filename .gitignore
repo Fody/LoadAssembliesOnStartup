@@ -135,3 +135,4 @@ BundleArtifacts/
 
 .vscode
 FodyWeavers.xsd
+tools/*

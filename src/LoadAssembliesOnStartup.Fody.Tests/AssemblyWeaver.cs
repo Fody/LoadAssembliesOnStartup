@@ -8,6 +8,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using Catel.Reflection;
@@ -44,11 +45,10 @@ public class AssemblyWeaver
         }
     }
 
-    public AssemblyInfo GetAssembly(string configString)
+    public AssemblyInfo GetAssembly(string testCaseName, string configString)
     {
         if (!_assemblies.ContainsKey(configString))
         {
-            // Force ref since MSTest is a POS
             var type = typeof(DummyDependencyInjectionClass);
 
             var assemblyInfo = new AssemblyInfo
@@ -56,7 +56,11 @@ public class AssemblyWeaver
                 BeforeAssemblyPath = type.GetAssemblyEx().Location
             };
 
-            assemblyInfo.AfterAssemblyPath = assemblyInfo.BeforeAssemblyPath.Replace(".dll", $"{_assemblies.Count}.dll");
+            var rootDirectory = Directory.GetParent(assemblyInfo.BeforeAssemblyPath).FullName;
+            var testCaseDirectory = Path.Combine(rootDirectory, testCaseName);
+            Directory.CreateDirectory(testCaseDirectory);
+
+            assemblyInfo.AfterAssemblyPath = Path.Combine(testCaseDirectory, Path.GetFileName(assemblyInfo.BeforeAssemblyPath));
 
             var oldPdb = Path.ChangeExtension(assemblyInfo.BeforeAssemblyPath, "pdb");
             var newPdb = Path.ChangeExtension(assemblyInfo.AfterAssemblyPath, "pdb");
@@ -68,12 +72,8 @@ public class AssemblyWeaver
             Debug.WriteLine("Weaving assembly on-demand from '{0}' to '{1}'", assemblyInfo.BeforeAssemblyPath, assemblyInfo.AfterAssemblyPath);
 
             var assemblyResolver = new DefaultAssemblyResolver();
-            assemblyResolver.AddSearchDirectory(AssemblyDirectoryHelper.GetCurrentDirectory());
-            //foreach (var referenceAssemblyPath in referenceAssemblyPaths)
-            //{
-            //    var directoryName = Path.GetDirectoryName(referenceAssemblyPath);
-            //    assemblyResolver.AddSearchDirectory(directoryName);
-            //}
+            assemblyResolver.AddSearchDirectory(testCaseDirectory);
+            assemblyResolver.AddSearchDirectory(rootDirectory);
 
             var metadataResolver = new MetadataResolver(assemblyResolver);
 
@@ -86,9 +86,25 @@ public class AssemblyWeaver
 
             using (var moduleDefinition = ModuleDefinition.ReadModule(assemblyInfo.BeforeAssemblyPath, readerParameters))
             {
+                // Important note: the test project can be on a completely different location (especially on a build agent)
                 var projectName = Path.GetFileName(assemblyInfo.BeforeAssemblyPath).Replace(".dll", string.Empty);
+
+                // Check 1: fixed location from test
                 var relativeCsProjectFilePath = Path.Combine(Directory.GetParent(assemblyInfo.BeforeAssemblyPath).FullName, "..", "..", "..", "..", "src", projectName, $"{projectName}.csproj");
                 var csProjectFilePath = Path.GetFullPath(relativeCsProjectFilePath);
+
+                if (!File.Exists(csProjectFilePath))
+                {
+                    // Check 2: Check 2 directories up, then search for the project file (happens on a build agent)
+                    var searchDirectory = Path.Combine(Directory.GetParent(assemblyInfo.BeforeAssemblyPath).FullName, "..", "..", "..", "Source");
+                    var searchFileName = $"{projectName}.csproj";
+                    csProjectFilePath = Directory.GetFiles(searchDirectory, searchFileName, SearchOption.AllDirectories).FirstOrDefault();
+                }
+
+                if (!File.Exists(csProjectFilePath))
+                {
+                    throw new System.Exception($"Project file '{csProjectFilePath}' does not exist, make sure to check the paths since this is required for the unit tests");
+                }
 
                 var weavingTask = new ModuleWeaver
                 {

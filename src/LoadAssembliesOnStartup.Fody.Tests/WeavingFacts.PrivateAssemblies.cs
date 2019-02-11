@@ -10,7 +10,7 @@
         [Test]
         public void ExcludesPrivateAssemblies()
         {
-            var assemblyInfo = AssemblyWeaver.Instance.GetAssembly(@"<LoadAssembliesOnStartup ExcludePrivateAssemblies='true' />");
+            var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("ExcludesPrivateAssemblies", @"<LoadAssembliesOnStartup ExcludePrivateAssemblies='true' />");
 
             ApprovalHelper.AssertIlCode(assemblyInfo.AfterAssemblyPath);
         }
@@ -18,7 +18,7 @@
         [Test]
         public void IncludesPrivateAssemblies()
         {
-            var assemblyInfo = AssemblyWeaver.Instance.GetAssembly(@"<LoadAssembliesOnStartup ExcludePrivateAssemblies='false' />");
+            var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("IncludesPrivateAssemblies", @"<LoadAssembliesOnStartup ExcludePrivateAssemblies='false' />");
 
             ApprovalHelper.AssertIlCode(assemblyInfo.AfterAssemblyPath);
         }
