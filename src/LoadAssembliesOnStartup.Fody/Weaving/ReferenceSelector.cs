@@ -109,7 +109,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 }
             }
 
-            return includedReferences;
+            return includedReferences.OrderBy(x => x.Name.Name);
         }
 
         private bool ShouldReferenceBeIncluded(AssemblyNameReference assemblyNameReference)
