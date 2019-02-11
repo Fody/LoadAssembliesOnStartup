@@ -193,10 +193,16 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             // For now, ignore the target version, just check whether the package (version) contains the assembly
             foreach (var privateReference in privateReferences)
             {
-                var path = Path.Combine(nuGetRoot, privateReference.PackageName, privateReference.Version, "lib");
-
                 try
                 {
+                    // For some packages (such as Fody), there is no /lib folder, in that case we don't need
+                    // to check anything
+                    var path = Path.Combine(nuGetRoot, privateReference.PackageName, privateReference.Version, "lib");
+                    if (!Directory.Exists(path))
+                    {
+                        continue;
+                    }
+
                     FodyEnvironment.LogDebug($"Checking private reference '{privateReference}' using '{path}'");
 
                     var isDll = Directory.GetFiles(path, $"{assemblyName}.dll", SearchOption.AllDirectories).Any();
