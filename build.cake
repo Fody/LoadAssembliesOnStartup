@@ -1,8 +1,38 @@
-var projectName = "LoadAssembliesOnStartup.Fody";
-var projectsToPackage = new [] { "LoadAssembliesOnStartup.Fody" };
-var company = "Fody";
-var startYear = 2010;
-var defaultRepositoryUrl = string.Format("https://github.com/{0}/{1}", company, projectName);
+//=======================================================
+// DEFINE PARAMETERS
+//=======================================================
 
-#l "./deployment/cake/variables.cake"
+// Define the required parameters
+var Parameters = new Dictionary<string, object>();
+Parameters["SolutionName"] = "LoadAssembliesOnStartup.Fody";
+Parameters["Company"] = "Fody";
+Parameters["RepositoryUrl"] = string.Format("https://github.com/{0}/{1}", GetBuildServerVariable("SolutionName"), GetBuildServerVariable("SolutionName"));
+Parameters["StartYear"] = "2015";
+Parameters["TestTargetFramework"] = "net462";
+
+// Note: the rest of the variables should be coming from the build server,
+// see `/deployment/cake/*-variables.cake` for customization options
+// 
+// If required, more variables can be overridden by specifying them via the 
+// Parameters dictionary, but the build server variables will always override
+// them if defined by the build server. For example, to override the code
+// sign wild card, add this to build.cake
+//
+// Parameters["CodeSignWildcard"] = "Orc.EntityFramework";
+
+//=======================================================
+// DEFINE COMPONENTS TO BUILD / PACKAGE
+//=======================================================
+
+Components.Add("LoadAssembliesOnStartup.Fody");
+
+TestProjects.Add(string.Format("{0}.Tests", GetBuildServerVariable("SolutionName")));
+
+//=======================================================
+// REQUIRED INITIALIZATION, DO NOT CHANGE
+//=======================================================
+
+// Now all variables are defined, include the tasks, that
+// script will take care of the rest of the magic
+
 #l "./deployment/cake/tasks.cake"

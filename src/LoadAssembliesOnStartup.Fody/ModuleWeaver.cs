@@ -50,7 +50,7 @@ namespace LoadAssembliesOnStartup.Fody
 #if DEBUG
                 if (!Debugger.IsAttached)
                 {
-                    Debugger.Launch();
+                    //Debugger.Launch();
 
                     //FodyEnvironment.LogDebug = CreateLoggingCallback(LogDebug);
                     //FodyEnvironment.LogInfo = CreateLoggingCallback(LogInfo);
@@ -60,7 +60,7 @@ namespace LoadAssembliesOnStartup.Fody
 #endif
 
                 // First of all, set the assembly resolver
-                if (AssemblyResolver == null)
+                if (AssemblyResolver is null)
                 {
                     AssemblyResolver = ModuleDefinition.AssemblyResolver;
                 }
@@ -103,6 +103,7 @@ namespace LoadAssembliesOnStartup.Fody
             FodyEnvironment.AssemblyResolver = AssemblyResolver;
 
             FodyEnvironment.Config = Config;
+            FodyEnvironment.LogDebug = LogDebug;
             FodyEnvironment.LogInfo = LogInfo;
             FodyEnvironment.LogWarning = LogWarning;
             FodyEnvironment.LogWarningPoint = LogWarningPoint;

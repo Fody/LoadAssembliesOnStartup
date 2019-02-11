@@ -17,23 +17,27 @@ namespace LoadAssembliesOnStartup.Fody
         public Configuration(XElement config)
         {
             OptOut = true;
+            ExcludePrivateAssemblies = true;
+            ExcludeSystemAssemblies = true;
             IncludeAssemblies = new List<string>();
             ExcludeAssemblies = new List<string>();
 
-            if (config == null)
+            if (config is null)
             {
                 return;
             }
 
-            if (config.Attribute("IncludeAssemblies") != null || config.Element("IncludeAssemblies") != null)
+            if (config.Attribute(nameof(IncludeAssemblies)) != null || config.Element(nameof(IncludeAssemblies)) != null)
             {
                 OptOut = false;
             }
 
-            ReadList(config, "ExcludeAssemblies", ExcludeAssemblies);
-            ReadList(config, "IncludeAssemblies", IncludeAssemblies);
-            ReadBool(config, "ExcludeOptimizedAssemblies", x => ExcludeOptimizedAssemblies = x);
-            ReadBool(config, "WrapInTryCatch", x => WrapInTryCatch = x);
+            ReadList(config, nameof(ExcludeAssemblies), ExcludeAssemblies);
+            ReadList(config, nameof(IncludeAssemblies), IncludeAssemblies);
+            ReadBool(config, nameof(ExcludePrivateAssemblies), x => ExcludePrivateAssemblies = x);
+            ReadBool(config, nameof(ExcludeSystemAssemblies), x => ExcludeSystemAssemblies = x);
+            ReadBool(config, nameof(ExcludeOptimizedAssemblies), x => ExcludeOptimizedAssemblies = x);
+            ReadBool(config, nameof(WrapInTryCatch), x => WrapInTryCatch = x);
 
             if (IncludeAssemblies.Any() && ExcludeAssemblies.Any())
             {
@@ -44,6 +48,8 @@ namespace LoadAssembliesOnStartup.Fody
         public bool OptOut { get; private set; }
         public List<string> IncludeAssemblies { get; private set; }
         public List<string> ExcludeAssemblies { get; private set; }
+        public bool ExcludePrivateAssemblies { get; private set; }
+        public bool ExcludeSystemAssemblies { get; private set; }
         public bool ExcludeOptimizedAssemblies { get; private set; }
         public bool WrapInTryCatch { get; private set; }
 
@@ -74,8 +80,7 @@ namespace LoadAssembliesOnStartup.Fody
             var attribute = config.Attribute(nodeName);
             if (attribute != null)
             {
-                bool value;
-                if (bool.TryParse(attribute.Value, out value))
+                if (bool.TryParse(attribute.Value, out var value))
                 {
                     setter(value);
                 }

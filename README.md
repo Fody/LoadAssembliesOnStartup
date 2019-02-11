@@ -93,6 +93,39 @@ Or as a attribute with items delimited by a pipe `|`.
     <LoadAssembliesOnStartup IncludeAssemblies='Foo|Bar' />
 
 
+### ExcludePrivateAssemblies
+
+Exclude private assembly references in modern SDK projects, e.g.:
+
+```
+  <PackageReference Include="Catel.Core" Version="5.8.0" PrivateAssets="true" />
+```
+
+Types can still be excluded using the `ExcludeAssemblies` option when this option is set to `false`.
+
+The default value is `true`.
+
+To include private assemblies, use the option below:
+
+	<LoadAssembliesOnStartup ExcludePrivateAssemblies='false' />
+
+
+### ExcludeSystemAssemblies
+
+Exclude system assemblies (such as System.Runtime.Serialization). Types can still be excluded using the `ExcludeAssemblies` option when this option is set to `false`.
+
+The default value is `true`.
+
+To include system assemblies, use the option below:
+
+	<LoadAssembliesOnStartup ExcludeSystemAssemblies='false' />
+
+The following wildcards will be used:
+
+- Mono.*
+- System.*
+
+
 ### ExcludeOptimizedAssemblies
 
 By default, this weaver will include references that are optimized away by the compiler. This can happen when you only use interfaces from a reference. Types can still be excluded using the `ExcludeAssemblies` option.

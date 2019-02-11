@@ -26,7 +26,7 @@ namespace LoadAssembliesOnStartup.Fody
             var instructions = method.Body.Instructions;
             var scope = debugInfo.Scope;
 
-            if (scope == null || instructions.Count == 0)
+            if (scope is null || instructions.Count == 0)
             {
                 return;
             }
