@@ -98,7 +98,7 @@ public class AssemblyWeaver
                     // Check 2: Check 2 directories up, then search for the project file (happens on a build agent)
                     var searchDirectory = Path.Combine(Directory.GetParent(assemblyInfo.BeforeAssemblyPath).FullName, "..", "..", "..", "Source");
                     var searchFileName = $"{projectName}.csproj";
-                    csProjectFilePath = Directory.GetFiles(searchDirectory, searchFileName).FirstOrDefault();
+                    csProjectFilePath = Directory.GetFiles(searchDirectory, searchFileName, SearchOption.AllDirectories).FirstOrDefault();
                 }
 
                 if (!File.Exists(csProjectFilePath))
