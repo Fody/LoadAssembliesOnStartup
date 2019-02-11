@@ -44,11 +44,10 @@ public class AssemblyWeaver
         }
     }
 
-    public AssemblyInfo GetAssembly(string configString)
+    public AssemblyInfo GetAssembly(string testCaseName, string configString)
     {
         if (!_assemblies.ContainsKey(configString))
         {
-            // Force ref since MSTest is a POS
             var type = typeof(DummyDependencyInjectionClass);
 
             var assemblyInfo = new AssemblyInfo
@@ -56,7 +55,11 @@ public class AssemblyWeaver
                 BeforeAssemblyPath = type.GetAssemblyEx().Location
             };
 
-            assemblyInfo.AfterAssemblyPath = assemblyInfo.BeforeAssemblyPath.Replace(".dll", $"{_assemblies.Count}.dll");
+            var rootDirectory = Directory.GetParent(assemblyInfo.BeforeAssemblyPath).FullName;
+            var testCaseDirectory = Path.Combine(rootDirectory, testCaseName);
+            Directory.CreateDirectory(testCaseDirectory);
+
+            assemblyInfo.AfterAssemblyPath = Path.Combine(testCaseDirectory, Path.GetFileName(assemblyInfo.BeforeAssemblyPath));
 
             var oldPdb = Path.ChangeExtension(assemblyInfo.BeforeAssemblyPath, "pdb");
             var newPdb = Path.ChangeExtension(assemblyInfo.AfterAssemblyPath, "pdb");
@@ -68,12 +71,8 @@ public class AssemblyWeaver
             Debug.WriteLine("Weaving assembly on-demand from '{0}' to '{1}'", assemblyInfo.BeforeAssemblyPath, assemblyInfo.AfterAssemblyPath);
 
             var assemblyResolver = new DefaultAssemblyResolver();
-            assemblyResolver.AddSearchDirectory(AssemblyDirectoryHelper.GetCurrentDirectory());
-            //foreach (var referenceAssemblyPath in referenceAssemblyPaths)
-            //{
-            //    var directoryName = Path.GetDirectoryName(referenceAssemblyPath);
-            //    assemblyResolver.AddSearchDirectory(directoryName);
-            //}
+            assemblyResolver.AddSearchDirectory(testCaseDirectory);
+            assemblyResolver.AddSearchDirectory(rootDirectory);
 
             var metadataResolver = new MetadataResolver(assemblyResolver);
 
