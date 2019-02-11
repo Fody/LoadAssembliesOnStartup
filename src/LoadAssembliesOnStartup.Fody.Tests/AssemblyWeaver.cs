@@ -8,6 +8,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using Catel.Reflection;
@@ -85,9 +86,25 @@ public class AssemblyWeaver
 
             using (var moduleDefinition = ModuleDefinition.ReadModule(assemblyInfo.BeforeAssemblyPath, readerParameters))
             {
+                // Important note: the test project can be on a completely different location (especially on a build agent)
                 var projectName = Path.GetFileName(assemblyInfo.BeforeAssemblyPath).Replace(".dll", string.Empty);
+
+                // Check 1: fixed location from test
                 var relativeCsProjectFilePath = Path.Combine(Directory.GetParent(assemblyInfo.BeforeAssemblyPath).FullName, "..", "..", "..", "..", "src", projectName, $"{projectName}.csproj");
                 var csProjectFilePath = Path.GetFullPath(relativeCsProjectFilePath);
+
+                if (!File.Exists(csProjectFilePath))
+                {
+                    // Check 2: Check 2 directories up, then search for the project file (happens on a build agent)
+                    var searchDirectory = Path.Combine(Directory.GetParent(assemblyInfo.BeforeAssemblyPath).FullName, "..", "..", "..", "Source");
+                    var searchFileName = $"{projectName}.csproj";
+                    csProjectFilePath = Directory.GetFiles(searchDirectory, searchFileName).FirstOrDefault();
+                }
+
+                if (!File.Exists(csProjectFilePath))
+                {
+                    throw new System.Exception($"Project file '{csProjectFilePath}' does not exist, make sure to check the paths since this is required for the unit tests");
+                }
 
                 var weavingTask = new ModuleWeaver
                 {
