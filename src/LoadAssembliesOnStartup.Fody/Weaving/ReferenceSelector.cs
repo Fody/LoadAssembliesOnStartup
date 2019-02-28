@@ -24,7 +24,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             "Anotar",
             "Catel.Fody.Attributes",
             "Costura",
-            "LoadAssembliesOnStartup",
+            //"LoadAssembliesOnStartup",
             "MethodTimer",
             "Obsolete",
             "PropertyChanged",
