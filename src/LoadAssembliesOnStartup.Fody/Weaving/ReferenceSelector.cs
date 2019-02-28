@@ -24,10 +24,12 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             "Anotar",
             "Catel.Fody.Attributes",
             "Costura",
+            "LoadAssembliesOnStartup",
             "MethodTimer",
             "Obsolete",
             "PropertyChanged",
             "Microsoft.CSharp",
+            "WpfAnalyzers",
         });
 
         private static readonly List<string> SystemAssemblyPrefixes = new List<string>(new[]
