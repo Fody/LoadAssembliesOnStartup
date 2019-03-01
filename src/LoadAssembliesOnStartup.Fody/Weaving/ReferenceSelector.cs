@@ -20,7 +20,13 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         #region Constants
         private static readonly List<string> KnownIgnoredPartialAssemblies = new List<string>(new[]
 {
-            "mscorlib"
+            "mscorlib",
+            "netstandard",
+            "netfx.force.conflicts",
+            "PresentationFramework",
+            "UIAutomationClient",
+            "UIAutomationTypes",
+            "UIAutomationProvider",
         });
 
         private static readonly List<string> KnownIgnoredExactAssemblies = new List<string>(new[]
@@ -37,6 +43,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             "PropertyChanged",
             "Microsoft.CSharp",
             "WpfAnalyzers",
+            "System"
         });
 
         private static readonly List<string> SystemAssemblyPrefixes = new List<string>(new[]
@@ -139,12 +146,11 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             foreach (var knownIgnoredAssembly in KnownIgnoredExactAssemblies)
             {
-                var exeName = $"{knownIgnoredAssembly.ToLower()}.exe";
-                var dllName = $"{knownIgnoredAssembly.ToLower()}.dll";
+                var name = knownIgnoredAssembly.ToLower();
 
-                if (assemblyNameLowered.Contains(exeName) || assemblyNameLowered.Contains(dllName))
+                if (assemblyNameLowered.Equals(name))
                 {
-                    FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is a known assembly to be ignored (via exact match '{knownIgnoredAssembly}')");
+                    FodyEnvironment.LogInfo($"Ignoring '{name}' because it is a known assembly to be ignored (via exact match '{knownIgnoredAssembly}')");
                     return false;
                 }
             }
@@ -168,7 +174,8 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                     FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is in the excluded list");
                 }
 
-                return !contains;
+                // Don't return here, allow it to check for private assemblies, we don't want to include *everything*
+                // just because 1 or 2 are being excluded
             }
 
             if (_configuration.ExcludeSystemAssemblies)
