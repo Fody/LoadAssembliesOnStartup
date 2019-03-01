@@ -20,7 +20,8 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         #region Constants
         private static readonly List<string> KnownIgnoredPartialAssemblies = new List<string>(new[]
 {
-            "mscorlib"
+            "mscorlib",
+            "UIAutomationClient"
         });
 
         private static readonly List<string> KnownIgnoredExactAssemblies = new List<string>(new[]
