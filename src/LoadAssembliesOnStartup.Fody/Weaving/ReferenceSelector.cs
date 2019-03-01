@@ -18,15 +18,22 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
     public class ReferenceSelector
     {
         #region Constants
-        private static readonly List<string> KnownIgnoredAssemblies = new List<string>(new[]
+        private static readonly List<string> KnownIgnoredPartialAssemblies = new List<string>(new[]
+{
+            "mscorlib"
+        });
+
+        private static readonly List<string> KnownIgnoredExactAssemblies = new List<string>(new[]
         {
-            "mscorlib",
-            "Anotar",
+            "Anotar.Fody",
+            "Catel.Fody",
             "Catel.Fody.Attributes",
-            "Costura",
-            //"LoadAssembliesOnStartup",
+            "Costura.Fody",
+            "FodyHelpers",
+            "LoadAssembliesOnStartup.Fody",
             "MethodTimer",
             "Obsolete",
+            "Obsolete.Fody",
             "PropertyChanged",
             "Microsoft.CSharp",
             "WpfAnalyzers",
@@ -119,11 +126,25 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             var assemblyName = assemblyNameReference.Name;
             var assemblyNameLowered = assemblyNameReference.Name.ToLower();
 
-            foreach (var knownIgnoredAssembly in KnownIgnoredAssemblies)
+            foreach (var knownIgnoredAssembly in KnownIgnoredPartialAssemblies)
             {
-                if (assemblyNameLowered.Contains(knownIgnoredAssembly.ToLower()))
+                var name = knownIgnoredAssembly.ToLower();
+
+                if (assemblyNameLowered.Contains(name))
                 {
-                    FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is a known assembly to be ignored");
+                    FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is a known assembly to be ignored (via partial match '{knownIgnoredAssembly}')");
+                    return false;
+                }
+            }
+
+            foreach (var knownIgnoredAssembly in KnownIgnoredExactAssemblies)
+            {
+                var exeName = $"{knownIgnoredAssembly.ToLower()}.exe";
+                var dllName = $"{knownIgnoredAssembly.ToLower()}.dll";
+
+                if (assemblyNameLowered.Contains(exeName) || assemblyNameLowered.Contains(dllName))
+                {
+                    FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is a known assembly to be ignored (via exact match '{knownIgnoredAssembly}')");
                     return false;
                 }
             }

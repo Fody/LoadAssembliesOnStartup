@@ -43,6 +43,11 @@
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
   
+  <!-- Explicitly remove any content files, this is a weaver only -->
+  <PropertyGroup>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+  
   <Target Name="IncludeFodyFiles">
     <ItemGroup>
       <NetClassicFilesToInclude Include="$(WeaverDirPath)\net4*\$(PackageId).dll" />
