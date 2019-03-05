@@ -172,6 +172,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 if (contains)
                 {
                     FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is in the excluded list");
+                    return false;
                 }
 
                 // Don't return here, allow it to check for private assemblies, we don't want to include *everything*
