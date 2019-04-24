@@ -16,6 +16,7 @@ using LoadAssembliesOnStartup.Fody;
 using LoadAssembliesOnStartup.Fody.TestAssembly;
 using LoadAssembliesOnStartup.Fody.Tests;
 using Mono.Cecil;
+using Fody;
 
 public class AssemblyWeaver
 {
@@ -71,9 +72,9 @@ public class AssemblyWeaver
 
             Debug.WriteLine("Weaving assembly on-demand from '{0}' to '{1}'", assemblyInfo.BeforeAssemblyPath, assemblyInfo.AfterAssemblyPath);
 
-            var assemblyResolver = new DefaultAssemblyResolver();
-            assemblyResolver.AddSearchDirectory(testCaseDirectory);
-            assemblyResolver.AddSearchDirectory(rootDirectory);
+            var assemblyResolver = new TestAssemblyResolver();
+            //assemblyResolver.AddSearchDirectory(testCaseDirectory);
+            //assemblyResolver.AddSearchDirectory(rootDirectory);
 
             var metadataResolver = new MetadataResolver(assemblyResolver);
 

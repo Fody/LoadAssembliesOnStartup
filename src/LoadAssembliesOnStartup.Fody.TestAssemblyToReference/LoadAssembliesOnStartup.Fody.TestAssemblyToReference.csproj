@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net462</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
     <AssemblyName>LoadAssembliesOnStartup.Fody.TestAssemblyToReference</AssemblyName>
     <RootNamespace>LoadAssembliesOnStartup.Fody.TestAssemblyToReference</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Catel.Core" Version="5.9.0" />
-    <PackageReference Include="Fody" Version="4.0.2">
+    <PackageReference Include="Fody" Version="5.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
