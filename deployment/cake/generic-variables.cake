@@ -60,6 +60,9 @@ if (IsLocalBuild)
 var RootDirectory = System.IO.Path.GetFullPath(".");
 var OutputRootDirectory = GetBuildServerVariable("OutputRootDirectory", string.Format("./output/{0}", ConfigurationName), showValue: true);
 
+// SourceLink
+var SourceLinkDisabled = bool.Parse(GetBuildServerVariable("SourceLinkDisabled", "False", showValue: true));
+
 // Code signing
 var CodeSignWildCard = GetBuildServerVariable("CodeSignWildcard", showValue: true);
 var CodeSignCertificateSubjectName = GetBuildServerVariable("CodeSignCertificateSubjectName", Company, showValue: true);
@@ -69,6 +72,9 @@ var CodeSignTimeStampUri = GetBuildServerVariable("CodeSignTimeStampUri", "http:
 var RepositoryUrl = GetBuildServerVariable("RepositoryUrl", showValue: true);
 var RepositoryBranchName = GetBuildServerVariable("RepositoryBranchName", showValue: true);
 var RepositoryCommitId = GetBuildServerVariable("RepositoryCommitId", showValue: true);
+
+// Dependency checks
+var DependencyCheckDisabled = bool.Parse(GetBuildServerVariable("DependencyCheckDisabled", "False", showValue: true));
 
 // SonarQube
 var SonarDisabled = bool.Parse(GetBuildServerVariable("SonarDisabled", "False", showValue: true));
