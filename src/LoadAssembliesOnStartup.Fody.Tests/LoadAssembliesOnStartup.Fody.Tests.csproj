@@ -13,15 +13,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ApprovalTests" Version="3.0.19" />
-    <PackageReference Include="FodyHelpers" Version="5.0.0" />
+    <PackageReference Include="ApprovalTests" Version="3.0.22" />
+    <PackageReference Include="FodyHelpers" Version="5.0.6" />
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Moq" Version="4.10.1" />
-    <PackageReference Include="NUnit" Version="3.11.0" PrivateAssets="all" />
+    <PackageReference Include="NUnit" Version="3.12.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fody" Version="5.0.0" PrivateAssets="None" />
+    <PackageReference Include="Fody" Version="5.0.6" PrivateAssets="None" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
     <PackageReference Update="NETStandard.Library" Version="2.0.1" />
   </ItemGroup>
