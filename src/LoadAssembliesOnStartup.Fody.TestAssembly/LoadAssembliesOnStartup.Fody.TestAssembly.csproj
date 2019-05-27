@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Catel.Core" Version="5.10.0" />
-    <PackageReference Include="Orc.FileSystem" Version="3.0.0">
+    <PackageReference Include="Orc.FileSystem" Version="3.1.0">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="WpfAnalyzers" Version="2.2.0.2">
