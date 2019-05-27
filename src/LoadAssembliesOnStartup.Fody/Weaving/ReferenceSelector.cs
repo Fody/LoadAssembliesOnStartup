@@ -43,7 +43,8 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             "PropertyChanged",
             "Microsoft.CSharp",
             "WpfAnalyzers",
-            "System"
+            "System",
+            "Microsoft.mshtml" // broken reference, fails without any exceptions / error logging, so never include
         });
 
         private static readonly List<string> SystemAssemblyPrefixes = new List<string>(new[]
