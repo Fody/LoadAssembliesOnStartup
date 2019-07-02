@@ -34,6 +34,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             "Anotar.Fody",
             "Catel.Fody",
             "Catel.Fody.Attributes",
+            "Costura",
             "Costura.Fody",
             "FodyHelpers",
             "LoadAssembliesOnStartup.Fody",
