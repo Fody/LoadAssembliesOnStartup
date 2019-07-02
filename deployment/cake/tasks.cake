@@ -1,10 +1,15 @@
 #l "lib-generic.cake"
+#l "lib-nuget.cake"
+#l "lib-sourcelink.cake"
+#l "issuetrackers.cake"
 #l "generic-tasks.cake"
 #l "apps-uwp-tasks.cake"
 #l "apps-web-tasks.cake"
 #l "apps-wpf-tasks.cake"
 #l "components-tasks.cake"
+#l "tools-tasks.cake"
 #l "docker-tasks.cake"
+#l "github-pages-tasks.cake"
 #l "tests.cake"
 
 #addin "nuget:?package=System.Net.Http&version=4.3.3"
@@ -28,7 +33,9 @@ ValidateUwpAppsInput();
 ValidateWebAppsInput();
 ValidateWpfAppsInput();
 ValidateComponentsInput();
+ValidateToolsInput();
 ValidateDockerImagesInput();
+ValidateGitHubPagesInput();
 
 //-------------------------------------------------------------
 
@@ -82,10 +89,12 @@ Task("Prepare")
     .Does(async () =>
 {
     await PrepareForComponentsAsync();
+    await PrepareForToolsAsync();
     await PrepareForUwpAppsAsync();
     await PrepareForWebAppsAsync();
     await PrepareForWpfAppsAsync();
     await PrepareForDockerImagesAsync();
+    await PrepareForGitHubPagesAsync();
 });
 
 //-------------------------------------------------------------
@@ -97,10 +106,12 @@ Task("UpdateInfo")
     UpdateSolutionAssemblyInfo();
     
     UpdateInfoForComponents();
+    UpdateInfoForTools();
     UpdateInfoForUwpApps();
     UpdateInfoForWebApps();
     UpdateInfoForWpfApps();
     UpdateInfoForDockerImages();
+    UpdateInfoForGitHubPages();
 });
 
 //-------------------------------------------------------------
@@ -108,6 +119,7 @@ Task("UpdateInfo")
 Task("Build")
     .IsDependentOn("Clean")
     .IsDependentOn("UpdateInfo")
+    .IsDependentOn("VerifyDependencies")
     .IsDependentOn("CleanupCode")
     .Does(async () =>
 {
@@ -138,10 +150,12 @@ Task("Build")
     }
 
     BuildComponents();
+    BuildTools();
     BuildUwpApps();
     BuildWebApps();
     BuildWpfApps();
     BuildDockerImages();
+    BuildGitHubPages();
 
     if (enableSonar)
     {
@@ -242,10 +256,12 @@ Task("Package")
     .Does(() =>
 {
     PackageComponents();
+    PackageTools();
     PackageUwpApps();
     PackageWebApps();
     PackageWpfApps();
     PackageDockerImages();
+    PackageGitHubPages();
 });
 
 //-------------------------------------------------------------
@@ -255,7 +271,7 @@ Task("PackageLocal")
     .Does(() =>
 {
     // For now only package components, we might need to move this to components-tasks.cake in the future
-    if (!HasComponents())
+    if (!HasComponents() && !HasTools())
     {
         return;
     }
@@ -282,10 +298,23 @@ Task("Deploy")
     .Does(() =>
 {
     DeployComponents();
+    DeployTools();
     DeployUwpApps();
     DeployWebApps();
     DeployWpfApps();
     DeployDockerImages();
+    DeployGitHubPages();
+});
+
+//-------------------------------------------------------------
+
+Task("Finalize")
+    // Note: no dependency on 'deploy' since we might have already deployed the solution
+    .Does(async () =>
+{
+    Information("Finalizing release '{0}'", VersionFullSemVer);
+
+    await CreateAndReleaseVersionAsync();
 });
 
 //-------------------------------------------------------------
