@@ -31,12 +31,14 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
         private static readonly List<string> KnownIgnoredExactAssemblies = new List<string>(new[]
         {
+            "Anotar",
             "Anotar.Fody",
             "Catel.Fody",
             "Catel.Fody.Attributes",
             "Costura",
             "Costura.Fody",
             "FodyHelpers",
+            "LoadAssembliesOnStartup",
             "LoadAssembliesOnStartup.Fody",
             "MethodTimer",
             "Obsolete",
