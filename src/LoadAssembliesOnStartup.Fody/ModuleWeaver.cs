@@ -84,8 +84,11 @@ namespace LoadAssembliesOnStartup.Fody
                 var loadTypesMethod = loadTypesWeaver.Execute();
 
                 // Call method on assembly init
-                var moduleLoaderImporter = new ModuleLoaderImporter();
-                moduleLoaderImporter.ImportModuleLoader(ModuleDefinition, loadTypesMethod, msCoreReferenceFinder);
+                if(!configuration.GenerateLoadMethodOnly)
+                {
+                    var moduleLoaderImporter = new ModuleLoaderImporter();
+                    moduleLoaderImporter.ImportModuleLoader(ModuleDefinition, loadTypesMethod, msCoreReferenceFinder);
+                }
             }
             catch (Exception ex)
             {
