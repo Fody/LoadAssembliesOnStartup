@@ -17,7 +17,7 @@
     <PackageReference Include="Orc.FileSystem" Version="3.1.2">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="WpfAnalyzers" Version="2.4.2">
+    <PackageReference Include="WpfAnalyzers" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
