@@ -7,6 +7,7 @@
     <PackageId>LoadAssembliesOnStartup.Fody</PackageId>
     <PackageVersion>3.0.0-alpha0001</PackageVersion>
     <Description>Fody add-in for forcing referenced assemblies to be loaded on startup. This allows other modules to register types without actually having to using their types directly.</Description>
+    <DevelopmentDependency>true</DevelopmentDependency>
     <PackageTags>load;assemblies;references;reference;force;startup;fody;ilweaving;weaving</PackageTags>
     <DisableFody>true</DisableFody>
   </PropertyGroup>
