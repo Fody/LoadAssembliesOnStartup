@@ -1,15 +1,14 @@
+# <img src="/design/logo/logo_64.png" height="30px"> LoadAssembliesOnStartup.Fody
+
 [![Chat on Gitter](https://img.shields.io/gitter/room/fody/fody.svg?style=flat)](https://gitter.im/Fody/Fody)
 [![NuGet Status](http://img.shields.io/nuget/v/LoadAssembliesOnStartup.Fody.svg?style=flat)](https://www.nuget.org/packages/LoadAssembliesOnStartup.Fody/)
 
-LoadAssembliesOnStartup
-=======================
-
-![Icon](design/logo/logo_64.png)
-
-
-### This is an add-in for [Fody](https://github.com/Fody/Fody/) 
-
 Loads all the references on startup by actually using the types in the module initializer.
+
+
+## This is an add-in for [Fody](https://github.com/Fody/Fody/)
+
+**It is expected that all developers using Fody either [become a Patron on OpenCollective](https://opencollective.com/fody/), or have a [Tidelift Subscription](https://tidelift.com/subscription/pkg/nuget-fody?utm_source=nuget-fody&utm_medium=referral&utm_campaign=enterprise).**
 
 
 ### NuGet package
