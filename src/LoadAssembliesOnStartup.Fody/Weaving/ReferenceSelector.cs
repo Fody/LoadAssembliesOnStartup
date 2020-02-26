@@ -19,7 +19,8 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
     {
         #region Constants
         private static readonly List<string> KnownIgnoredPartialAssemblies = new List<string>(new[]
-{
+        {
+            "Anotar.",
             "mscorlib",
             "netstandard",
             "netfx.force.conflicts",
@@ -32,7 +33,6 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         private static readonly List<string> KnownIgnoredExactAssemblies = new List<string>(new[]
         {
             "Anotar",
-            "Anotar.Fody",
             "Catel.Fody",
             "Catel.Fody.Attributes",
             "Costura",
