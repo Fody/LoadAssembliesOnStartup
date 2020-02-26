@@ -92,7 +92,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 var assembly = resolver.Resolve(assemblyReference);
                 if (assembly != null)
                 {
-                    FodyEnvironment.LogInfo($"Including reference '{assemblyReference.Name}'");
+                    FodyEnvironment.WriteInfo($"Including reference '{assemblyReference.Name}'");
 
                     includedReferences.Add(assembly);
                 }
@@ -121,7 +121,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         var assembly = resolver.Resolve(referenceName);
                         if (assembly != null)
                         {
-                            FodyEnvironment.LogInfo($"Including reference '{referenceName.Name}', it was optimized away by the compiler but still adding it");
+                            FodyEnvironment.WriteInfo($"Including reference '{referenceName.Name}', it was optimized away by the compiler but still adding it");
 
                             includedReferences.Add(assembly);
                         }
@@ -143,7 +143,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
                 if (assemblyNameLowered.Contains(name))
                 {
-                    FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is a known assembly to be ignored (via partial match '{knownIgnoredAssembly}')");
+                    FodyEnvironment.WriteInfo($"Ignoring '{assemblyName}' because it is a known assembly to be ignored (via partial match '{knownIgnoredAssembly}')");
                     return false;
                 }
             }
@@ -154,7 +154,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
                 if (assemblyNameLowered.Equals(name))
                 {
-                    FodyEnvironment.LogInfo($"Ignoring '{name}' because it is a known assembly to be ignored (via exact match '{knownIgnoredAssembly}')");
+                    FodyEnvironment.WriteInfo($"Ignoring '{name}' because it is a known assembly to be ignored (via exact match '{knownIgnoredAssembly}')");
                     return false;
                 }
             }
@@ -164,7 +164,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 var contains = _configuration.IncludeAssemblies.Any(x => string.Equals(assemblyNameLowered, x.ToLower()));
                 if (!contains)
                 {
-                    FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is not in the included list");
+                    FodyEnvironment.WriteInfo($"Ignoring '{assemblyName}' because it is not in the included list");
                 }
 
                 return contains;
@@ -175,7 +175,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 var contains = _configuration.ExcludeAssemblies.Any(x => string.Equals(assemblyNameLowered, x.ToLower()));
                 if (contains)
                 {
-                    FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is in the excluded list");
+                    FodyEnvironment.WriteInfo($"Ignoring '{assemblyName}' because it is in the excluded list");
                     return false;
                 }
 
@@ -191,7 +191,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                     if (assemblyName.IndexOf(systemAssemblyPrefix, StringComparison.OrdinalIgnoreCase) == 0 ||
                         assemblyName.Equals("System", StringComparison.OrdinalIgnoreCase))
                     {
-                        FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is a system assembly");
+                        FodyEnvironment.WriteInfo($"Ignoring '{assemblyName}' because it is a system assembly");
                         return false;
                     }
                 }
@@ -201,7 +201,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             {
                 if (IsPrivateReference(assemblyName))
                 {
-                    FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is a private assembly");
+                    FodyEnvironment.WriteInfo($"Ignoring '{assemblyName}' because it is a private assembly");
                     return false;
                 }
                 // TODO: How to determine private assemblies, do we have access to the csproj?
@@ -238,7 +238,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         continue;
                     }
 
-                    FodyEnvironment.LogDebug($"Checking private reference '{privateReference}' using '{path}'");
+                    FodyEnvironment.WriteDebug($"Checking private reference '{privateReference}' using '{path}'");
 
                     var isDll = Directory.GetFiles(path, $"{assemblyName}.dll", SearchOption.AllDirectories).Any();
                     if (isDll)
@@ -254,7 +254,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 }
                 catch (Exception ex)
                 {
-                    FodyEnvironment.LogError($"Failed to check private reference '{privateReference}':\n{ex}");
+                    FodyEnvironment.WriteError($"Failed to check private reference '{privateReference}':\n{ex}");
                 }
             }
 
@@ -298,7 +298,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         var versionAttribute = packageReferenceElement.Attribute("Version");
                         if (versionAttribute is null)
                         {
-                            FodyEnvironment.LogWarning($"Could not find version attribute for '{packageName}'");
+                            FodyEnvironment.WriteWarning($"Could not find version attribute for '{packageName}'");
                             continue;
                         }
 
@@ -327,7 +327,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 }
                 catch (Exception ex)
                 {
-                    FodyEnvironment.LogError($"Failed to search for private packages in project file '{csProj}':\n{ex}");
+                    FodyEnvironment.WriteError($"Failed to search for private packages in project file '{csProj}':\n{ex}");
                 }
 
                 privateReferencesCache[csProj] = privateReferences;
