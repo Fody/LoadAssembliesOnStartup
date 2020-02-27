@@ -42,7 +42,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             var debugWriteLineMethod = FindDebugWriteLineMethod();
             if (debugWriteLineMethod is null)
             {
-                FodyEnvironment.LogInfo("Can't find Debug.WriteLine, won't be writing debug info during assembly loading");
+                FodyEnvironment.WriteInfo("Can't find Debug.WriteLine, won't be writing debug info during assembly loading");
             }
 
             var voidType = _msCoreReferenceFinder.GetCoreTypeReference("Void");
@@ -70,7 +70,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 var firstType = assembly.MainModule.Types.FirstOrDefault(x => x.IsClass && x.IsPublic);
                 if (firstType != null)
                 {
-                    FodyEnvironment.LogInfo($"Adding code to force load assembly '{assembly.Name}'");
+                    FodyEnvironment.WriteInfo($"Adding code to force load assembly '{assembly.Name}'");
 
                     if (debugWriteLineMethod != null)
                     {

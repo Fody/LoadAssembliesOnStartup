@@ -17,17 +17,6 @@ namespace LoadAssembliesOnStartup.Fody
 
     public class ModuleWeaver : BaseModuleWeaver
     {
-        public ModuleWeaver()
-        {
-            // Init logging delegates to make testing easier
-            LogDebug = s => { Debug.WriteLine(s); };
-            LogInfo = s => { Debug.WriteLine(s); };
-            LogWarning = s => { Debug.WriteLine(s); };
-            LogWarningPoint = (s, p) => { Debug.WriteLine(s); };
-            LogError = s => { Debug.WriteLine(s); };
-            LogErrorPoint = (s, p) => { Debug.WriteLine(s); };
-        }
-
         public IAssemblyResolver AssemblyResolver { get; set; }
 
         public override bool ShouldCleanReference => true;
@@ -51,11 +40,6 @@ namespace LoadAssembliesOnStartup.Fody
                 if (!Debugger.IsAttached)
                 {
                     //Debugger.Launch();
-
-                    //FodyEnvironment.LogDebug = CreateLoggingCallback(LogDebug);
-                    //FodyEnvironment.LogInfo = CreateLoggingCallback(LogInfo);
-                    //FodyEnvironment.LogWarning = CreateLoggingCallback(LogWarning);
-                    //FodyEnvironment.LogError = CreateLoggingCallback(LogError);
                 }
 #endif
 
@@ -73,7 +57,7 @@ namespace LoadAssembliesOnStartup.Fody
                 // Read config
                 var configuration = new Configuration(Config);
 
-                LogInfo($"LoadAssembliesOnStartup.Fody v{GetType().Assembly.GetName().Version}");
+                WriteInfo($"LoadAssembliesOnStartup.Fody v{GetType().Assembly.GetName().Version}");
 
                 // Set up the basics
                 var msCoreReferenceFinder = new MsCoreReferenceFinder(this, ModuleDefinition.AssemblyResolver);
@@ -89,7 +73,7 @@ namespace LoadAssembliesOnStartup.Fody
             }
             catch (Exception ex)
             {
-                LogError(ex.Message);
+                WriteError(ex.Message);
 
 #if DEBUG
                 Debugger.Launch();
@@ -103,12 +87,12 @@ namespace LoadAssembliesOnStartup.Fody
             FodyEnvironment.AssemblyResolver = AssemblyResolver;
 
             FodyEnvironment.Config = Config;
-            FodyEnvironment.LogDebug = LogDebug;
-            FodyEnvironment.LogInfo = LogInfo;
-            FodyEnvironment.LogWarning = LogWarning;
-            FodyEnvironment.LogWarningPoint = LogWarningPoint;
-            FodyEnvironment.LogError = LogError;
-            FodyEnvironment.LogErrorPoint = LogErrorPoint;
+            FodyEnvironment.WriteDebug = WriteDebug;
+            FodyEnvironment.WriteInfo = WriteInfo;
+            FodyEnvironment.WriteWarning = WriteWarning;
+            FodyEnvironment.WriteWarningPoint = WriteWarning;
+            FodyEnvironment.WriteError = WriteError;
+            FodyEnvironment.WriteErrorPoint = WriteError;
 
             if (string.IsNullOrEmpty(References))
             {

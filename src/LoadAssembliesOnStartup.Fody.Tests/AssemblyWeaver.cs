@@ -113,10 +113,6 @@ public class AssemblyWeaver
                     ModuleDefinition = moduleDefinition,
                     AssemblyResolver = assemblyResolver,
                     ProjectFilePath = csProjectFilePath,
-                    LogError = (x) =>
-                    {
-                        assemblyInfo.Errors.Add(x);
-                    },
                 };
 
                 weavingTask.Execute();
