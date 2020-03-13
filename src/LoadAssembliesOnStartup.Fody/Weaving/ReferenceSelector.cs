@@ -11,6 +11,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Xml.Linq;
     using System.Xml.XPath;
     using Mono.Cecil;
@@ -161,7 +162,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             if (_configuration.IncludeAssemblies.Any())
             {
-                var contains = _configuration.IncludeAssemblies.Any(x => string.Equals(assemblyNameLowered, x.ToLower()));
+                var contains = _configuration.IncludeAssemblies.Any(x => Regex.IsMatch(assemblyNameLowered, "^" + Regex.Escape(x.ToLower()).Replace("\\*", ".*") + "$"));
                 if (!contains)
                 {
                     FodyEnvironment.WriteInfo($"Ignoring '{assemblyName}' because it is not in the included list");
@@ -172,7 +173,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             if (_configuration.ExcludeAssemblies.Any())
             {
-                var contains = _configuration.ExcludeAssemblies.Any(x => string.Equals(assemblyNameLowered, x.ToLower()));
+                var contains = _configuration.ExcludeAssemblies.Any(x => Regex.IsMatch(assemblyNameLowered, "^" + Regex.Escape(x.ToLower()).Replace("\\*", ".*") + "$"));
                 if (contains)
                 {
                     FodyEnvironment.WriteInfo($"Ignoring '{assemblyName}' because it is in the excluded list");

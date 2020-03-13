@@ -52,6 +52,8 @@ Do not include `.exe` or `.dll` in the names.
 
 Can not be defined with `IncludeAssemblies`.
 
+Can use wildcard patterns such as `*.Tools.*`.
+
 Can take two forms. 
 
 As an element with items delimited by a newline.
@@ -60,12 +62,13 @@ As an element with items delimited by a newline.
         <ExcludeAssemblies>
             Foo
             Bar
+            Company.Tools.*
         </ExcludeAssemblies>
     </LoadAssembliesOnStartup>
     
 Or as a attribute with items delimited by a pipe `|`.
 
-    <LoadAssembliesOnStartup ExcludeAssemblies='Foo|Bar' />
+    <LoadAssembliesOnStartup ExcludeAssemblies='Foo|Bar|Company.Tools.*' />
 
 
 ### IncludeAssemblies
@@ -76,6 +79,8 @@ Do not include `.exe` or `.dll` in the names.
 
 Can not be defined with `ExcludeAssemblies`.
 
+Can use wildcard patterns such as `*.Plugin.Web.*`.
+
 Can take two forms. 
 
 As an element with items delimited by a newline.
@@ -84,12 +89,13 @@ As an element with items delimited by a newline.
         <IncludeAssemblies>
             Foo
             Bar
+            Company.Plugin.*
         </IncludeAssemblies>
     </LoadAssembliesOnStartup>
     
 Or as a attribute with items delimited by a pipe `|`.
 
-    <LoadAssembliesOnStartup IncludeAssemblies='Foo|Bar' />
+    <LoadAssembliesOnStartup IncludeAssemblies='Foo|Bar|Company.Plugin.*' />
 
 
 ### ExcludePrivateAssemblies
