@@ -5,7 +5,7 @@
     using NUnit.Framework;
 
     [TestFixture]
-    public partial class NoWeavingFacts
+    public partial class WeavingFacts
     {
         [Test]
         public void ExcludesSystemAssemblies()
