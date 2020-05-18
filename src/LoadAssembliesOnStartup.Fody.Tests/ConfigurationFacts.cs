@@ -23,30 +23,33 @@ namespace LoadAssembliesOnStartup.Fody.Tests
     <ExcludeAssemblies>
 Foo
 Bar
+Company.Tools.*
     </ExcludeAssemblies>
 </LoadAssembliesOnStartup>");
             var config = new Configuration(xElement);
 
             Assert.AreEqual("Foo", config.ExcludeAssemblies[0]);
             Assert.AreEqual("Bar", config.ExcludeAssemblies[1]);
+            Assert.AreEqual("Company.Tools.*", config.ExcludeAssemblies[2]);
         }
 
         [TestCase]
         public void ExcludeAssembliesAttribute()
         {
             var xElement = XElement.Parse(@"
-<LoadAssembliesOnStartup ExcludeAssemblies='Foo|Bar'/>");
+<LoadAssembliesOnStartup ExcludeAssemblies='Foo|Bar|Company.Tools.*'/>");
             var config = new Configuration(xElement);
 
             Assert.AreEqual("Foo", config.ExcludeAssemblies[0]);
             Assert.AreEqual("Bar", config.ExcludeAssemblies[1]);
+            Assert.AreEqual("Company.Tools.*", config.ExcludeAssemblies[2]);
         }
 
         [TestCase]
         public void ExcludeAssembliesCombined()
         {
             var xElement = XElement.Parse(@"
-<LoadAssembliesOnStartup  ExcludeAssemblies='Foo'>
+<LoadAssembliesOnStartup ExcludeAssemblies='Foo'>
     <ExcludeAssemblies>
 Bar
     </ExcludeAssemblies>
@@ -65,23 +68,26 @@ Bar
     <IncludeAssemblies>
 Foo
 Bar
+Company.Tools.*
     </IncludeAssemblies>
 </LoadAssembliesOnStartup>");
             var config = new Configuration(xElement);
 
             Assert.AreEqual("Foo", config.IncludeAssemblies[0]);
             Assert.AreEqual("Bar", config.IncludeAssemblies[1]);
+            Assert.AreEqual("Company.Tools.*", config.IncludeAssemblies[2]);
         }
 
         [TestCase]
         public void IncludeAssembliesAttribute()
         {
             var xElement = XElement.Parse(@"
-<LoadAssembliesOnStartup IncludeAssemblies='Foo|Bar'/>");
+<LoadAssembliesOnStartup IncludeAssemblies='Foo|Bar|Company.Tools.*'/>");
             var config = new Configuration(xElement);
 
             Assert.AreEqual("Foo", config.IncludeAssemblies[0]);
             Assert.AreEqual("Bar", config.IncludeAssemblies[1]);
+            Assert.AreEqual("Company.Tools.*", config.IncludeAssemblies[2]);
         }
 
         [TestCase]

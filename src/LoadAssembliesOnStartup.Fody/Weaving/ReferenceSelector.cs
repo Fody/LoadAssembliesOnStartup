@@ -11,6 +11,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Xml.Linq;
     using System.Xml.XPath;
     using Mono.Cecil;
@@ -161,7 +162,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             if (_configuration.IncludeAssemblies.Any())
             {
-                var contains = _configuration.IncludeAssemblies.Any(x => string.Equals(assemblyNameLowered, x.ToLower()));
+                var contains = ContainsAssembly(_configuration.IncludeAssemblies, assemblyNameLowered);
                 if (!contains)
                 {
                     FodyEnvironment.WriteInfo($"Ignoring '{assemblyName}' because it is not in the included list");
@@ -172,7 +173,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             if (_configuration.ExcludeAssemblies.Any())
             {
-                var contains = _configuration.ExcludeAssemblies.Any(x => string.Equals(assemblyNameLowered, x.ToLower()));
+                var contains = ContainsAssembly(_configuration.ExcludeAssemblies, assemblyNameLowered);
                 if (contains)
                 {
                     FodyEnvironment.WriteInfo($"Ignoring '{assemblyName}' because it is in the excluded list");
@@ -216,6 +217,12 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             }
 
             return _configuration.OptOut;
+        }
+
+        private bool ContainsAssembly(List<string> sourceList, string assemblyName)
+        {
+            var contained = sourceList.Any(x => Regex.IsMatch(assemblyName, "^" + Regex.Escape(x.ToLower()).Replace("\\*", ".*") + "$", RegexOptions.IgnoreCase));
+            return contained;
         }
 
         private bool IsPrivateReference(string assemblyName)

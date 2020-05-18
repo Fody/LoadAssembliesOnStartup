@@ -9,6 +9,7 @@ namespace LoadAssembliesOnStartup.Fody.TestAssembly
 {
     using System;
     using Catel.IoC;
+    using Orc.FileSystem;
     using TestAssemblyToReference.Services;
     using TestAssemblyToReferenceWithIgnores.Services;
 
@@ -67,5 +68,6 @@ namespace LoadAssembliesOnStartup.Fody.TestAssembly
 
         public static bool IsRightAssemblyLoaded { get { return ServiceLocator.Default.IsTypeRegistered<IClassThatShouldBeRegistered>(); } }
         public static bool IsRightAssemblyUnloaded { get { return ServiceLocator.Default.IsTypeRegistered<IClassThatShouldNotBeRegistered>(); } }
+        public static bool IsOrcFileSystemLoaded { get { return ServiceLocator.Default.IsTypeRegistered<IFileService>(); } }
     }
 }
