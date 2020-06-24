@@ -6,6 +6,8 @@
 
 namespace LoadAssembliesOnStartup.Fody.Weaving
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Mono.Cecil;
     using Mono.Cecil.Cil;
@@ -15,8 +17,8 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
     public class LoadTypesWeaver
     {
-        #region Constants
-        #endregion
+        private static readonly HashSet<string> IgnoredNamespaces = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private static readonly HashSet<string> IgnoredTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         #region Fields
         private readonly ModuleDefinition _moduleDefinition;
@@ -26,6 +28,12 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         #endregion
 
         #region Constructors
+        static LoadTypesWeaver()
+        {
+            // Add ignored namespaces and types here
+            IgnoredNamespaces.Add("XamlGeneratedNamespace");
+        }
+
         public LoadTypesWeaver(ModuleDefinition moduleDefinition, MsCoreReferenceFinder msCoreReferenceFinder,
             Configuration configuration, ModuleWeaver moduleWeaver)
         {
@@ -67,7 +75,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             // Note: we are looping reversed to easily add try/catch mechanism
             foreach (var assembly in referenceSelector.GetIncludedReferences().Reverse())
             {
-                var firstType = assembly.MainModule.Types.FirstOrDefault(x => x.IsClass && x.IsPublic);
+                var firstType = FindFirstType(assembly);
                 if (firstType != null)
                 {
                     FodyEnvironment.WriteInfo($"Adding code to force load assembly '{assembly.Name}'");
@@ -145,6 +153,24 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             _moduleDefinition.Types.Add(typeDefinition);
 
             return loadMethod;
+        }
+
+        private TypeReference FindFirstType(AssemblyDefinition assembly)
+        {
+            foreach (var type in assembly.MainModule.Types.Where(x => x.IsClass && x.IsPublic))
+            {
+                var typeName = type.FullName;
+                var typeNamespace = type.Namespace;
+
+                if (!IgnoredNamespaces.Any(x => typeNamespace.IndexOf(x, 0, StringComparison.OrdinalIgnoreCase) >= 0) && 
+                    !IgnoredTypes.Any(x => typeName.IndexOf(x, 0, StringComparison.OrdinalIgnoreCase) >= 0))
+                {
+                    // Found a valid type
+                    return type;
+                }
+            }
+
+            return null;
         }
 
         private MethodReference FindDebugWriteLineMethod()
