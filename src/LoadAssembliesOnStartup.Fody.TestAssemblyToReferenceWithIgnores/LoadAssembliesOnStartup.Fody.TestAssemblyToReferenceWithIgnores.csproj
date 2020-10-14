@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Catel.Core" Version="5.12.10" />
-    <PackageReference Include="Fody" Version="6.2.6">
+    <PackageReference Include="Fody" Version="6.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
