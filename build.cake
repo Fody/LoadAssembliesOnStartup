@@ -9,6 +9,7 @@ Parameters["Company"] = "Fody";
 Parameters["RepositoryUrl"] = string.Format("https://github.com/{0}/{1}", GetBuildServerVariable("SolutionName"), GetBuildServerVariable("SolutionName"));
 Parameters["StartYear"] = "2015";
 Parameters["UseVisualStudioPrerelease"] = "false";
+Parameters["NuGet_NoDependencies"] = "false";
 
 // Note: the rest of the variables should be coming from the build server,
 // see `/deployment/cake/*-variables.cake` for customization options
