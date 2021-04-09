@@ -1,10 +1,10 @@
 ﻿IL_0000: ldtoken System.ComponentModel.BeginEditEventArgs | Catel.Core, Version=5.12.12.0, Culture=neutral, PublicKeyToken=null
 IL_0005: call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
 IL_000a: stloc V_0
-IL_000b: ldtoken ModuleInitializer | LoadAssembliesOnStartup.Fody.TestAssemblyToReference, Version=4.5.0.0, Culture=neutral, PublicKeyToken=null
+IL_000b: ldtoken LoadAssembliesOnStartup.Fody.TestAssemblyToReference.Services.ClassThatShouldBeRegistered | LoadAssembliesOnStartup.Fody.TestAssemblyToReference, Version=4.5.0.0, Culture=neutral, PublicKeyToken=null
 IL_0010: call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
 IL_0015: stloc V_1
-IL_0016: ldtoken ModuleInitializer | LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores, Version=4.5.0.0, Culture=neutral, PublicKeyToken=null
+IL_0016: ldtoken LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores.Services.ClassThatShouldNotBeRegistered | LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores, Version=4.5.0.0, Culture=neutral, PublicKeyToken=null
 IL_001b: call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
 IL_0020: stloc V_2
 IL_0021: ldtoken Microsoft.Win32.SafeHandles.CriticalHandleMinusOneIsInvalid | System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e

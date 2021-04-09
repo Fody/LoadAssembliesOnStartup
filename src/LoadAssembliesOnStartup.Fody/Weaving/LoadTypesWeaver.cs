@@ -32,6 +32,8 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         {
             // Add ignored namespaces and types here
             IgnoredNamespaces.Add("XamlGeneratedNamespace");
+
+            IgnoredTypes.Add("ModuleInitializer");
         }
 
         public LoadTypesWeaver(ModuleDefinition moduleDefinition, MsCoreReferenceFinder msCoreReferenceFinder,

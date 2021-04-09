@@ -106,6 +106,11 @@ public class AssemblyWeaver
                     ignoreCodes: new[] { "0x80131869" },
                     runPeVerify: false);
 
+                if (testResult.Errors.Count > 0)
+                {
+                    throw new System.Exception("Received errors while weaving");
+                }
+
                 _assemblies[configString] = testResult;
             }
         }

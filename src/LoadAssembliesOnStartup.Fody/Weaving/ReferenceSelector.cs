@@ -97,6 +97,10 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
                     includedReferences.Add(assembly);
                 }
+                else
+                {
+                    FodyEnvironment.WriteError($"Reference '{assemblyReference.Name}' should be included, but cannot be resolved");
+                }
             }
 
             if (!_configuration.ExcludeOptimizedAssemblies)
@@ -125,6 +129,10 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                             FodyEnvironment.WriteInfo($"Including reference '{referenceName.Name}', it was optimized away by the compiler but still adding it");
 
                             includedReferences.Add(assembly);
+                        }
+                        else
+                        {
+                            FodyEnvironment.WriteError($"Reference '{referenceName}' should be included, but cannot be resolved");
                         }
                     }
                 }
