@@ -63,7 +63,7 @@ namespace LoadAssembliesOnStartup.Fody
 
         public static bool IsDecoratedWithAttribute(Collection<CustomAttribute> customAttributes, string attributeName)
         {
-            return GetAttribute(customAttributes, attributeName) != null;
+            return GetAttribute(customAttributes, attributeName) is not null;
         }
 
         public static void RemoveAttribute(this TypeDefinition typeDefinition, string attributeName)

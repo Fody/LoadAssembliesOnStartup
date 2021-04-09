@@ -28,7 +28,7 @@ namespace LoadAssembliesOnStartup.Fody.Tests
                     return;
                 }
 
-                if (ex.InnerException != null)
+                if (ex.InnerException is not null)
                 {
                     exceptionType = ex.InnerException.GetType();
                 }

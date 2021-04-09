@@ -76,11 +76,11 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             foreach (var assembly in referenceSelector.GetIncludedReferences().Reverse())
             {
                 var firstType = FindFirstType(assembly);
-                if (firstType != null)
+                if (firstType is not null)
                 {
                     FodyEnvironment.WriteInfo($"Adding code to force load assembly '{assembly.Name}'");
 
-                    if (debugWriteLineMethod != null)
+                    if (debugWriteLineMethod is not null)
                     {
                         // L_0001: ldstr "Loading assembly TestAssemblyToReference"
                         //L_0006: call void [System]System.Diagnostics.Debug::WriteLine(string)

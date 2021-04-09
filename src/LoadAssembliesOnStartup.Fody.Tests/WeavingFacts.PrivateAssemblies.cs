@@ -12,7 +12,7 @@
         {
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("ExcludesPrivateAssemblies", @"<LoadAssembliesOnStartup ExcludePrivateAssemblies='true' />");
 
-            ApprovalHelper.AssertIlCode(assemblyInfo.AfterAssemblyPath);
+            ApprovalHelper.AssertIlCode(assemblyInfo.AssemblyPath);
         }
 
         [Test]
@@ -20,7 +20,7 @@
         {
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("IncludesPrivateAssemblies", @"<LoadAssembliesOnStartup ExcludePrivateAssemblies='false' />");
 
-            ApprovalHelper.AssertIlCode(assemblyInfo.AfterAssemblyPath);
+            ApprovalHelper.AssertIlCode(assemblyInfo.AssemblyPath);
         }
     }
 }

@@ -38,6 +38,22 @@ namespace LoadAssembliesOnStartup.Fody
             //return version;
         }
 
+        public static bool IsNetCoreLibrary(this AssemblyDefinition assemblyDefinition)
+        {
+            if (IsNetStandardLibrary(assemblyDefinition))
+            {
+                return false;
+            }
+
+            var mainModule = assemblyDefinition.MainModule;
+            if (mainModule.Types.Count == 1)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool IsNetStandardLibrary(this AssemblyDefinition assemblyDefinition)
         {
             return assemblyDefinition.MainModule.FileName.IndexOf("netstandard", 0, StringComparison.OrdinalIgnoreCase) >= 0;

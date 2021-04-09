@@ -27,7 +27,7 @@ namespace LoadAssembliesOnStartup.Fody
                 return;
             }
 
-            if (config.Attribute(nameof(IncludeAssemblies)) != null || config.Element(nameof(IncludeAssemblies)) != null)
+            if (config.Attribute(nameof(IncludeAssemblies)) is not null || config.Element(nameof(IncludeAssemblies)) is not null)
             {
                 OptOut = false;
             }
@@ -56,7 +56,7 @@ namespace LoadAssembliesOnStartup.Fody
         public static void ReadList(XElement config, string nodeName, List<string> list)
         {
             var attribute = config.Attribute(nodeName);
-            if (attribute != null)
+            if (attribute is not null)
             {
                 foreach (var item in attribute.Value.Split('|').NonEmpty())
                 {
@@ -65,7 +65,7 @@ namespace LoadAssembliesOnStartup.Fody
             }
 
             var element = config.Element(nodeName);
-            if (element != null)
+            if (element is not null)
             {
                 foreach (var item in element.Value.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                                             .NonEmpty())
@@ -78,7 +78,7 @@ namespace LoadAssembliesOnStartup.Fody
         public static void ReadBool(XElement config, string nodeName, Action<bool> setter)
         {
             var attribute = config.Attribute(nodeName);
-            if (attribute != null)
+            if (attribute is not null)
             {
                 if (bool.TryParse(attribute.Value, out var value))
                 {

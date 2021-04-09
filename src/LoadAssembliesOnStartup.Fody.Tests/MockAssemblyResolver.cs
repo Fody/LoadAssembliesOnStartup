@@ -1,4 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="MockAssemblyResolver.cs" company="Catel development team">
 //   Copyright (c) 2008 - 2013 Catel development team. All rights reserved.
 // </copyright>
@@ -25,7 +25,7 @@ public class MockAssemblyResolver : DefaultAssemblyResolver
             {
                 if (name.Name == "System")
                 {
-                    var codeBase = typeof(Debug).Assembly.CodeBase.Replace("file:///", "");
+                    var codeBase = typeof(Debug).Assembly.Location.Replace("file:///", "");
                     definition = AssemblyDefinition.ReadAssembly(codeBase);
                 }
                 else

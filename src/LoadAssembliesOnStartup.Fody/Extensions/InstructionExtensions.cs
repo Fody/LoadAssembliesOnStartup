@@ -34,7 +34,7 @@ namespace LoadAssembliesOnStartup.Fody
             if (instruction.IsOpCode(opCodes))
             {
                 var fieldDefinition = instruction.Operand as FieldDefinition;
-                if (fieldDefinition != null)
+                if (fieldDefinition is not null)
                 {
                     if (string.Equals(fieldDefinition.DeclaringType.Name, typeDefinition.Name))
                     {
@@ -43,7 +43,7 @@ namespace LoadAssembliesOnStartup.Fody
                 }
 
                 var fieldReference = instruction.Operand as FieldReference;
-                if (fieldReference != null)
+                if (fieldReference is not null)
                 {
                     if (string.Equals(fieldReference.DeclaringType.Name, typeDefinition.Name))
                     {
@@ -52,7 +52,7 @@ namespace LoadAssembliesOnStartup.Fody
                 }
 
                 var methodDefinition = instruction.Operand as MethodDefinition;
-                if (methodDefinition != null)
+                if (methodDefinition is not null)
                 {
                     if (string.Equals(methodDefinition.DeclaringType.Name, typeDefinition.Name))
                     {
@@ -61,7 +61,7 @@ namespace LoadAssembliesOnStartup.Fody
                 }
 
                 var methodReference = instruction.Operand as MethodReference;
-                if (methodReference != null)
+                if (methodReference is not null)
                 {
                     if (string.Equals(methodReference.DeclaringType.Name, typeDefinition.Name))
                     {
@@ -76,7 +76,7 @@ namespace LoadAssembliesOnStartup.Fody
         public static bool UsesField(this Instruction instruction, FieldDefinition fieldDefinition)
         {
             var usedFieldDefinition = instruction.Operand as FieldDefinition;
-            if (usedFieldDefinition != null)
+            if (usedFieldDefinition is not null)
             {
                 if (string.Equals(usedFieldDefinition.Name, fieldDefinition.Name))
                 {
@@ -85,7 +85,7 @@ namespace LoadAssembliesOnStartup.Fody
             }
 
             var usedFieldReference = instruction.Operand as FieldReference;
-            if (usedFieldReference != null)
+            if (usedFieldReference is not null)
             {
                 if (string.Equals(usedFieldReference.Name, fieldDefinition.Name))
                 {

@@ -17,10 +17,10 @@ namespace LoadAssembliesOnStartup.Fody
         public static int FindBaseConstructorIndex(this MethodDefinition method)
         {
             var declaringType = method.DeclaringType;
-            if (declaringType != null)
+            if (declaringType is not null)
             {
                 var baseType = declaringType.BaseType;
-                if (baseType != null)
+                if (baseType is not null)
                 {
                     var instructions = method.Body.Instructions;
 
@@ -30,7 +30,7 @@ namespace LoadAssembliesOnStartup.Fody
                         if (instruction.IsOpCode(OpCodes.Call))
                         {
                             var methodReference = instruction.Operand as MethodReference;
-                            if (methodReference != null)
+                            if (methodReference is not null)
                             {
                                 if (methodReference.Name.Equals(".ctor"))
                                 {

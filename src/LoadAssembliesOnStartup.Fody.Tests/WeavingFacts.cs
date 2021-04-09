@@ -26,7 +26,7 @@
             // Load program to load assembly
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("IncludeOrcLibraries", "<LoadAssembliesOnStartup IncludeAssemblies=\"Orc.*\" />");
 
-            ApprovalHelper.AssertIlCode(assemblyInfo.AfterAssemblyPath);
+            ApprovalHelper.AssertIlCode(assemblyInfo.AssemblyPath);
         }
 
         [Test]
@@ -35,7 +35,7 @@
             // Load program to load assembly
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("ExcludeOrcLibraries", "<LoadAssembliesOnStartup ExcludeAssemblies=\"Orc.*\" />");
 
-            ApprovalHelper.AssertIlCode(assemblyInfo.AfterAssemblyPath);
+            ApprovalHelper.AssertIlCode(assemblyInfo.AssemblyPath);
         }
 
         //[TestCase]

@@ -91,7 +91,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 }
 
                 var assembly = resolver.Resolve(assemblyReference);
-                if (assembly != null)
+                if (assembly is not null)
                 {
                     FodyEnvironment.WriteInfo($"Including reference '{assemblyReference.Name}'");
 
@@ -120,7 +120,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         }
 
                         var assembly = resolver.Resolve(referenceName);
-                        if (assembly != null)
+                        if (assembly is not null)
                         {
                             FodyEnvironment.WriteInfo($"Including reference '{referenceName.Name}', it was optimized away by the compiler but still adding it");
 
@@ -312,7 +312,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         var version = versionAttribute.Value;
 
                         var privateAssetsAttribute = packageReferenceElement.Attribute("PrivateAssets");
-                        if (privateAssetsAttribute != null)
+                        if (privateAssetsAttribute is not null)
                         {
                             if (string.Equals(privateAssetsAttribute.Value, "all", StringComparison.OrdinalIgnoreCase))
                             {
@@ -322,7 +322,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         }
 
                         var privateAssetsElement = packageReferenceElement.Element("PrivateAssets");
-                        if (privateAssetsElement != null)
+                        if (privateAssetsElement is not null)
                         {
                             if (string.Equals(privateAssetsElement.Value, "all", StringComparison.OrdinalIgnoreCase))
                             {
