@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ReferenceSelector.cs" company="CatenaLogic">
-//   Copyright (c) 2008 - 2014 CatenaLogic. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace LoadAssembliesOnStartup.Fody.Weaving
+﻿namespace LoadAssembliesOnStartup.Fody.Weaving
 {
     using System;
     using System.Collections.Generic;
@@ -240,6 +233,8 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             var userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var nuGetRoot = Path.Combine(userProfilePath, ".nuget", "packages");
 
+            var cache = CacheHelper.GetCache<Dictionary<string, bool>>("private_references");
+
             // For now, ignore the target version, just check whether the package (version) contains the assembly
             foreach (var privateReference in privateReferences)
             {
@@ -253,19 +248,26 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         continue;
                     }
 
-                    FodyEnvironment.WriteDebug($"Checking private reference '{privateReference}' using '{path}'");
-
-                    var isDll = Directory.GetFiles(path, $"{assemblyName}.dll", SearchOption.AllDirectories).Any();
-                    if (isDll)
+                    if (!cache.TryGetValue(path, out var cachedValue))
                     {
-                        return true;
+                        FodyEnvironment.WriteDebug($"Checking private reference '{privateReference}' using '{path}'");
+
+                        var isDll = Directory.GetFiles(path, $"{assemblyName}.dll", SearchOption.AllDirectories).Any();
+                        if (isDll)
+                        {
+                            cachedValue = true;
+                        }
+
+                        var isExe = Directory.GetFiles(path, $"{assemblyName}.exe", SearchOption.AllDirectories).Any();
+                        if (isExe)
+                        {
+                            cachedValue = true;
+                        }
+
+                        cache[path] = cachedValue;
                     }
 
-                    var isExe = Directory.GetFiles(path, $"{assemblyName}.exe", SearchOption.AllDirectories).Any();
-                    if (isExe)
-                    {
-                        return true;
-                    }
+                    return cachedValue;
                 }
                 catch (Exception ex)
                 {
@@ -276,12 +278,12 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             return false;
         }
 
-        private List<PrivateReference> FindPrivateReferences()
+        private IEnumerable<PrivateReference> FindPrivateReferences()
         {
             var csProj = _moduleWeaver.ProjectFilePath;
             if (string.IsNullOrWhiteSpace(csProj) || !File.Exists(csProj))
             {
-                return new List<PrivateReference>();
+                return Array.Empty<PrivateReference>();
             }
 
             // Assembly name != package name, so we need to go through all *private* packages to 
