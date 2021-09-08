@@ -236,6 +236,8 @@
             {
                 if (IsPrivateReferenceAvailableOnDisk(assemblyName, fastPathPrivateReference, nuGetRoot))
                 {
+                    // Only cache fast path values when true
+                    cache[assemblyName] = true;
                     return true;
                 }
             }
@@ -247,16 +249,21 @@
             {
                 if (IsPrivateReferenceAvailableOnDisk(assemblyName, privateReference, nuGetRoot))
                 {
+                    // Cache for fast path
+                    cache[assemblyName] = true;
                     return true;
                 }
             }
 
+            // Cache for fast path
+            cache[assemblyName] = false;
             return false;
         }
 
         private bool IsPrivateReferenceAvailableOnDisk(string assemblyName, PrivateReference privateReference, string nuGetRoot)
         {
-            var cache = CacheHelper.GetCache<Dictionary<string, bool>>("IsPrivateReference");
+            var dllCache = CacheHelper.GetCache<Dictionary<string, string[]>>("IsPrivateReference_DllCache");
+            var exeCache = CacheHelper.GetCache<Dictionary<string, string[]>>("IsPrivateReference_ExeCache");
 
             try
             {
@@ -268,28 +275,33 @@
                     return false;
                 }
 
-                var cacheKey = $"{assemblyName}_{path}";
-
-                if (!cache.TryGetValue(cacheKey, out var cachedValue))
+                if (!dllCache.TryGetValue(path, out var dllFiles))
                 {
-                    FodyEnvironment.WriteDebug($"Checking private reference '{privateReference}' using '{path}'");
-
-                    var isDll = Directory.GetFiles(path, $"{assemblyName}.dll", SearchOption.AllDirectories).Any();
-                    if (isDll)
-                    {
-                        cachedValue = true;
-                    }
-
-                    var isExe = Directory.GetFiles(path, $"{assemblyName}.exe", SearchOption.AllDirectories).Any();
-                    if (isExe)
-                    {
-                        cachedValue = true;
-                    }
-
-                    cache[cacheKey] = cachedValue;
+                    dllFiles = Directory.GetFiles(path, $"*.dll", SearchOption.AllDirectories);
+                    dllCache[path] = dllFiles;
                 }
 
-                return cachedValue;
+                var dllName = $"{assemblyName}.dll";
+                var isDll = dllFiles.Any(x => x.EndsWith(dllName, StringComparison.OrdinalIgnoreCase));
+                if (isDll)
+                {
+                    return true;
+                }
+
+                if (!exeCache.TryGetValue(path, out var exeFiles))
+                {
+                    exeFiles = Directory.GetFiles(path, $"*.exe", SearchOption.AllDirectories);
+                    exeCache[path] = exeFiles;
+                }
+
+                var exeName = $"{assemblyName}.exe";
+                var isExe = exeFiles.Any(x => x.EndsWith(exeName, StringComparison.OrdinalIgnoreCase));
+                if (isExe)
+                {
+                    return true;
+                }
+
+                return false;
             }
             catch (Exception ex)
             {
