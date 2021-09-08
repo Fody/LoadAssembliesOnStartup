@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
     <AssemblyName>LoadAssembliesOnStartup.Fody.Tests</AssemblyName>
     <RootNamespace>LoadAssembliesOnStartup.Fody.Tests</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -13,16 +13,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ApprovalTests" Version="5.2.3" />
-    <PackageReference Include="FodyHelpers" Version="6.1.1" />
+    <PackageReference Include="ApprovalTests" Version="5.7.0" />
+    <PackageReference Include="Fody" Version="6.5.2" PrivateAssets="None" />
+    <PackageReference Include="FodyHelpers" Version="6.5.2" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Moq" Version="4.14.1" />
-    <PackageReference Include="NUnit" Version="3.12.0" PrivateAssets="all" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Fody" Version="6.1.1" PrivateAssets="None" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="NUnit" Version="3.13.2" PrivateAssets="all" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
     <PackageReference Update="NETStandard.Library" Version="2.0.3" />
   </ItemGroup>
 
@@ -33,21 +31,6 @@
 
   <ItemGroup>
     <Compile Remove="*.approved.cs;*.received.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />

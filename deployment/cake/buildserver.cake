@@ -1,8 +1,6 @@
 // Customize this file when using a different build server
 #l "buildserver-continuaci.cake"
 
-#addin "nuget:?package=MagicChunks&version=2.0.0.119"
-
 using System.Runtime.InteropServices;
 
 public interface IBuildServer
@@ -135,7 +133,7 @@ public class BuildServerIntegration : IIntegration
             }
         }
 
-        var overrideFile = "./build.cakeoverrides";
+        var overrideFile = System.IO.Path.Combine(".", "build.cakeoverrides");
         if (System.IO.File.Exists(overrideFile))
         {
             var sb = new StringBuilder(string.Empty, 256);

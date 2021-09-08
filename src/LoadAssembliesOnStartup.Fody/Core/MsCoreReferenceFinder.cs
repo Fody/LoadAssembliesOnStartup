@@ -36,10 +36,7 @@ namespace LoadAssembliesOnStartup.Fody
 
         public void Execute()
         {
-            var msCoreLibDefinition = _assemblyResolver.Resolve(new AssemblyNameReference("mscorlib", null));
-            var msCoreTypes = msCoreLibDefinition.MainModule.Types;
-
-            var objectDefinition = msCoreTypes.FirstOrDefault(x => string.Equals(x.Name, "Object"));
+            var objectDefinition = _moduleWeaver.FindTypeDefinition("System.Object");
             if (objectDefinition is null)
             {
                 return;
@@ -60,7 +57,7 @@ namespace LoadAssembliesOnStartup.Fody
                 var types = GetTypes();
                 var type = types.FirstOrDefault(x => string.Equals(x.Name, typeName) || string.Equals(x.FullName, typeName));
 
-                _typeReferences[typeName] = (type != null) ? _moduleWeaver.ModuleDefinition.ImportReference(type) : null;
+                _typeReferences[typeName] = (type is not null) ? _moduleWeaver.ModuleDefinition.ImportReference(type) : null;
             }
 
             return _typeReferences[typeName];
@@ -74,7 +71,11 @@ namespace LoadAssembliesOnStartup.Fody
             var objectDefinition = msCoreTypes.FirstOrDefault(x => string.Equals(x.Name, "Object"));
             if (objectDefinition is null)
             {
-                if (msCoreLibDefinition.IsNetStandardLibrary())
+                if (msCoreLibDefinition.IsNetCoreLibrary())
+                {
+                    msCoreTypes.AddRange(GetDotNetCoreTypes());
+                }
+                else if (msCoreLibDefinition.IsNetStandardLibrary())
                 {
                     msCoreTypes.AddRange(GetNetStandardTypes());
                 }
@@ -88,23 +89,43 @@ namespace LoadAssembliesOnStartup.Fody
                 msCoreTypes.AddRange(GetDotNetTypes());
             }
 
-            return msCoreTypes;
+            return msCoreTypes.OrderBy(x => x.FullName);
         }
 
         private IEnumerable<TypeReference> GetDotNetTypes()
         {
-            var systemDefinition = _assemblyResolver.Resolve("System");
-            var systemTypes = systemDefinition.MainModule.Types;
+            var allTypes = new List<TypeReference>();
 
-            return systemTypes;
+            allTypes.AddRange(GetTypesFromAssembly("System"));
+
+            return allTypes;
+        }
+
+        private IEnumerable<TypeReference> GetDotNetCoreTypes()
+        {
+            var allTypes = new List<TypeReference>();
+
+            allTypes.AddRange(GetTypesFromAssembly("System"));
+            allTypes.AddRange(GetTypesFromAssembly("System.Core"));
+            allTypes.AddRange(GetTypesFromAssembly("System.ComponentModel"));
+            allTypes.AddRange(GetTypesFromAssembly("System.Diagnostics.Debug"));
+            allTypes.AddRange(GetTypesFromAssembly("System.Diagnostics.Tools"));
+            allTypes.AddRange(GetTypesFromAssembly("System.ObjectModel"));
+            allTypes.AddRange(GetTypesFromAssembly("System.Runtime"));
+
+            // Fallback mechanism
+            allTypes.AddRange(GetTypesFromAssembly("System.Private.CoreLib"));
+
+            return allTypes;
         }
 
         private IEnumerable<TypeReference> GetWinRtTypes()
         {
-            var systemRuntime = _assemblyResolver.Resolve("System.Runtime");
-            var systemRuntimeTypes = systemRuntime.MainModule.Types;
+            var allTypes = new List<TypeReference>();
 
-            return systemRuntimeTypes;
+            allTypes.AddRange(GetTypesFromAssembly("System.Runtime"));
+
+            return allTypes;
         }
 
         private IEnumerable<TypeReference> GetNetStandardTypes()
@@ -115,13 +136,25 @@ namespace LoadAssembliesOnStartup.Fody
             foreach (var assembly in _moduleWeaver.ModuleDefinition.AssemblyReferences)
             {
                 var resolvedAssembly = _assemblyResolver.Resolve(assembly);
-                if ((resolvedAssembly != null) && resolvedAssembly.IsNetStandardLibrary())
+                if ((resolvedAssembly is not null) && resolvedAssembly.IsNetStandardLibrary())
                 {
                     allTypes.AddRange(resolvedAssembly.MainModule.Types);
                 }
             }
 
             return allTypes;
+        }
+
+        private IEnumerable<TypeReference> GetTypesFromAssembly(string assemblyName)
+        {
+            var assembly = _assemblyResolver.Resolve(assemblyName);
+            if (assembly is null)
+            {
+                return Array.Empty<TypeReference>();
+            }
+
+            var systemTypes = assembly.MainModule.Types;
+            return systemTypes;
         }
     }
 }

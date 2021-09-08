@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ReferenceSelector.cs" company="CatenaLogic">
-//   Copyright (c) 2008 - 2014 CatenaLogic. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace LoadAssembliesOnStartup.Fody.Weaving
+﻿namespace LoadAssembliesOnStartup.Fody.Weaving
 {
     using System;
     using System.Collections.Generic;
@@ -91,11 +84,15 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                 }
 
                 var assembly = resolver.Resolve(assemblyReference);
-                if (assembly != null)
+                if (assembly is not null)
                 {
                     FodyEnvironment.WriteInfo($"Including reference '{assemblyReference.Name}'");
 
                     includedReferences.Add(assembly);
+                }
+                else
+                {
+                    FodyEnvironment.WriteError($"Reference '{assemblyReference.Name}' should be included, but cannot be resolved");
                 }
             }
 
@@ -120,11 +117,15 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         }
 
                         var assembly = resolver.Resolve(referenceName);
-                        if (assembly != null)
+                        if (assembly is not null)
                         {
                             FodyEnvironment.WriteInfo($"Including reference '{referenceName.Name}', it was optimized away by the compiler but still adding it");
 
                             includedReferences.Add(assembly);
+                        }
+                        else
+                        {
+                            FodyEnvironment.WriteError($"Reference '{referenceName}' should be included, but cannot be resolved");
                         }
                     }
                 }
@@ -200,20 +201,11 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             if (_configuration.ExcludePrivateAssemblies)
             {
-                if (IsPrivateReference(assemblyName))
+                if (IsPrivateReferenceAvailableOnDisk(assemblyName))
                 {
                     FodyEnvironment.WriteInfo($"Ignoring '{assemblyName}' because it is a private assembly");
                     return false;
                 }
-                // TODO: How to determine private assemblies, do we have access to the csproj?
-                //foreach (var systemAssemblyPrefix in SystemAssemblyPrefixes)
-                //{
-                //    if (assemblyNameLowered.IndexOf(systemAssemblyPrefix, StringComparison.OrdinalIgnoreCase) == 0)
-                //    {
-                //        FodyEnvironment.LogInfo($"Ignoring '{assemblyName}' because it is a system assembly");
-                //        return false;
-                //    }
-                //}
             }
 
             return _configuration.OptOut;
@@ -225,55 +217,105 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             return contained;
         }
 
-        private bool IsPrivateReference(string assemblyName)
+        private bool IsPrivateReferenceAvailableOnDisk(string assemblyName)
         {
+            var cache = CacheHelper.GetCache<Dictionary<string, bool>>("IsPrivateReference");
+            if (cache.TryGetValue(assemblyName, out var fastPathCaching))
+            {
+                return fastPathCaching;
+            }
+
             var privateReferences = FindPrivateReferences();
 
             var userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var nuGetRoot = Path.Combine(userProfilePath, ".nuget", "packages");
 
-            // For now, ignore the target version, just check whether the package (version) contains the assembly
-            foreach (var privateReference in privateReferences)
+            // Step 1 (FAST PATH): check if directly exists
+            var fastPathPrivateReference = privateReferences.FirstOrDefault(x => string.Equals(assemblyName, x.PackageName));
+            if (fastPathPrivateReference is not null)
             {
-                try
+                if (IsPrivateReferenceAvailableOnDisk(assemblyName, fastPathPrivateReference, nuGetRoot))
                 {
-                    // For some packages (such as Fody), there is no /lib folder, in that case we don't need
-                    // to check anything
-                    var path = Path.Combine(nuGetRoot, privateReference.PackageName, privateReference.Version, "lib");
-                    if (!Directory.Exists(path))
-                    {
-                        continue;
-                    }
-
-                    FodyEnvironment.WriteDebug($"Checking private reference '{privateReference}' using '{path}'");
-
-                    var isDll = Directory.GetFiles(path, $"{assemblyName}.dll", SearchOption.AllDirectories).Any();
-                    if (isDll)
-                    {
-                        return true;
-                    }
-
-                    var isExe = Directory.GetFiles(path, $"{assemblyName}.exe", SearchOption.AllDirectories).Any();
-                    if (isExe)
-                    {
-                        return true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    FodyEnvironment.WriteError($"Failed to check private reference '{privateReference}':\n{ex}");
+                    // Only cache fast path values when true
+                    cache[assemblyName] = true;
+                    return true;
                 }
             }
 
+            // Step 2: (SLOW PATH): check all paths
+
+            // For now, ignore the target version, just check whether the package (version) contains the assembly
+            foreach (var privateReference in privateReferences)
+            {
+                if (IsPrivateReferenceAvailableOnDisk(assemblyName, privateReference, nuGetRoot))
+                {
+                    // Cache for fast path
+                    cache[assemblyName] = true;
+                    return true;
+                }
+            }
+
+            // Cache for fast path
+            cache[assemblyName] = false;
             return false;
         }
 
-        private List<PrivateReference> FindPrivateReferences()
+        private bool IsPrivateReferenceAvailableOnDisk(string assemblyName, PrivateReference privateReference, string nuGetRoot)
+        {
+            var dllCache = CacheHelper.GetCache<Dictionary<string, string[]>>("IsPrivateReference_DllCache");
+            var exeCache = CacheHelper.GetCache<Dictionary<string, string[]>>("IsPrivateReference_ExeCache");
+
+            try
+            {
+                // For some packages (such as Fody), there is no /lib folder, in that case we don't need
+                // to check anything
+                var path = Path.Combine(nuGetRoot, privateReference.PackageName, privateReference.Version, "lib");
+                if (!Directory.Exists(path))
+                {
+                    return false;
+                }
+
+                if (!dllCache.TryGetValue(path, out var dllFiles))
+                {
+                    dllFiles = Directory.GetFiles(path, $"*.dll", SearchOption.AllDirectories);
+                    dllCache[path] = dllFiles;
+                }
+
+                var dllName = $"{assemblyName}.dll";
+                var isDll = dllFiles.Any(x => x.EndsWith(dllName, StringComparison.OrdinalIgnoreCase));
+                if (isDll)
+                {
+                    return true;
+                }
+
+                if (!exeCache.TryGetValue(path, out var exeFiles))
+                {
+                    exeFiles = Directory.GetFiles(path, $"*.exe", SearchOption.AllDirectories);
+                    exeCache[path] = exeFiles;
+                }
+
+                var exeName = $"{assemblyName}.exe";
+                var isExe = exeFiles.Any(x => x.EndsWith(exeName, StringComparison.OrdinalIgnoreCase));
+                if (isExe)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                FodyEnvironment.WriteError($"Failed to check private reference '{privateReference}':\n{ex}");
+                return false;
+            }
+        }
+
+        private IEnumerable<PrivateReference> FindPrivateReferences()
         {
             var csProj = _moduleWeaver.ProjectFilePath;
             if (string.IsNullOrWhiteSpace(csProj) || !File.Exists(csProj))
             {
-                return new List<PrivateReference>();
+                return Array.Empty<PrivateReference>();
             }
 
             // Assembly name != package name, so we need to go through all *private* packages to 
@@ -312,7 +354,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         var version = versionAttribute.Value;
 
                         var privateAssetsAttribute = packageReferenceElement.Attribute("PrivateAssets");
-                        if (privateAssetsAttribute != null)
+                        if (privateAssetsAttribute is not null)
                         {
                             if (string.Equals(privateAssetsAttribute.Value, "all", StringComparison.OrdinalIgnoreCase))
                             {
@@ -322,7 +364,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
                         }
 
                         var privateAssetsElement = packageReferenceElement.Element("PrivateAssets");
-                        if (privateAssetsElement != null)
+                        if (privateAssetsElement is not null)
                         {
                             if (string.Equals(privateAssetsElement.Value, "all", StringComparison.OrdinalIgnoreCase))
                             {

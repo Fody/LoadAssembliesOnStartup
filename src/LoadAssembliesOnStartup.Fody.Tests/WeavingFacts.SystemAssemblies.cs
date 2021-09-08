@@ -12,7 +12,7 @@
         {
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("ExcludesSystemAssemblies", @"<LoadAssembliesOnStartup ExcludeSystemAssemblies='true' />");
 
-            ApprovalHelper.AssertIlCode(assemblyInfo.AfterAssemblyPath);
+            ApprovalHelper.AssertIlCode(assemblyInfo.AssemblyPath);
         }
 
         [Test]
@@ -20,7 +20,7 @@
         {
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("IncludesSystemAssemblies", @"<LoadAssembliesOnStartup ExcludeSystemAssemblies='false' />");
 
-            ApprovalHelper.AssertIlCode(assemblyInfo.AfterAssemblyPath);
+            ApprovalHelper.AssertIlCode(assemblyInfo.AssemblyPath);
         }
     }
 }

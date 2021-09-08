@@ -1,6 +1,6 @@
 #l "buildserver.cake"
 
-#tool "nuget:?package=GitVersion.CommandLine&version=5.3.2"
+#tool "nuget:?package=GitVersion.CommandLine&version=5.7.0"
 
 //-------------------------------------------------------------
 
@@ -9,6 +9,7 @@ public class GeneralContext : BuildContextWithItemsBase
     public GeneralContext(IBuildContext parentBuildContext)
         : base(parentBuildContext)
     {
+        SkipComponentsThatAreNotDeployable = true;
     }
 
     public string Target { get; set; }
@@ -23,6 +24,7 @@ public class GeneralContext : BuildContextWithItemsBase
     public bool MaximizePerformance { get; set; }
     public bool UseVisualStudioPrerelease { get; set; }
     public bool VerifyDependencies { get; set; }
+    public bool SkipComponentsThatAreNotDeployable { get; set; }
 
     public VersionContext Version { get; set; }
     public CopyrightContext Copyright { get; set; }
@@ -73,24 +75,24 @@ public class VersionContext : BuildContextBase
             {
                 CakeContext.Information("No local .git directory found, treating as dynamic repository");
 
+                // Make a *BIG* assumption that the solution name == repository name
+                var repositoryName = generalContext.Solution.Name;
+                var dynamicRepositoryPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), repositoryName);
+
                 if (ClearCache)
                 {
                     CakeContext.Warning("Cleaning the cloned temp directory, disable by setting 'GitVersion_ClearCache' to 'false'");
-                    
-                    // Make a *BIG* assumption that the solution name == repository name
-                    var repositoryName = generalContext.Solution.Name;
-                    var tempDirectory = $"{System.IO.Path.GetTempPath()}\\{repositoryName}";
-                    
-                    if (CakeContext.DirectoryExists(tempDirectory))
+    
+                    if (CakeContext.DirectoryExists(dynamicRepositoryPath))
                     {
-                        CakeContext.DeleteDirectory(tempDirectory, new DeleteDirectorySettings
+                        CakeContext.DeleteDirectory(dynamicRepositoryPath, new DeleteDirectorySettings
                         {
                             Force = true,
                             Recursive = true
                         });
                     }
                 }
-          
+
                 // Validate first
                 if (string.IsNullOrWhiteSpace(generalContext.Repository.BranchName))
                 {
@@ -102,6 +104,8 @@ public class VersionContext : BuildContextBase
                     throw new Exception("No local .git directory was found, but repository url was not specified either. Make sure to specify the branch");
                 }
 
+                CakeContext.Information($"Fetching dynamic repository from url '{generalContext.Repository.Url}' => '{dynamicRepositoryPath}'");
+
                 // Dynamic repository
                 gitVersionSettings.UserName = generalContext.Repository.Username;
                 gitVersionSettings.Password = generalContext.Repository.Password;
@@ -110,6 +114,8 @@ public class VersionContext : BuildContextBase
                 gitVersionSettings.Commit = generalContext.Repository.CommitId;
                 gitVersionSettings.NoFetch = false;
                 gitVersionSettings.WorkingDirectory = generalContext.RootDirectory;
+                gitVersionSettings.DynamicRepositoryPath = dynamicRepositoryPath;
+                gitVersionSettings.Verbosity = GitVersionVerbosity.Debug;
             }
 
             _gitVersionContext = CakeContext.GitVersion(gitVersionSettings);
@@ -119,6 +125,33 @@ public class VersionContext : BuildContextBase
     }
 
     public bool ClearCache { get; set; }
+
+    private string _major;
+
+    public string Major
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(_major))
+            {
+                _major = string.Empty;
+
+                for (int i = 0; i < MajorMinorPatch.Length; i++)
+                {
+                    var character = MajorMinorPatch[i];
+                    if (!char.IsDigit(character))
+                    {
+                        break;
+                    }
+
+                    _major += character.ToString();
+                }
+            }
+
+            return _major;
+        }
+    }
+
     public string MajorMinorPatch { get; set; }
     public string FullSemVer { get; set; }
     public string NuGet { get; set; }
@@ -174,6 +207,10 @@ public class NuGetContext : BuildContextBase
     public string Executable { get; set; }
     public string LocalPackagesDirectory { get; set; }
 
+    public bool RestoreUsingNuGet { get; set; }
+    public bool RestoreUsingDotNetRestore { get; set; }
+    public bool NoDependencies { get; set; }
+
     protected override void ValidateContext()
     {
     
@@ -181,7 +218,8 @@ public class NuGetContext : BuildContextBase
     
     protected override void LogStateInfoForContext()
     {
-    
+        CakeContext.Information($"Restore using NuGet: '{RestoreUsingNuGet}'");
+        CakeContext.Information($"Restore using dotnet restore: '{RestoreUsingDotNetRestore}'");
     }
 }
 
@@ -202,16 +240,11 @@ public class SolutionContext : BuildContextBase
         get
         {
             var directory = System.IO.Directory.GetParent(FileName).FullName;
-            if (!directory.EndsWith("/") && !directory.EndsWith("\\"))
+            var separator = System.IO.Path.DirectorySeparatorChar.ToString();
+
+            if (!directory.EndsWith(separator))
             {
-                if (directory.Contains("\\"))
-                {
-                    directory += "\\";
-                }
-                else
-                {
-                    directory += "/";
-                }
+                directory += separator;
             }
 
             return directory;
@@ -323,6 +356,7 @@ public class SonarQubeContext : BuildContextBase
     public bool IsDisabled { get; set; }
     public bool SupportBranches { get; set; }
     public string Url { get; set; }
+    public string Organization { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
     public string Project { get; set; }
@@ -366,7 +400,10 @@ private GeneralContext InitializeGeneralContext(BuildContext buildContext, IBuil
     {
         PackageSources = buildContext.BuildServer.GetVariable("NuGetPackageSources", showValue: true),
         Executable = "./tools/nuget.exe",
-        LocalPackagesDirectory = "c:\\source\\_packages"
+        LocalPackagesDirectory = "c:\\source\\_packages",
+        RestoreUsingNuGet = buildContext.BuildServer.GetVariableAsBool("NuGet_RestoreUsingNuGet", false, showValue: true),
+        RestoreUsingDotNetRestore = buildContext.BuildServer.GetVariableAsBool("NuGet_RestoreUsingDotNetRestore", true, showValue: true),
+        NoDependencies = buildContext.BuildServer.GetVariableAsBool("NuGet_NoDependencies", true, showValue: true)
     };
 
     var solutionName = buildContext.BuildServer.GetVariable("SolutionName", showValue: true);
@@ -389,6 +426,7 @@ private GeneralContext InitializeGeneralContext(BuildContext buildContext, IBuil
     data.MaximizePerformance = buildContext.BuildServer.GetVariableAsBool("MaximizePerformance", true, showValue: true);
     data.UseVisualStudioPrerelease = buildContext.BuildServer.GetVariableAsBool("UseVisualStudioPrerelease", false, showValue: true);
     data.VerifyDependencies = !buildContext.BuildServer.GetVariableAsBool("DependencyCheckDisabled", false, showValue: true);
+    data.SkipComponentsThatAreNotDeployable = buildContext.BuildServer.GetVariableAsBool("SkipComponentsThatAreNotDeployable", true, showValue: true);
 
     // If local, we want full pdb, so do a debug instead
     if (data.IsLocalBuild)
@@ -409,8 +447,8 @@ private GeneralContext InitializeGeneralContext(BuildContext buildContext, IBuil
     data.CodeSign = new CodeSignContext(data)
     {
         WildCard = buildContext.BuildServer.GetVariable("CodeSignWildcard", showValue: true),
-        CertificateSubjectName = buildContext.BuildServer.GetVariable("CodeSignCertificateSubjectName", data.Copyright.Company, showValue: true),
-        TimeStampUri = buildContext.BuildServer.GetVariable("CodeSignTimeStampUri", "http://timestamp.comodoca.com/authenticode", showValue: true)
+        CertificateSubjectName = buildContext.BuildServer.GetVariable("CodeSignCertificateSubjectName", showValue: true),
+        TimeStampUri = buildContext.BuildServer.GetVariable("CodeSignTimeStampUri", "http://timestamp.digicert.com", showValue: true)
     };
 
     data.Repository = new RepositoryContext(data)
@@ -427,6 +465,7 @@ private GeneralContext InitializeGeneralContext(BuildContext buildContext, IBuil
         IsDisabled = buildContext.BuildServer.GetVariableAsBool("SonarDisabled", false, showValue: true),
         SupportBranches = buildContext.BuildServer.GetVariableAsBool("SonarSupportBranches", true, showValue: true),
         Url = buildContext.BuildServer.GetVariable("SonarUrl", showValue: true),
+        Organization = buildContext.BuildServer.GetVariable("SonarOrganization", showValue: true),
         Username = buildContext.BuildServer.GetVariable("SonarUsername", showValue: false),
         Password = buildContext.BuildServer.GetVariable("SonarPassword", showValue: false),
         Project = buildContext.BuildServer.GetVariable("SonarProject", data.Solution.Name, showValue: true)

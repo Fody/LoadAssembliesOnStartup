@@ -1,7 +1,28 @@
 public static bool IsSourceLinkSupported(BuildContext buildContext, string projectFileName)
 {
+    if (buildContext.General.SourceLink.IsDisabled)
+    {
+        return false;
+    }
+    
+    if (buildContext.General.IsLocalBuild)
+    {
+        return false;
+    }
+
+    if (string.IsNullOrWhiteSpace(buildContext.General.Repository.Url))
+    {
+        return false;
+    }
+
     // Only support C# projects
     if (!projectFileName.EndsWith(".csproj"))
+    {
+        return false;
+    }
+
+    // Only support when running a real build, e.g. ot for 'Package' only
+    if (!buildContext.General.Target.ToLower().Contains("build"))
     {
         return false;
     }
@@ -38,7 +59,7 @@ public static void InjectSourceLinkInProjectFile(BuildContext buildContext, stri
     var referencesItemGroup = new XElement("ItemGroup");
     var sourceLinkPackageReference = new XElement("PackageReference");
     sourceLinkPackageReference.Add(new XAttribute("Include", "Microsoft.SourceLink.GitHub"));
-    sourceLinkPackageReference.Add(new XAttribute("Version", "1.0.0-beta-63127-02"));
+    sourceLinkPackageReference.Add(new XAttribute("Version", "1.0.0"));
     sourceLinkPackageReference.Add(new XAttribute("PrivateAssets", "all"));
 
     referencesItemGroup.Add(sourceLinkPackageReference);
@@ -51,9 +72,10 @@ public static void InjectSourceLinkInProjectFile(BuildContext buildContext, stri
 
     // Required to end with a \
     var sourceRootValue = buildContext.General.RootDirectory;
-    if (!sourceRootValue.EndsWith("\\"))
+    var directorySeparator = System.IO.Path.DirectorySeparatorChar.ToString();
+    if (!sourceRootValue.EndsWith(directorySeparator))
     {
-        sourceRootValue += "\\";
+        sourceRootValue += directorySeparator;
     };
 
     sourceRoot.Add(new XAttribute("Include", sourceRootValue));
@@ -68,7 +90,4 @@ public static void InjectSourceLinkInProjectFile(BuildContext buildContext, stri
     projectElement.Add(sourceRootItemGroup);
 
     xmlDocument.Save(projectFileName);
-
-    // Restore packages again for the dynamic package
-    RestoreNuGetPackages(buildContext, projectFileName);
 }

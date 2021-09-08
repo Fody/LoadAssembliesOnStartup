@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>LoadAssembliesOnStartup.Fody</AssemblyName>
     <RootNamespace>LoadAssembliesOnStartup.Fody</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -10,16 +10,18 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <PackageTags>load;assemblies;references;reference;force;startup;fody;ilweaving;weaving</PackageTags>
     <DisableFody>true</DisableFody>
+    <NoWarn>$(NoWarn);NU5100;NU5118;NU5128</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
     <!-- SonarQube requires a project guid -->
     <ProjectGuid>11688DF4-BB8B-4BC8-B2F4-78DF23292EF6</ProjectGuid>
   </PropertyGroup>
-  
+
   <ItemGroup>
-    <PackageReference Include="Fody" Version="6.1.1" PrivateAssets="None" />
-    <PackageReference Include="FodyHelpers" Version="6.1.1" PrivateAssets="All" />
+    <PackageReference Include="Fody" Version="6.5.2" PrivateAssets="none" />
+    <PackageReference Include="FodyHelpers" Version="6.5.2" PrivateAssets="All" />
+    <PackageReference Include="FodyPackaging" Version="6.5.2" PrivateAssets="All" />
     <PackageReference Update="NETStandard.Library" Version="2.0.3" />
   </ItemGroup>
 
@@ -27,14 +29,14 @@
     <!-- this project targets netstandard2.0 (unnecessarily) and has the below ref to work around this bug https://github.com/Microsoft/msbuild/issues/2661 -->
     <ProjectReference Include="..\$(PackageId)\$(PackageId).csproj" PrivateAssets="All" Condition="$(TargetFramework)=='fake'" />
   </ItemGroup>
-  
+
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
 
   <!--
   Note: the code below comes from https://raw.githubusercontent.com/Fody/Fody/master/FodyPackaging/build/FodyPackaging.targets
-  but is needed because we use 'Catel.Fody.Attributes' instead of 'Catel' as attributes project name
+  but is needed because we use 'LoadAssembliesOnStartup.Fody' instead of 'LoadAssembliesOnStartup' as attributes project name
   -->
-  
+
   <!-- Required *after* import of explicit properties -->
   <PropertyGroup>
     <!-- The properties below come from the FodyPackaging.props, see explanation at end of file -->
@@ -43,30 +45,26 @@
     <WeaverDirPath>$(OverridableOutputPath)\..\$(PackageId)</WeaverDirPath>
     <Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
-  
+
   <!-- Explicitly remove any content files, this is a weaver only -->
   <PropertyGroup>
     <IncludeBuildOutput>false</IncludeBuildOutput>
   </PropertyGroup>
-  
+
   <Target Name="IncludeFodyFiles">
+    <PropertyGroup>
+      <WeaverFile>$(WeaverDirPath)\netstandard2.0\$(PackageId).dll</WeaverFile>
+      <XcfFile>$(WeaverDirPath)\netstandard2.0\$(PackageId).xcf</XcfFile>
+    </PropertyGroup>
+
+    <Error Text="FodyPackaging: No weaver found at $(WeaverFile). $(ProjectName) should have a Project Dependency on $(PackageId), and $(PackageId) should target 'netstandard2.0'." Condition="!Exists($(WeaverFile))" />
+
     <ItemGroup>
-      <NetClassicFilesToInclude Include="$(WeaverDirPath)\net4*\$(PackageId).dll" />
-      <NetClassicFilesToInclude Include="$(WeaverDirPath)\net4*\$(PackageId).xcf" />
-      <NetClassicFilesToInclude Include="$(WeaverDirPath)\net4*\$(PackageId).pdb" />
-      <NetStandardFilesToInclude Include="$(WeaverDirPath)\netstandard2*\$(PackageId).dll" />
-      <NetStandardFilesToInclude Include="$(WeaverDirPath)\netstandard2*\$(PackageId).xcf" />
-      <NetStandardFilesToInclude Include="$(WeaverDirPath)\netstandard2*\$(PackageId).pdb" />
+      <TfmSpecificPackageFile Include="$(XcfFile)" PackagePath="weaver\$(PackageId).xcf" Condition="Exists($(XcfFile))" />
+      <TfmSpecificPackageFile Include="$(WeaverFile)" PackagePath="weaver\$(PackageId).dll" />
+      <TfmSpecificPackageFile Include="$(WeaverPropsFile)" PackagePath="build\$(PackageId).props" />
     </ItemGroup>
-    
-    <CreateItem Include="@(NetClassicFilesToInclude)" AdditionalMetadata="PackagePath=netclassicweaver">
-      <Output TaskParameter="Include" ItemName="TfmSpecificPackageFile" />
-    </CreateItem>
-    
-    <CreateItem Include="@(NetStandardFilesToInclude)" AdditionalMetadata="PackagePath=netstandardweaver">
-      <Output TaskParameter="Include" ItemName="TfmSpecificPackageFile" />
-    </CreateItem>
-    
+
     <CreateItem Include="$(MSBuildThisFileDirectory)..\$(PackageId)\$(PackageId).props" AdditionalMetadata="PackagePath=build">
       <Output TaskParameter="Include" ItemName="TfmSpecificPackageFile" />
     </CreateItem>

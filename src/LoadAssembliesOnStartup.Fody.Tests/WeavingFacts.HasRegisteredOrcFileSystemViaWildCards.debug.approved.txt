@@ -1,4 +1,4 @@
-IL_0000: ldtoken ModuleInitializer | Orc.FileSystem, Version=3.2.0.0, Culture=neutral, PublicKeyToken=null
+IL_0000: ldtoken Orc.FileSystem.SystemErrorCodes | Orc.FileSystem, Version=4.1.4.0, Culture=neutral, PublicKeyToken=null
 IL_0005: call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
 IL_000a: stloc V_0
 IL_000b: ret

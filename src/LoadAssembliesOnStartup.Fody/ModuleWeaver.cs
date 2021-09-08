@@ -57,7 +57,7 @@ namespace LoadAssembliesOnStartup.Fody
                 // Read config
                 var configuration = new Configuration(Config);
 
-                WriteInfo($"LoadAssembliesOnStartup.Fody v{GetType().Assembly.GetName().Version}");
+                WriteInfo($"LoadAssembliesOnStartup.Fody v{GetType().Assembly.GetVersion()}");
 
                 // Set up the basics
                 var msCoreReferenceFinder = new MsCoreReferenceFinder(this, ModuleDefinition.AssemblyResolver);

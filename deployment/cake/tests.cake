@@ -2,51 +2,126 @@
 #l "tests-variables.cake"
 #l "tests-nunit.cake"
 
-//-------------------------------------------------------------
-
-private static void BuildTestProjects(BuildContext buildContext)
+public class TestProcessor : ProcessorBase
 {
-    // In case of a local build and we have included / excluded anything, skip tests
-    if (buildContext.General.IsLocalBuild && 
-        (buildContext.General.Includes.Count > 0 || buildContext.General.Excludes.Count > 0))
+    public TestProcessor(BuildContext buildContext)
+        : base(buildContext)
     {
-        buildContext.CakeContext.Information("Skipping test project because this is a local build with specific includes / excludes");
-        return;
+
     }
 
-    foreach (var testProject in buildContext.Tests.Items)
+    public override bool HasItems()
     {
-        buildContext.CakeContext.LogSeparator("Building test project '{0}'", testProject);
+        return BuildContext.Tests.Items.Count > 0;
+    }
 
-        var projectFileName = GetProjectFileName(buildContext, testProject);
-        
-        var msBuildSettings = new MSBuildSettings
+    public override async Task PrepareAsync()
+    {
+        // Check whether projects should be processed, `.ToList()` 
+        // is required to prevent issues with foreach
+        foreach (var testProject in BuildContext.Tests.Items.ToList())
         {
-            Verbosity = Verbosity.Quiet, // Verbosity.Diagnostic
-            ToolVersion = MSBuildToolVersion.Default,
-            Configuration = buildContext.General.Solution.ConfigurationName,
-            MSBuildPlatform = MSBuildPlatform.x86, // Always require x86, see platform for actual target platform
-            PlatformTarget = PlatformTarget.MSIL
-        };
+            if (IgnoreTestProject(testProject))
+            {
+                BuildContext.Tests.Items.Remove(testProject);
+            }
+        }
+    }
 
-        ConfigureMsBuild(buildContext, msBuildSettings, testProject);
+    public override async Task UpdateInfoAsync()
+    {
+        // Not required
+    }
 
-        // Always disable SourceLink
-        msBuildSettings.WithProperty("EnableSourceLink", "false");
+    public override async Task BuildAsync()
+    {
+        if (!HasItems())
+        {
+            return;
+        }
 
-        // Force disable SonarQube
-        msBuildSettings.WithProperty("SonarQubeExclude", "true");
+        foreach (var testProject in BuildContext.Tests.Items)
+        {
+            BuildContext.CakeContext.LogSeparator("Building test project '{0}'", testProject);
 
-        // Note: we need to set OverridableOutputPath because we need to be able to respect
-        // AppendTargetFrameworkToOutputPath which isn't possible for global properties (which
-        // are properties passed in using the command line)
-        var outputDirectory = string.Format("{0}/{1}/", buildContext.General.OutputRootDirectory, testProject);
-        buildContext.CakeContext.Information("Output directory: '{0}'", outputDirectory);
-        msBuildSettings.WithProperty("OverridableOutputRootPath", buildContext.General.OutputRootDirectory);
-        msBuildSettings.WithProperty("OverridableOutputPath", outputDirectory);
-        msBuildSettings.WithProperty("PackageOutputPath", buildContext.General.OutputRootDirectory);
+            var projectFileName = GetProjectFileName(BuildContext, testProject);
+            
+            var msBuildSettings = new MSBuildSettings
+            {
+                Verbosity = Verbosity.Quiet, // Verbosity.Diagnostic
+                ToolVersion = MSBuildToolVersion.Default,
+                Configuration = BuildContext.General.Solution.ConfigurationName,
+                MSBuildPlatform = MSBuildPlatform.x86, // Always require x86, see platform for actual target platform
+                PlatformTarget = PlatformTarget.MSIL
+            };
 
-        buildContext.CakeContext.MSBuild(projectFileName, msBuildSettings);
+            ConfigureMsBuild(BuildContext, msBuildSettings, testProject);
+
+            // Always disable SourceLink
+            msBuildSettings.WithProperty("EnableSourceLink", "false");
+
+            // Force disable SonarQube
+            msBuildSettings.WithProperty("SonarQubeExclude", "true");
+
+            // Note: we need to set OverridableOutputPath because we need to be able to respect
+            // AppendTargetFrameworkToOutputPath which isn't possible for global properties (which
+            // are properties passed in using the command line)
+            var outputDirectory = GetProjectOutputDirectory(BuildContext, testProject);
+            BuildContext.CakeContext.Information("Output directory: '{0}'", outputDirectory);
+            msBuildSettings.WithProperty("OverridableOutputRootPath", BuildContext.General.OutputRootDirectory);
+            msBuildSettings.WithProperty("OverridableOutputPath", outputDirectory);
+            msBuildSettings.WithProperty("PackageOutputPath", BuildContext.General.OutputRootDirectory);
+
+            RunMsBuild(BuildContext, testProject, projectFileName, msBuildSettings);
+        }
+    }
+
+    public override async Task PackageAsync()
+    {
+        // Not required
+    }
+
+    public override async Task DeployAsync()
+    {
+        // Not required
+    }
+
+    public override async Task FinalizeAsync()
+    {
+        // Not required
+    }
+
+    //-------------------------------------------------------------
+
+    private bool IgnoreTestProject(string projectName)
+    {
+        if (BuildContext.General.IsLocalBuild && BuildContext.General.MaximizePerformance)
+        {
+            BuildContext.CakeContext.Information($"Local build with maximized performance detected, ignoring test project for project '{projectName}'");
+            return true;
+        }
+
+        // In case of a local build and we have included / excluded anything, skip tests
+        if (BuildContext.General.IsLocalBuild && 
+            (BuildContext.General.Includes.Count > 0 || BuildContext.General.Excludes.Count > 0))
+        {
+            BuildContext.CakeContext.Information($"Skipping test project '{projectName}' because this is a local build with specific includes / excludes");
+            return true;
+        }
+
+        // Special unit test part assuming a few naming conventions:
+        // 1. [ProjectName].Tests
+        // 2. [SolutionName].Tests.[ProjectName]
+        //
+        // In both cases, we can simply remove ".Tests" and check if that project is being ignored
+        var expectedProjectName = projectName.Replace(".Tests", string.Empty);
+        if (!ShouldProcessProject(BuildContext, expectedProjectName))
+        {
+            BuildContext.CakeContext.Information($"Skipping test project '{projectName}' because project '{expectedProjectName}' should not be processed either");
+            return true;
+        }
+
+        return false;
     }
 }
 
@@ -54,7 +129,8 @@ private static void BuildTestProjects(BuildContext buildContext)
 
 private static void RunUnitTests(BuildContext buildContext, string projectName)
 {
-    var testResultsDirectory = string.Format("{0}/testresults/{1}/", buildContext.General.OutputRootDirectory, projectName);
+    var testResultsDirectory = System.IO.Path.Combine(buildContext.General.OutputRootDirectory,
+        "testresults", projectName);
 
     buildContext.CakeContext.CreateDirectory(testResultsDirectory);
 
@@ -73,9 +149,10 @@ private static void RunUnitTests(BuildContext buildContext, string projectName)
             buildContext.CakeContext.DotNetCoreTest(projectFileName, new DotNetCoreTestSettings
             {
                 Configuration = buildContext.General.Solution.ConfigurationName,
-                NoRestore = true,
                 NoBuild = true,
-                OutputDirectory = string.Format("{0}/{1}", GetProjectOutputDirectory(buildContext, projectName), testTargetFramework),
+                NoLogo = true,
+                NoRestore = true,
+                OutputDirectory = System.IO.Path.Combine(GetProjectOutputDirectory(buildContext, projectName), testTargetFramework),
                 ResultsDirectory = testResultsDirectory
             });
 

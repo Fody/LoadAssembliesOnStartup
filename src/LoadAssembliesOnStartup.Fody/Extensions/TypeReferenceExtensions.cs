@@ -19,7 +19,7 @@ namespace LoadAssembliesOnStartup.Fody
 
             var typeDefinition = type.Resolve();
 
-            while (typeDefinition != null)
+            while (typeDefinition is not null)
             {
                 if (typeDefinition.Equals(target))
                 {

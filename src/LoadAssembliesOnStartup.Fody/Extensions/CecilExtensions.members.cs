@@ -31,25 +31,25 @@ namespace LoadAssembliesOnStartup.Fody
         private static bool IsMarkedAsGeneratedCodeInternal(object obj)
         {
             var fieldDefinition = obj as FieldDefinition;
-            if (fieldDefinition != null)
+            if (fieldDefinition is not null)
             {
                 return ContainsAttribute(fieldDefinition.CustomAttributes, MsCoreReferenceFinder.GeneratedCodeAttributeTypeName);
             }
 
             var propertyDefinition = obj as PropertyDefinition;
-            if (propertyDefinition != null)
+            if (propertyDefinition is not null)
             {
                 return ContainsAttribute(propertyDefinition.CustomAttributes, MsCoreReferenceFinder.GeneratedCodeAttributeTypeName);
             }
 
             var methodDefinition = obj as MethodDefinition;
-            if (methodDefinition != null)
+            if (methodDefinition is not null)
             {
                 return ContainsAttribute(methodDefinition.CustomAttributes, MsCoreReferenceFinder.GeneratedCodeAttributeTypeName);
             }
 
             var typeDefinition = obj as TypeDefinition;
-            if (typeDefinition != null)
+            if (typeDefinition is not null)
             {
                 return ContainsAttribute(typeDefinition.CustomAttributes, MsCoreReferenceFinder.GeneratedCodeAttributeTypeName);
             }
@@ -80,25 +80,25 @@ namespace LoadAssembliesOnStartup.Fody
         private static void MarkAsGeneratedCodeInternal(object obj, MsCoreReferenceFinder msCoreReferenceFinder)
         {
             var fieldDefinition = obj as FieldDefinition;
-            if (fieldDefinition != null)
+            if (fieldDefinition is not null)
             {
                 fieldDefinition.CustomAttributes.MarkAsGeneratedCodeInternal(msCoreReferenceFinder, fieldDefinition.Module);
             }
 
             var propertyDefinition = obj as PropertyDefinition;
-            if (propertyDefinition != null)
+            if (propertyDefinition is not null)
             {
                 propertyDefinition.CustomAttributes.MarkAsGeneratedCodeInternal(msCoreReferenceFinder, propertyDefinition.Module);
             }
 
             var methodDefinition = obj as MethodDefinition;
-            if (methodDefinition != null)
+            if (methodDefinition is not null)
             {
                 methodDefinition.CustomAttributes.MarkAsGeneratedCodeInternal(msCoreReferenceFinder, methodDefinition.Module);
             }
 
             var typeDefinition = obj as TypeDefinition;
-            if (typeDefinition != null)
+            if (typeDefinition is not null)
             {
                 typeDefinition.CustomAttributes.MarkAsGeneratedCodeInternal(msCoreReferenceFinder, typeDefinition.Module);
             }
@@ -107,13 +107,13 @@ namespace LoadAssembliesOnStartup.Fody
         private static void MarkAsGeneratedCodeInternal(this Collection<CustomAttribute> customAttributes, MsCoreReferenceFinder msCoreReferenceFinder, ModuleDefinition importingModule)
         {
             var generatedCodeAttribute = CreateGeneratedCodeAttribute(msCoreReferenceFinder, importingModule);
-            if (generatedCodeAttribute != null)
+            if (generatedCodeAttribute is not null)
             {
                 customAttributes.Add(generatedCodeAttribute);
             }
 
             var debuggerAttribute = CreateDebuggerNonUserCodeAttribute(msCoreReferenceFinder, importingModule);
-            if (debuggerAttribute != null)
+            if (debuggerAttribute is not null)
             {
                 customAttributes.Add(debuggerAttribute);
             }
