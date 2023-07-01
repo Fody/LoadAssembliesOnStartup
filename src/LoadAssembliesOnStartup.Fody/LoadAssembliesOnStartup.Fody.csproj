@@ -19,9 +19,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fody" Version="6.7.0" PrivateAssets="none" />
-    <PackageReference Include="FodyHelpers" Version="6.7.0" PrivateAssets="All" />
-    <PackageReference Include="FodyPackaging" Version="6.7.0" PrivateAssets="All" />
+    <PackageReference Include="Fody" Version="6.8.0" PrivateAssets="none" />
+    <PackageReference Include="FodyHelpers" Version="6.8.0" PrivateAssets="All" />
+    <PackageReference Include="FodyPackaging" Version="6.8.0" PrivateAssets="All" />
     <PackageReference Update="NETStandard.Library" Version="2.0.3" />
   </ItemGroup>
 
