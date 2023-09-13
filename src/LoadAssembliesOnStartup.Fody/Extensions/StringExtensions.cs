@@ -14,7 +14,7 @@ namespace LoadAssembliesOnStartup.Fody
     {
         public static IEnumerable<string> NonEmpty(this IEnumerable<string> list)
         {
-            return list.Select(x => x.Trim()).Where(x => x != string.Empty);
+            return list.Select(_ => _.Trim()).Where(_ => _ != string.Empty);
         }
     }
 }

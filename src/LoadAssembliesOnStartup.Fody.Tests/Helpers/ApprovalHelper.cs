@@ -31,7 +31,7 @@
 
             var assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyFileName);
             var loadAssembliesOnStartupTypeDefinition = assemblyDefinition.MainModule.GetType("LoadAssembliesOnStartup");
-            var loadAssembliesOnStartupMethodDefinition = loadAssembliesOnStartupTypeDefinition.Methods.First(x => x.Name == "LoadTypesOnStartup");
+            var loadAssembliesOnStartupMethodDefinition = loadAssembliesOnStartupTypeDefinition.Methods.First(_ => _.Name == "LoadTypesOnStartup");
 
             var methodBody = loadAssembliesOnStartupMethodDefinition.Body;
             methodBody.SimplifyMacros();

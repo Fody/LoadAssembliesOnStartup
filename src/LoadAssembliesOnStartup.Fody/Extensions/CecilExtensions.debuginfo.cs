@@ -37,7 +37,7 @@ namespace LoadAssembliesOnStartup.Fody
             // Step 1: check if all variables are present
             foreach (var variable in method.Body.Variables)
             {
-                var hasVariable = scope.Variables.Any(x => x.Index == variable.Index);
+                var hasVariable = scope.Variables.Any(_ => _.Index == variable.Index);
                 if (!hasVariable)
                 {
                     var variableDebugInfo = new VariableDebugInformation(variable, $"__var_{variable.Index}");

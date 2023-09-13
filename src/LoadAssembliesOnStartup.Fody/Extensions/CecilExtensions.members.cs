@@ -64,7 +64,7 @@ namespace LoadAssembliesOnStartup.Fody
                 return false;
             }
 
-            return customAttributes.Any(x => x.AttributeType.FullName.Contains(attributeTypeName));
+            return customAttributes.Any(_ => _.AttributeType.FullName.Contains(attributeTypeName));
         }
 
         public static void MarkAsCompilerGenerated(this TypeReference type, MsCoreReferenceFinder msCoreReferenceFinder)

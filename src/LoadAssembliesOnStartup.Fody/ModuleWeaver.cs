@@ -27,7 +27,7 @@ namespace LoadAssembliesOnStartup.Fody
 
             // For now just return all references
             assemblies.Add("netstandard");
-            assemblies.AddRange(ModuleDefinition.AssemblyReferences.Select(x => x.Name));
+            assemblies.AddRange(ModuleDefinition.AssemblyReferences.Select(_ => _.Name));
 
             return assemblies;
         }

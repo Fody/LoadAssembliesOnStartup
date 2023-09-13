@@ -26,7 +26,7 @@ namespace LoadAssembliesOnStartup.Fody
                     return true;
                 }
 
-                if (typeDefinition.Interfaces.Any(x => x.InterfaceType.Equals(target)))
+                if (typeDefinition.Interfaces.Any(_ => _.InterfaceType.Equals(target)))
                 {
                     return true;
                 }

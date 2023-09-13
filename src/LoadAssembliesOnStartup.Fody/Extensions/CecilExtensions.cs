@@ -180,7 +180,7 @@ namespace LoadAssembliesOnStartup.Fody
 
             foreach (var module in resolvedAssembly.Modules)
             {
-                var allTypes = module.GetAllTypeDefinitions().OrderBy(x => x.FullName);
+                var allTypes = module.GetAllTypeDefinitions().OrderBy(_ => _.FullName);
 
                 var type = (from typeDefinition in allTypes
                             where typeDefinition.FullName == typeName
@@ -377,7 +377,7 @@ namespace LoadAssembliesOnStartup.Fody
 
                     if (mappedFromSuperType.Any())
                     {
-                        currentBase = ((GenericInstanceType)currentBase).ElementType.MakeGenericInstanceType(previousGenericArgsMap.Select(x => x.Value).ToArray());
+                        currentBase = ((GenericInstanceType)currentBase).ElementType.MakeGenericInstanceType(previousGenericArgsMap.Select(_ => _.Value).ToArray());
                         mappedFromSuperType.Clear();
                     }
                 }
@@ -414,7 +414,7 @@ namespace LoadAssembliesOnStartup.Fody
 
                     if (mappedFromSuperType.Any())
                     {
-                        result = genericIface.ElementType.MakeGenericInstanceType(map.Select(x => x.Value).ToArray()).Import();
+                        result = genericIface.ElementType.MakeGenericInstanceType(map.Select(_ => _.Value).ToArray()).Import();
                     }
                 }
 

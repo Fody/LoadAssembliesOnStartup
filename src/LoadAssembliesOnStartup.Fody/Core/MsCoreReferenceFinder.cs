@@ -43,7 +43,7 @@ namespace LoadAssembliesOnStartup.Fody
             }
 
             var type = GetCoreTypeReference("System.Type").Resolve();
-            GetTypeFromHandle = _moduleWeaver.ModuleDefinition.ImportReference(type.Methods.First(m => m.Name == "GetTypeFromHandle"));
+            GetTypeFromHandle = _moduleWeaver.ModuleDefinition.ImportReference(type.Methods.First(_ => _.Name == "GetTypeFromHandle"));
 
             GeneratedCodeAttribute = GetCoreTypeReference(GeneratedCodeAttributeTypeName);
             CompilerGeneratedAttribute = GetCoreTypeReference(CompilerGeneratedAttributeTypeName);
@@ -89,7 +89,7 @@ namespace LoadAssembliesOnStartup.Fody
                 msCoreTypes.AddRange(GetDotNetTypes());
             }
 
-            return msCoreTypes.OrderBy(x => x.FullName);
+            return msCoreTypes.OrderBy(_ => _.FullName);
         }
 
         private IEnumerable<TypeReference> GetDotNetTypes()

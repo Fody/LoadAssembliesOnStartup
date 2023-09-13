@@ -159,7 +159,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
         private TypeReference FindFirstType(AssemblyDefinition assembly)
         {
-            foreach (var type in assembly.MainModule.Types.Where(x => x.IsClass && x.IsPublic))
+            foreach (var type in assembly.MainModule.Types.Where(_ => _.IsClass && x.IsPublic))
             {
                 var typeName = type.FullName;
                 var typeNamespace = type.Namespace;

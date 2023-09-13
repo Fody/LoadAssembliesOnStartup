@@ -131,7 +131,7 @@
                 }
             }
 
-            return includedReferences.OrderBy(x => x.Name.Name);
+            return includedReferences.OrderBy(_ => _.Name.Name);
         }
 
         private bool ShouldReferenceBeIncluded(AssemblyNameReference assemblyNameReference)
@@ -282,7 +282,7 @@
                 }
 
                 var dllName = $"{assemblyName}.dll";
-                var isDll = dllFiles.Any(x => x.EndsWith(dllName, StringComparison.OrdinalIgnoreCase));
+                var isDll = dllFiles.Any(_ => _.EndsWith(dllName, StringComparison.OrdinalIgnoreCase));
                 if (isDll)
                 {
                     return true;
@@ -295,7 +295,7 @@
                 }
 
                 var exeName = $"{assemblyName}.exe";
-                var isExe = exeFiles.Any(x => x.EndsWith(exeName, StringComparison.OrdinalIgnoreCase));
+                var isExe = exeFiles.Any(_ => _.EndsWith(exeName, StringComparison.OrdinalIgnoreCase));
                 if (isExe)
                 {
                     return true;
