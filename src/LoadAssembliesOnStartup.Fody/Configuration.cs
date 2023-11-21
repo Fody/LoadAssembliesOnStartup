@@ -34,10 +34,10 @@ namespace LoadAssembliesOnStartup.Fody
 
             ReadList(config, nameof(ExcludeAssemblies), ExcludeAssemblies);
             ReadList(config, nameof(IncludeAssemblies), IncludeAssemblies);
-            ReadBool(config, nameof(ExcludePrivateAssemblies), x => ExcludePrivateAssemblies = x);
-            ReadBool(config, nameof(ExcludeSystemAssemblies), x => ExcludeSystemAssemblies = x);
-            ReadBool(config, nameof(ExcludeOptimizedAssemblies), x => ExcludeOptimizedAssemblies = x);
-            ReadBool(config, nameof(WrapInTryCatch), x => WrapInTryCatch = x);
+            ReadBool(config, nameof(ExcludePrivateAssemblies), _ => ExcludePrivateAssemblies = _);
+            ReadBool(config, nameof(ExcludeSystemAssemblies), _ => ExcludeSystemAssemblies = _);
+            ReadBool(config, nameof(ExcludeOptimizedAssemblies), _ => ExcludeOptimizedAssemblies = _);
+            ReadBool(config, nameof(WrapInTryCatch), _ => WrapInTryCatch = _);
 
             if (IncludeAssemblies.Any() && ExcludeAssemblies.Any())
             {
