@@ -91,7 +91,7 @@ public class AssemblyWeaver
                     //"Orc.FileSystem.dll"
                 };
 
-                var weavingTask = new ModuleWeaver
+                var weaver = new ModuleWeaver
                 {
                     Config = XElement.Parse(configString),
                     AssemblyResolver = assemblyResolver,
@@ -101,7 +101,7 @@ public class AssemblyWeaver
                     ReferenceCopyLocalPaths = references.Select(r => Path.Combine(rootDirectory, r)).ToList(),
                 };
 
-                var testResult = weavingTask.ExecuteTestRun(assemblyPath,
+                var testResult = weaver.ExecuteTestRun(assemblyPath,
                     assemblyName: testCaseName,
                     ignoreCodes: new[] { "0x80131869" },
                     runPeVerify: false);
