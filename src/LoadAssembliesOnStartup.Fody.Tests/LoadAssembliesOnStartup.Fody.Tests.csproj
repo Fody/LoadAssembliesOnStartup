@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="ApprovalTests" Version="6.0.0" />
-    <PackageReference Include="Fody" Version="6.8.1" PrivateAssets="None" />
+    <PackageReference Include="Fody" Version="6.9.1" PrivateAssets="None" />
     <PackageReference Include="FodyHelpers" Version="6.8.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
