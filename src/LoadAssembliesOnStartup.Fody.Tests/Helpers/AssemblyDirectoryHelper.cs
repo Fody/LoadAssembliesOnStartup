@@ -1,7 +1,7 @@
 ﻿namespace LoadAssembliesOnStartup.Fody.Tests
 {
     using System;
-    using Catel.IO;
+    using System.IO;
 
     internal static class AssemblyDirectoryHelper
     {

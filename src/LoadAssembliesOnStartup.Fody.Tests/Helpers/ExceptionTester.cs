@@ -11,7 +11,7 @@
             {
                 action();
 
-                Assert.Fail("Expected exception '{0}'", typeof(TException).Name);
+                Assert.Fail($"Expected exception '{typeof(TException).Name}'");
             }
             catch (Exception ex)
             {
@@ -31,7 +31,7 @@
                     return;
                 }
 
-                Assert.Fail("Expected exception '{0}' but got '{1}'", typeof(TException).Name, ex.GetType().Name);
+                Assert.Fail($"Expected exception '{typeof(TException).Name}' but got '{ex.GetType().Name}'");
             }
         }
     }

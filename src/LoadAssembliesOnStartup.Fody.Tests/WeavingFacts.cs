@@ -17,7 +17,7 @@
             var programInstance = Activator.CreateInstance(programType);
 
             var propertyInfo = programType.GetPropertyEx("IsRightAssemblyLoaded", true, true);
-            Assert.IsTrue((bool)propertyInfo.GetValue(null, null));
+            Assert.That((bool)propertyInfo.GetValue(null, null), Is.True);
         }
 
         [Test, Explicit("Unable to resolve private assets during unit tests in .NET 5")]

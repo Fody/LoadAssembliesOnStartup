@@ -1,7 +1,6 @@
 ﻿namespace LoadAssembliesOnStartup.Fody.Tests
 {
     using System.Xml.Linq;
-    using Catel.Tests;
     using Fody;
     using NUnit.Framework;
 
@@ -21,9 +20,9 @@ Company.Tools.*
 </LoadAssembliesOnStartup>");
             var config = new Configuration(xElement);
 
-            Assert.AreEqual("Foo", config.ExcludeAssemblies[0]);
-            Assert.AreEqual("Bar", config.ExcludeAssemblies[1]);
-            Assert.AreEqual("Company.Tools.*", config.ExcludeAssemblies[2]);
+            Assert.That(config.ExcludeAssemblies[0], Is.EqualTo("Foo"));
+            Assert.That(config.ExcludeAssemblies[1], Is.EqualTo("Bar"));
+            Assert.That(config.ExcludeAssemblies[2], Is.EqualTo("Company.Tools.*"));
         }
 
         [TestCase]
@@ -33,9 +32,9 @@ Company.Tools.*
 <LoadAssembliesOnStartup ExcludeAssemblies='Foo|Bar|Company.Tools.*'/>");
             var config = new Configuration(xElement);
 
-            Assert.AreEqual("Foo", config.ExcludeAssemblies[0]);
-            Assert.AreEqual("Bar", config.ExcludeAssemblies[1]);
-            Assert.AreEqual("Company.Tools.*", config.ExcludeAssemblies[2]);
+            Assert.That(config.ExcludeAssemblies[0], Is.EqualTo("Foo"));
+            Assert.That(config.ExcludeAssemblies[1], Is.EqualTo("Bar"));
+            Assert.That(config.ExcludeAssemblies[2], Is.EqualTo("Company.Tools.*"));
         }
 
         [TestCase]
@@ -49,8 +48,8 @@ Bar
 </LoadAssembliesOnStartup>");
             var config = new Configuration(xElement);
 
-            Assert.AreEqual("Foo", config.ExcludeAssemblies[0]);
-            Assert.AreEqual("Bar", config.ExcludeAssemblies[1]);
+            Assert.That(config.ExcludeAssemblies[0], Is.EqualTo("Foo"));
+            Assert.That(config.ExcludeAssemblies[1], Is.EqualTo("Bar"));
         }
 
         [TestCase]
@@ -66,9 +65,9 @@ Company.Tools.*
 </LoadAssembliesOnStartup>");
             var config = new Configuration(xElement);
 
-            Assert.AreEqual("Foo", config.IncludeAssemblies[0]);
-            Assert.AreEqual("Bar", config.IncludeAssemblies[1]);
-            Assert.AreEqual("Company.Tools.*", config.IncludeAssemblies[2]);
+            Assert.That(config.IncludeAssemblies[0], Is.EqualTo("Foo"));
+            Assert.That(config.IncludeAssemblies[1], Is.EqualTo("Bar"));
+            Assert.That(config.IncludeAssemblies[2], Is.EqualTo("Company.Tools.*"));
         }
 
         [TestCase]
@@ -78,9 +77,9 @@ Company.Tools.*
 <LoadAssembliesOnStartup IncludeAssemblies='Foo|Bar|Company.Tools.*'/>");
             var config = new Configuration(xElement);
 
-            Assert.AreEqual("Foo", config.IncludeAssemblies[0]);
-            Assert.AreEqual("Bar", config.IncludeAssemblies[1]);
-            Assert.AreEqual("Company.Tools.*", config.IncludeAssemblies[2]);
+            Assert.That(config.IncludeAssemblies[0], Is.EqualTo("Foo"));
+            Assert.That(config.IncludeAssemblies[1], Is.EqualTo("Bar"));
+            Assert.That(config.IncludeAssemblies[2], Is.EqualTo("Company.Tools.*"));
         }
 
         [TestCase]
@@ -103,8 +102,8 @@ Bar
 </LoadAssembliesOnStartup>");
             var config = new Configuration(xElement);
 
-            Assert.AreEqual("Foo", config.IncludeAssemblies[0]);
-            Assert.AreEqual("Bar", config.IncludeAssemblies[1]);
+            Assert.That(config.IncludeAssemblies[0], Is.EqualTo("Foo"));
+            Assert.That(config.IncludeAssemblies[1], Is.EqualTo("Bar"));
         }
 
         [TestCase]
@@ -115,7 +114,7 @@ Bar
 
             var config = new Configuration(xElement);
 
-            Assert.AreEqual(false, config.ExcludeSystemAssemblies);
+            Assert.That(config.ExcludeSystemAssemblies, Is.False);
         }
 
         [TestCase]
@@ -126,7 +125,7 @@ Bar
 
             var config = new Configuration(xElement);
 
-            Assert.AreEqual(false, config.ExcludePrivateAssemblies);
+            Assert.That(config.ExcludePrivateAssemblies, Is.False);
         }
 
         [TestCase]
@@ -137,7 +136,7 @@ Bar
 
             var config = new Configuration(xElement);
 
-            Assert.AreEqual(true, config.ExcludeOptimizedAssemblies);
+            Assert.That(config.ExcludeOptimizedAssemblies, Is.False);
         }
 
         [TestCase]
@@ -148,7 +147,7 @@ Bar
 
             var config = new Configuration(xElement);
 
-            Assert.AreEqual(true, config.WrapInTryCatch);
+            Assert.That(config.WrapInTryCatch, Is.True);
         }
     }
 }

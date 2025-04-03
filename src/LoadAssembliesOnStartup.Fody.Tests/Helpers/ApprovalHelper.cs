@@ -53,7 +53,7 @@
             var actualIl = actualIlBuilder.ToString();
 
             // Note: don't dispose, otherwise we can't use approvals
-            var tempFileContext = new TemporaryFilesContext(slug);
+            using var tempFileContext = new TemporaryFilesContext(slug);
 
             var actualFile = tempFileContext.GetFile($"actual_il_{_configurationName}.txt", true);
 
