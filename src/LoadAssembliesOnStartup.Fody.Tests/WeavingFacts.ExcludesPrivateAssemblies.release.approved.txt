@@ -1,4 +1,4 @@
-﻿IL_0000: ldtoken System.ComponentModel.BeginEditEventArgs | Catel.Core, Version=5.12.18.0, Culture=neutral, PublicKeyToken=null
+﻿IL_0000: ldtoken System.ComponentModel.BeginEditEventArgs | Catel.Core, Version=6.0.7.0, Culture=neutral, PublicKeyToken=null
 IL_0005: call System.Type System.Type::GetTypeFromHandle(System.RuntimeTypeHandle)
 IL_000a: stloc V_0
 IL_000b: ldtoken LoadAssembliesOnStartup.Fody.TestAssemblyToReference.Services.ClassThatShouldBeRegistered | LoadAssembliesOnStartup.Fody.TestAssemblyToReference, Version=4.6.0.0, Culture=neutral, PublicKeyToken=null
