@@ -1,6 +1,6 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net5.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <AssemblyName>LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores</AssemblyName>
     <RootNamespace>LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catel.Core" Version="5.12.22" />
+    <PackageReference Include="Catel.Core" Version="6.0.7" />
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="All" />
   </ItemGroup>
 
