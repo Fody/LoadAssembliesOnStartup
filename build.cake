@@ -25,9 +25,19 @@ Parameters["NuGet_NoDependencies"] = "false";
 // DEFINE COMPONENTS TO BUILD / PACKAGE
 //=======================================================
 
+Dependencies.Add("LoadAssembliesOnStartup.Fody.TestAssemblyToReference", new []
+{
+    "LoadAssembliesOnStartup.Fody.TestAssembly"
+});
+Dependencies.Add("LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores", new []
+{
+    "LoadAssembliesOnStartup.Fody.TestAssembly"
+});
+Dependencies.Add("LoadAssembliesOnStartup.Fody.TestAssembly");
+
 Components.Add("LoadAssembliesOnStartup.Fody");
 
-TestProjects.Add(string.Format("{0}.Tests", GetBuildServerVariable("SolutionName")));
+TestProjects.Add("LoadAssembliesOnStartup.Fody.Tests");
 
 //=======================================================
 // REQUIRED INITIALIZATION, DO NOT CHANGE
