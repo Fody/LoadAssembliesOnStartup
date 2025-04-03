@@ -130,6 +130,8 @@
                         body.ExceptionHandlers.Insert(0, handler);
                     }
                 }
+
+                assembly.Dispose();
             }
 
             instructions.Add(Instruction.Create(OpCodes.Ret));
@@ -148,7 +150,7 @@
 
         private TypeReference FindFirstType(AssemblyDefinition assembly)
         {
-            foreach (var type in assembly.MainModule.Types.Where(_ => _.IsClass && x.IsPublic))
+            foreach (var type in assembly.MainModule.Types.Where(_ => _.IsClass && _.IsPublic))
             {
                 var typeName = type.FullName;
                 var typeNamespace = type.Namespace;

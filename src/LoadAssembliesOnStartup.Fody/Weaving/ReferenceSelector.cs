@@ -76,7 +76,9 @@
                     continue;
                 }
 
+#pragma warning disable IDISP001 // Dispose created
                 var assembly = resolver.Resolve(assemblyReference);
+#pragma warning restore IDISP001 // Dispose created
                 if (assembly is not null)
                 {
                     FodyEnvironment.WriteInfo($"Including reference '{assemblyReference.Name}'");

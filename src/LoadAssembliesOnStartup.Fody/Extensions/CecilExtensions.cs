@@ -8,7 +8,7 @@
 
     public static partial class CecilExtensions
     {
-        private static readonly Dictionary<string, TypeDefinition> _cachedTypeDefinitions = CacheHelper.GetCache<Dictionary<string, TypeDefinition>>("CecilExtensions");
+        private static readonly Dictionary<string, TypeDefinition> CachedTypeDefinitions = CacheHelper.GetCache<Dictionary<string, TypeDefinition>>("CecilExtensions");
 
         public static bool IsBoxingRequired(this TypeReference typeReference, TypeReference expectedType)
         {
@@ -161,12 +161,12 @@
         public static TypeDefinition FindType(this ModuleDefinition moduleDefinition, string assemblyName, string typeName)
         {
             var cacheKey = $"{typeName}, {assemblyName}|{moduleDefinition.Name}";
-            if (_cachedTypeDefinitions.ContainsKey(cacheKey))
+            if (CachedTypeDefinitions.ContainsKey(cacheKey))
             {
-                return _cachedTypeDefinitions[cacheKey];
+                return CachedTypeDefinitions[cacheKey];
             }
 
-            var resolvedAssembly = moduleDefinition.ResolveAssembly(assemblyName);
+            using var resolvedAssembly = moduleDefinition.ResolveAssembly(assemblyName);
             if (resolvedAssembly is null)
             {
                 return null;
@@ -188,7 +188,7 @@
 
                 if (type is not null)
                 {
-                    _cachedTypeDefinitions[cacheKey] = type;
+                    CachedTypeDefinitions[cacheKey] = type;
                     return type;
                 }
             }
@@ -243,7 +243,7 @@
             var resolver = module.AssemblyResolver;
             foreach (var assemblyReference in module.AssemblyReferences)
             {
-                var assembly = resolver.Resolve(assemblyReference.Name);
+                using var assembly = resolver.Resolve(assemblyReference.Name);
                 if (assembly is not null)
                 {
                     foreach (var type in assembly.MainModule.GetAllTypeDefinitions())

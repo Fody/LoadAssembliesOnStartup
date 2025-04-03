@@ -4,16 +4,12 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Xml.Linq;
     using global::Fody;
     using Weaving;
     using Mono.Cecil;
-    using Mono.Cecil.Cil;
 
     public class ModuleWeaver : BaseModuleWeaver
     {
-        public IAssemblyResolver AssemblyResolver { get; set; }
-
         public override bool ShouldCleanReference => true;
 
         public override IEnumerable<string> GetAssembliesForScanning()
