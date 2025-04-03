@@ -1,30 +1,17 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AssemblyWeaver.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2013 Catel development team. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
 using Catel.Reflection;
 using LoadAssembliesOnStartup.Fody;
 using LoadAssembliesOnStartup.Fody.TestAssembly;
-using LoadAssembliesOnStartup.Fody.Tests;
 using Mono.Cecil;
 using Fody;
 
 public class AssemblyWeaver
 {
-    #region Constants
     private readonly Dictionary<string, TestResult> _assemblies = new Dictionary<string, TestResult>();
-    #endregion
 
-    #region Constructors
     static AssemblyWeaver()
     {
         Instance = new AssemblyWeaver();
@@ -117,7 +104,6 @@ public class AssemblyWeaver
 
         return _assemblies[configString];
     }
-    #endregion
 
     public static AssemblyWeaver Instance { get; private set; }
 }

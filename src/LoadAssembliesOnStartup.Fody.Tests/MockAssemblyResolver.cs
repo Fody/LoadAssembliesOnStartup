@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Mono.Cecil;
 using System.Collections.Generic;
 
@@ -13,8 +12,7 @@ public class MockAssemblyResolver : DefaultAssemblyResolver
 
         lock (_cache)
         {
-            AssemblyDefinition definition = null;
-            if (!_cache.TryGetValue(fullName, out definition))
+            if (!_cache.TryGetValue(fullName, out var definition))
             {
                 if (name.Name == "System")
                 {

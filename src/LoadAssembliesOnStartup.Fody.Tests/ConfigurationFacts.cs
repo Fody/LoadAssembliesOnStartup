@@ -136,7 +136,7 @@ Bar
 
             var config = new Configuration(xElement);
 
-            Assert.That(config.ExcludeOptimizedAssemblies, Is.False);
+            Assert.That(config.ExcludeOptimizedAssemblies, Is.True);
         }
 
         [TestCase]
