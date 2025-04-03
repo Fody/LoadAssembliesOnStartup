@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="DummyDependencyInjectionClass.cs" company="CatenaLogic">
-//   Copyright (c) 2014 - 2014 CatenaLogic. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace LoadAssembliesOnStartup.Fody.TestAssembly
+﻿namespace LoadAssembliesOnStartup.Fody.TestAssembly
 {
     using TestAssemblyToReference.Services;
 

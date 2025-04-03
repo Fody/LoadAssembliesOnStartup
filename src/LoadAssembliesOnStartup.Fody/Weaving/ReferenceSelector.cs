@@ -11,7 +11,6 @@
 
     public class ReferenceSelector
     {
-        #region Constants
         private static readonly List<string> KnownIgnoredPartialAssemblies = new List<string>(new[]
         {
             "Anotar.",
@@ -49,24 +48,18 @@
             "Mono.",
             "System."
         });
-        #endregion
 
-        #region Fields
         private readonly ModuleWeaver _moduleWeaver;
         private readonly ModuleDefinition _moduleDefinition;
         private readonly Configuration _configuration;
-        #endregion
 
-        #region Constructors
         public ReferenceSelector(ModuleWeaver moduleWeaver, ModuleDefinition moduleDefinition, Configuration configuration)
         {
             _moduleWeaver = moduleWeaver;
             _moduleDefinition = moduleDefinition;
             _configuration = configuration;
         }
-        #endregion
 
-        #region Methods
         /// <summary>
         /// Gets the included references.
         /// </summary>
@@ -83,7 +76,9 @@
                     continue;
                 }
 
+#pragma warning disable IDISP001 // Dispose created
                 var assembly = resolver.Resolve(assemblyReference);
+#pragma warning restore IDISP001 // Dispose created
                 if (assembly is not null)
                 {
                     FodyEnvironment.WriteInfo($"Including reference '{assemblyReference.Name}'");
@@ -131,7 +126,7 @@
                 }
             }
 
-            return includedReferences.OrderBy(x => x.Name.Name);
+            return includedReferences.OrderBy(_ => _.Name.Name);
         }
 
         private bool ShouldReferenceBeIncluded(AssemblyNameReference assemblyNameReference)
@@ -282,7 +277,7 @@
                 }
 
                 var dllName = $"{assemblyName}.dll";
-                var isDll = dllFiles.Any(x => x.EndsWith(dllName, StringComparison.OrdinalIgnoreCase));
+                var isDll = dllFiles.Any(_ => _.EndsWith(dllName, StringComparison.OrdinalIgnoreCase));
                 if (isDll)
                 {
                     return true;
@@ -295,7 +290,7 @@
                 }
 
                 var exeName = $"{assemblyName}.exe";
-                var isExe = exeFiles.Any(x => x.EndsWith(exeName, StringComparison.OrdinalIgnoreCase));
+                var isExe = exeFiles.Any(_ => _.EndsWith(exeName, StringComparison.OrdinalIgnoreCase));
                 if (isExe)
                 {
                     return true;
@@ -384,6 +379,5 @@
 
             return privateReferences;
         }
-        #endregion
     }
 }

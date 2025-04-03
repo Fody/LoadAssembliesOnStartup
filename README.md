@@ -5,6 +5,8 @@
 
 Loads all the references on startup by actually using the types in the module initializer.
 
+**See [Milestones](../../milestones?state=closed) for release notes.**
+
 
 ## This is an add-in for [Fody](https://github.com/Fody/Fody/)
 

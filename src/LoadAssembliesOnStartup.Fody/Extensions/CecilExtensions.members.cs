@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CecilExtensions.members.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2014 Catel development team. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace LoadAssembliesOnStartup.Fody
+﻿namespace LoadAssembliesOnStartup.Fody
 {
     using System.Linq;
     using Mono.Cecil;
@@ -64,7 +57,7 @@ namespace LoadAssembliesOnStartup.Fody
                 return false;
             }
 
-            return customAttributes.Any(x => x.AttributeType.FullName.Contains(attributeTypeName));
+            return customAttributes.Any(_ => _.AttributeType.FullName.Contains(attributeTypeName));
         }
 
         public static void MarkAsCompilerGenerated(this TypeReference type, MsCoreReferenceFinder msCoreReferenceFinder)

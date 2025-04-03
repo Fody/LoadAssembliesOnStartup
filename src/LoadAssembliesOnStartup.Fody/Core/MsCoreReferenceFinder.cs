@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MsCoreReferenceFinder.cs" company="CatenaLogic">
-//   Copyright (c) 2008 - 2014 CatenaLogic. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace LoadAssembliesOnStartup.Fody
+﻿namespace LoadAssembliesOnStartup.Fody
 {
     using System;
     using System.Collections.Generic;
@@ -43,7 +36,7 @@ namespace LoadAssembliesOnStartup.Fody
             }
 
             var type = GetCoreTypeReference("System.Type").Resolve();
-            GetTypeFromHandle = _moduleWeaver.ModuleDefinition.ImportReference(type.Methods.First(m => m.Name == "GetTypeFromHandle"));
+            GetTypeFromHandle = _moduleWeaver.ModuleDefinition.ImportReference(type.Methods.First(_ => _.Name == "GetTypeFromHandle"));
 
             GeneratedCodeAttribute = GetCoreTypeReference(GeneratedCodeAttributeTypeName);
             CompilerGeneratedAttribute = GetCoreTypeReference(CompilerGeneratedAttributeTypeName);
@@ -65,7 +58,7 @@ namespace LoadAssembliesOnStartup.Fody
 
         private IEnumerable<TypeReference> GetTypes()
         {
-            var msCoreLibDefinition = _assemblyResolver.Resolve("mscorlib");
+            using var msCoreLibDefinition = _assemblyResolver.Resolve("mscorlib");
             var msCoreTypes = msCoreLibDefinition.MainModule.Types.Cast<TypeReference>().ToList();
 
             var objectDefinition = msCoreTypes.FirstOrDefault(x => string.Equals(x.Name, "Object"));
@@ -89,7 +82,7 @@ namespace LoadAssembliesOnStartup.Fody
                 msCoreTypes.AddRange(GetDotNetTypes());
             }
 
-            return msCoreTypes.OrderBy(x => x.FullName);
+            return msCoreTypes.OrderBy(_ => _.FullName);
         }
 
         private IEnumerable<TypeReference> GetDotNetTypes()
@@ -135,7 +128,7 @@ namespace LoadAssembliesOnStartup.Fody
 
             foreach (var assembly in _moduleWeaver.ModuleDefinition.AssemblyReferences)
             {
-                var resolvedAssembly = _assemblyResolver.Resolve(assembly);
+                using var resolvedAssembly = _assemblyResolver.Resolve(assembly);
                 if ((resolvedAssembly is not null) && resolvedAssembly.IsNetStandardLibrary())
                 {
                     allTypes.AddRange(resolvedAssembly.MainModule.Types);
@@ -147,7 +140,7 @@ namespace LoadAssembliesOnStartup.Fody
 
         private IEnumerable<TypeReference> GetTypesFromAssembly(string assemblyName)
         {
-            var assembly = _assemblyResolver.Resolve(assemblyName);
+            using var assembly = _assemblyResolver.Resolve(assemblyName);
             if (assembly is null)
             {
                 return Array.Empty<TypeReference>();

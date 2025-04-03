@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ExceptionTester.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2018 Catel development team. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace LoadAssembliesOnStartup.Fody.Tests
+﻿namespace LoadAssembliesOnStartup.Fody.Tests
 {
     using System;
     using NUnit.Framework;
@@ -18,7 +11,7 @@ namespace LoadAssembliesOnStartup.Fody.Tests
             {
                 action();
 
-                Assert.Fail("Expected exception '{0}'", typeof(TException).Name);
+                Assert.Fail($"Expected exception '{typeof(TException).Name}'");
             }
             catch (Exception ex)
             {
@@ -38,7 +31,7 @@ namespace LoadAssembliesOnStartup.Fody.Tests
                     return;
                 }
 
-                Assert.Fail("Expected exception '{0}' but got '{1}'", typeof(TException).Name, ex.GetType().Name);
+                Assert.Fail($"Expected exception '{typeof(TException).Name}' but got '{ex.GetType().Name}'");
             }
         }
     }

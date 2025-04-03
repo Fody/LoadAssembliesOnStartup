@@ -31,7 +31,7 @@
 
             var assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyFileName);
             var loadAssembliesOnStartupTypeDefinition = assemblyDefinition.MainModule.GetType("LoadAssembliesOnStartup");
-            var loadAssembliesOnStartupMethodDefinition = loadAssembliesOnStartupTypeDefinition.Methods.First(x => x.Name == "LoadTypesOnStartup");
+            var loadAssembliesOnStartupMethodDefinition = loadAssembliesOnStartupTypeDefinition.Methods.First(_ => _.Name == "LoadTypesOnStartup");
 
             var methodBody = loadAssembliesOnStartupMethodDefinition.Body;
             methodBody.SimplifyMacros();
@@ -53,7 +53,9 @@
             var actualIl = actualIlBuilder.ToString();
 
             // Note: don't dispose, otherwise we can't use approvals
+#pragma warning disable IDISP001 // Dispose created
             var tempFileContext = new TemporaryFilesContext(slug);
+#pragma warning restore IDISP001 // Dispose created
 
             var actualFile = tempFileContext.GetFile($"actual_il_{_configurationName}.txt", true);
 

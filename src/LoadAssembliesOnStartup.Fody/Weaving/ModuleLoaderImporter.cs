@@ -16,13 +16,13 @@
                                                 | MethodAttributes.SpecialName
                                                 | MethodAttributes.RTSpecialName;
 
-            var moduleClass = moduleDefinition.Types.FirstOrDefault(x => x.Name == "<Module>");
+            var moduleClass = moduleDefinition.Types.FirstOrDefault(_ => _.Name == "<Module>");
             if (moduleClass is null)
             {
                 throw new WeavingException("Found no module class!");
             }
 
-            var cctor = moduleClass.Methods.FirstOrDefault(x => x.Name == ".cctor");
+            var cctor = moduleClass.Methods.FirstOrDefault(_ => _.Name == ".cctor");
             if (cctor is null)
             {
                 cctor = new MethodDefinition(".cctor", attributes, moduleDefinition.ImportReference(msCoreReferenceFinder.GetCoreTypeReference("Void")));

@@ -1,11 +1,4 @@
-// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TypeReferenceExtensions.cs" company="CatenaLogic">
-//   Copyright (c) 2014 - 2018 CatenaLogic. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace LoadAssembliesOnStartup.Fody
+﻿namespace LoadAssembliesOnStartup.Fody
 {
     using System.Linq;
     using Mono.Cecil;
@@ -26,7 +19,7 @@ namespace LoadAssembliesOnStartup.Fody
                     return true;
                 }
 
-                if (typeDefinition.Interfaces.Any(x => x.InterfaceType.Equals(target)))
+                if (typeDefinition.Interfaces.Any(_ => _.InterfaceType.Equals(target)))
                 {
                     return true;
                 }

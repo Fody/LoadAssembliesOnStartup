@@ -1,15 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CecilExtensions.assembly.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2017 Catel development team. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace LoadAssembliesOnStartup.Fody
+﻿namespace LoadAssembliesOnStartup.Fody
 {
     using System;
-    using System.Linq;
-    using System.Reflection;
     using Mono.Cecil;
 
     public static partial class CecilExtensions
@@ -23,10 +14,10 @@ namespace LoadAssembliesOnStartup.Fody
             //var assemblyVersionAttributeName = typeof(AssemblyVersionAttribute).FullName;
             //var assemblyFileVersionAttributeName = typeof(AssemblyFileVersionAttribute).FullName;
 
-            //var attribute = assemblyDefinition.CustomAttributes.FirstOrDefault(x => x.AttributeType.FullName == assemblyVersionAttributeName);
+            //var attribute = assemblyDefinition.CustomAttributes.FirstOrDefault(_ => _.AttributeType.FullName == assemblyVersionAttributeName);
             //if (attribute is null)
             //{
-            //    attribute = assemblyDefinition.CustomAttributes.FirstOrDefault(x => x.AttributeType.FullName == assemblyFileVersionAttributeName);
+            //    attribute = assemblyDefinition.CustomAttributes.FirstOrDefault(_ => _.AttributeType.FullName == assemblyFileVersionAttributeName);
             //}
 
             //if (attribute != null)

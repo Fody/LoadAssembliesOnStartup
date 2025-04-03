@@ -1,7 +1,5 @@
 ﻿namespace LoadAssembliesOnStartup.Fody.Tests
 {
-    using System;
-    using Catel.Reflection;
     using NUnit.Framework;
 
     [TestFixture]

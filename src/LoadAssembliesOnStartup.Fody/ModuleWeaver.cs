@@ -1,24 +1,15 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ModuleWeaver.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2013 Catel development team. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-namespace LoadAssembliesOnStartup.Fody
+﻿namespace LoadAssembliesOnStartup.Fody
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Xml.Linq;
     using global::Fody;
     using Weaving;
     using Mono.Cecil;
-    using Mono.Cecil.Cil;
 
     public class ModuleWeaver : BaseModuleWeaver
     {
-        public IAssemblyResolver AssemblyResolver { get; set; }
-
         public override bool ShouldCleanReference => true;
 
         public override IEnumerable<string> GetAssembliesForScanning()
@@ -27,7 +18,7 @@ namespace LoadAssembliesOnStartup.Fody
 
             // For now just return all references
             assemblies.Add("netstandard");
-            assemblies.AddRange(ModuleDefinition.AssemblyReferences.Select(x => x.Name));
+            assemblies.AddRange(ModuleDefinition.AssemblyReferences.Select(_ => _.Name));
 
             return assemblies;
         }

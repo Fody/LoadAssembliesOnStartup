@@ -1,10 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CecilExtensions.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2013 Catel development team. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace LoadAssembliesOnStartup.Fody
+﻿namespace LoadAssembliesOnStartup.Fody
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -14,7 +8,7 @@ namespace LoadAssembliesOnStartup.Fody
 
     public static partial class CecilExtensions
     {
-        private static readonly Dictionary<string, TypeDefinition> _cachedTypeDefinitions = CacheHelper.GetCache<Dictionary<string, TypeDefinition>>("CecilExtensions");
+        private static readonly Dictionary<string, TypeDefinition> CachedTypeDefinitions = CacheHelper.GetCache<Dictionary<string, TypeDefinition>>("CecilExtensions");
 
         public static bool IsBoxingRequired(this TypeReference typeReference, TypeReference expectedType)
         {
@@ -167,12 +161,12 @@ namespace LoadAssembliesOnStartup.Fody
         public static TypeDefinition FindType(this ModuleDefinition moduleDefinition, string assemblyName, string typeName)
         {
             var cacheKey = $"{typeName}, {assemblyName}|{moduleDefinition.Name}";
-            if (_cachedTypeDefinitions.ContainsKey(cacheKey))
+            if (CachedTypeDefinitions.ContainsKey(cacheKey))
             {
-                return _cachedTypeDefinitions[cacheKey];
+                return CachedTypeDefinitions[cacheKey];
             }
 
-            var resolvedAssembly = moduleDefinition.ResolveAssembly(assemblyName);
+            using var resolvedAssembly = moduleDefinition.ResolveAssembly(assemblyName);
             if (resolvedAssembly is null)
             {
                 return null;
@@ -180,7 +174,7 @@ namespace LoadAssembliesOnStartup.Fody
 
             foreach (var module in resolvedAssembly.Modules)
             {
-                var allTypes = module.GetAllTypeDefinitions().OrderBy(x => x.FullName);
+                var allTypes = module.GetAllTypeDefinitions().OrderBy(_ => _.FullName);
 
                 var type = (from typeDefinition in allTypes
                             where typeDefinition.FullName == typeName
@@ -194,7 +188,7 @@ namespace LoadAssembliesOnStartup.Fody
 
                 if (type is not null)
                 {
-                    _cachedTypeDefinitions[cacheKey] = type;
+                    CachedTypeDefinitions[cacheKey] = type;
                     return type;
                 }
             }
@@ -249,7 +243,7 @@ namespace LoadAssembliesOnStartup.Fody
             var resolver = module.AssemblyResolver;
             foreach (var assemblyReference in module.AssemblyReferences)
             {
-                var assembly = resolver.Resolve(assemblyReference.Name);
+                using var assembly = resolver.Resolve(assemblyReference.Name);
                 if (assembly is not null)
                 {
                     foreach (var type in assembly.MainModule.GetAllTypeDefinitions())
@@ -377,7 +371,7 @@ namespace LoadAssembliesOnStartup.Fody
 
                     if (mappedFromSuperType.Any())
                     {
-                        currentBase = ((GenericInstanceType)currentBase).ElementType.MakeGenericInstanceType(previousGenericArgsMap.Select(x => x.Value).ToArray());
+                        currentBase = ((GenericInstanceType)currentBase).ElementType.MakeGenericInstanceType(previousGenericArgsMap.Select(_ => _.Value).ToArray());
                         mappedFromSuperType.Clear();
                     }
                 }
@@ -414,7 +408,7 @@ namespace LoadAssembliesOnStartup.Fody
 
                     if (mappedFromSuperType.Any())
                     {
-                        result = genericIface.ElementType.MakeGenericInstanceType(map.Select(x => x.Value).ToArray()).Import();
+                        result = genericIface.ElementType.MakeGenericInstanceType(map.Select(_ => _.Value).ToArray()).Import();
                     }
                 }
 
