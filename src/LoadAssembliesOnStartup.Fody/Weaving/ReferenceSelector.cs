@@ -11,7 +11,6 @@
 
     public class ReferenceSelector
     {
-        #region Constants
         private static readonly List<string> KnownIgnoredPartialAssemblies = new List<string>(new[]
         {
             "Anotar.",
@@ -49,24 +48,18 @@
             "Mono.",
             "System."
         });
-        #endregion
 
-        #region Fields
         private readonly ModuleWeaver _moduleWeaver;
         private readonly ModuleDefinition _moduleDefinition;
         private readonly Configuration _configuration;
-        #endregion
 
-        #region Constructors
         public ReferenceSelector(ModuleWeaver moduleWeaver, ModuleDefinition moduleDefinition, Configuration configuration)
         {
             _moduleWeaver = moduleWeaver;
             _moduleDefinition = moduleDefinition;
             _configuration = configuration;
         }
-        #endregion
 
-        #region Methods
         /// <summary>
         /// Gets the included references.
         /// </summary>
@@ -384,6 +377,5 @@
 
             return privateReferences;
         }
-        #endregion
     }
 }

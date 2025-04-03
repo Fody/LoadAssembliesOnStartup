@@ -1,10 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ArgumentWeaver.cs" company="Catel development team">
-//   Copyright (c) 2008 - 2013 Catel development team. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace LoadAssembliesOnStartup.Fody.Weaving
+﻿namespace LoadAssembliesOnStartup.Fody.Weaving
 {
     using System;
     using System.Collections.Generic;
@@ -20,14 +14,11 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
         private static readonly HashSet<string> IgnoredNamespaces = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private static readonly HashSet<string> IgnoredTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        #region Fields
         private readonly ModuleDefinition _moduleDefinition;
         private readonly MsCoreReferenceFinder _msCoreReferenceFinder;
         private readonly Configuration _configuration;
         private readonly ModuleWeaver _moduleWeaver;
-        #endregion
 
-        #region Constructors
         static LoadTypesWeaver()
         {
             // Add ignored namespaces and types here
@@ -44,9 +35,7 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
             _configuration = configuration;
             _moduleWeaver = moduleWeaver;
         }
-        #endregion
 
-        #region Methods
         public MethodDefinition Execute()
         {
             var debugWriteLineMethod = FindDebugWriteLineMethod();
@@ -201,6 +190,5 @@ namespace LoadAssembliesOnStartup.Fody.Weaving
 
             return _moduleDefinition.ImportReference(debugWriteLineMethod);
         }
-        #endregion
     }
 }
