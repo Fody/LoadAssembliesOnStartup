@@ -5,6 +5,8 @@
     using System.Text;
     using System.Threading.Tasks;
     using Catel;
+    using Catel.Reflection;
+    using Microsoft.Win32.SafeHandles;
     using Mono.Cecil;
     using Mono.Cecil.Rocks;
     using VerifyNUnit;
@@ -50,6 +52,22 @@
             };
 
             settings.UniqueForAssemblyConfiguration();
+
+            // Replace versions so it never breaks on updates
+            foreach (var assembly in new[]
+            {
+                typeof(Catel.CoreModule).Assembly,
+                typeof(VerifyHelper).Assembly, // test assembly version
+                typeof(CriticalHandleMinusOneIsInvalid).Assembly, // System.Private.CoreLib
+            })
+            {
+                var search = $"Version={assembly.Version()}";
+
+                settings.ScrubLinesWithReplace(replaceLine: _ =>
+                {
+                    return _.Replace(search, "Version=Version");
+                });
+            }
 
             await Verifier.Verify(actualIl, settings);
         }
