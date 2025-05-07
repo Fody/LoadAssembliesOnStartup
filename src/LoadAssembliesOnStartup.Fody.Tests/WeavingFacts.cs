@@ -1,6 +1,7 @@
 ﻿namespace LoadAssembliesOnStartup.Fody.Tests
 {
     using System;
+    using System.Threading.Tasks;
     using Catel.Reflection;
     using NUnit.Framework;
 
@@ -21,21 +22,21 @@
         }
 
         [Test, Explicit("Unable to resolve private assets during unit tests in .NET 5")]
-        public void HasRegisteredOrcFileSystemViaWildCards()
+        public async Task HasRegisteredOrcFileSystemViaWildCardsAsync()
         {
             // Load program to load assembly
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("IncludeOrcLibraries", "<LoadAssembliesOnStartup IncludeAssemblies=\"Orc.*\" />");
 
-            ApprovalHelper.AssertIlCode(assemblyInfo.AssemblyPath);
+            await VerifyHelper.AssertIlCodeAsync(assemblyInfo.AssemblyPath);
         }
 
         [Test]
-        public void HasNotRegisteredOrcFileSystemViaWildCards()
+        public async Task HasNotRegisteredOrcFileSystemViaWildCardsAsync()
         {
             // Load program to load assembly
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("ExcludeOrcLibraries", "<LoadAssembliesOnStartup ExcludeAssemblies=\"Orc.*\" />");
 
-            ApprovalHelper.AssertIlCode(assemblyInfo.AssemblyPath);
+            await VerifyHelper.AssertIlCodeAsync(assemblyInfo.AssemblyPath);
         }
 
         //[TestCase]

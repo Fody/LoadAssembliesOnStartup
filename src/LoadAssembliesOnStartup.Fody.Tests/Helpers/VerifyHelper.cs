@@ -1,31 +1,23 @@
 ﻿namespace LoadAssembliesOnStartup.Fody.Tests
 {
-    using System.IO;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Text;
-    using ApprovalTests;
-    using ApprovalTests.Namers;
-    using ApprovalTests.Writers;
+    using System.Threading.Tasks;
     using Catel;
     using Mono.Cecil;
     using Mono.Cecil.Rocks;
+    using VerifyNUnit;
+    using VerifyTests;
 
-    public static class ApprovalHelper
+    public static class VerifyHelper
     {
-        private static readonly string _configurationName;
-
-        static ApprovalHelper()
+        static VerifyHelper()
         {
-#if DEBUG
-            _configurationName = "debug";
-#else
-            _configurationName = "release";
-#endif
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        public static void AssertIlCode(string assemblyFileName, [CallerMemberName]string callerMemberName = "")
+        public static async Task AssertIlCodeAsync(string assemblyFileName, [CallerMemberName]string callerMemberName = "")
         {
             var slug = callerMemberName.GetSlug();
 
@@ -52,26 +44,14 @@
 
             var actualIl = actualIlBuilder.ToString();
 
-            // Note: don't dispose, otherwise we can't use approvals
-#pragma warning disable IDISP001 // Dispose created
-            var tempFileContext = new TemporaryFilesContext(slug);
-#pragma warning restore IDISP001 // Dispose created
+            var settings = new VerifySettings
+            {
+                
+            };
 
-            var actualFile = tempFileContext.GetFile($"actual_il_{_configurationName}.txt", true);
+            settings.UniqueForAssemblyConfiguration();
 
-            File.WriteAllText(actualFile, actualIl);
-
-            var writer = new ExistingFileWriter(actualFile);
-            var namer = new ApprovalNamer();
-            
-            Approvals.Verify(writer, namer, Approvals.GetReporter());
-
-            //Approvals.VerifyFile(actualFile);
-        }
-
-        private class ApprovalNamer : UnitTestFrameworkNamer
-        {
-            public override string Name => $"{base.Name}.{_configurationName}";
+            await Verifier.Verify(actualIl, settings);
         }
     }
 }

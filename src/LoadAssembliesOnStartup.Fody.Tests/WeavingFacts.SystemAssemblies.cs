@@ -1,24 +1,25 @@
 ﻿namespace LoadAssembliesOnStartup.Fody.Tests
 {
+    using System.Threading.Tasks;
     using NUnit.Framework;
 
     [TestFixture]
     public partial class WeavingFacts
     {
         [Test]
-        public void ExcludesSystemAssemblies()
+        public async Task ExcludesSystemAssembliesAsync()
         {
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("ExcludesSystemAssemblies", @"<LoadAssembliesOnStartup ExcludeSystemAssemblies='true' />");
 
-            ApprovalHelper.AssertIlCode(assemblyInfo.AssemblyPath);
+            await VerifyHelper.AssertIlCodeAsync(assemblyInfo.AssemblyPath);
         }
 
         [Test]
-        public void IncludesSystemAssemblies()
+        public async Task IncludesSystemAssembliesAsync()
         {
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("IncludesSystemAssemblies", @"<LoadAssembliesOnStartup ExcludeSystemAssemblies='false' />");
 
-            ApprovalHelper.AssertIlCode(assemblyInfo.AssemblyPath);
+            await VerifyHelper.AssertIlCodeAsync(assemblyInfo.AssemblyPath);
         }
     }
 }

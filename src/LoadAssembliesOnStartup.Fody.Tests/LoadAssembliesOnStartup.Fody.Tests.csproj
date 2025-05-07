@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ApprovalTests" Version="6.0.0" />
     <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="None" />
     <PackageReference Include="FodyHelpers" Version="6.9.2" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
@@ -21,6 +20,7 @@
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="NUnit" Version="4.3.2" PrivateAssets="all" />
     <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
+    <PackageReference Include="Verify.NUnit" Version="30.0.0" />
   </ItemGroup>
 
   <ItemGroup>
