@@ -88,7 +88,7 @@ Company.Tools.*
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup IncludeAssemblies='Bar' ExcludeAssemblies='Foo'/>");
 
-            ExceptionTester.CallMethodAndExpectException<WeavingException>(() => new Configuration(xElement));
+            Assert.Throws<WeavingException>(() => new Configuration(xElement));
         }
 
         [TestCase]
