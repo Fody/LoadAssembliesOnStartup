@@ -1,4 +1,4 @@
-<Project Sdk="MSBuild.Sdk.Extras">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
     <AssemblyName>LoadAssembliesOnStartup.Fody.TestAssembly</AssemblyName>
@@ -21,6 +21,7 @@
     <ProjectReference Include="..\LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores\LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores.csproj" />
     <ProjectReference Include="..\LoadAssembliesOnStartup.Fody.TestAssemblyToReference\LoadAssembliesOnStartup.Fody.TestAssemblyToReference.csproj" />
   </ItemGroup>
+  
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props')" />
 </Project>
