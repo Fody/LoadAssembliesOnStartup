@@ -1,0 +1,22 @@
+<Solution>
+  <Folder Name="/misc/">
+    <File Path="Directory.build.project.props" />
+    <File Path="Directory.build.props" />
+    <File Path="Directory.build.shared.explicit.props" />
+    <File Path="Directory.build.shared.implicit.props" />
+    <File Path="Directory.build.targets" />
+    <File Path="LoadAssembliesOnStartup.Fody.sln.DotSettings" />
+    <File Path="nuget.config" />
+    <File Path="Settings.StyleCop" />
+    <File Path="SolutionAssemblyInfo.cs" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="LoadAssembliesOnStartup.Fody/LoadAssembliesOnStartup.Fody.csproj" />
+  </Folder>
+  <Folder Name="/src/Test/">
+    <Project Path="LoadAssembliesOnStartup.Fody.TestAssembly/LoadAssembliesOnStartup.Fody.TestAssembly.csproj" />
+    <Project Path="LoadAssembliesOnStartup.Fody.TestAssemblyToReference/LoadAssembliesOnStartup.Fody.TestAssemblyToReference.csproj" />
+    <Project Path="LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores/LoadAssembliesOnStartup.Fody.TestAssemblyToReferenceWithIgnores.csproj" />
+    <Project Path="LoadAssembliesOnStartup.Fody.Tests/LoadAssembliesOnStartup.Fody.Tests.csproj" />
+  </Folder>
+</Solution>
