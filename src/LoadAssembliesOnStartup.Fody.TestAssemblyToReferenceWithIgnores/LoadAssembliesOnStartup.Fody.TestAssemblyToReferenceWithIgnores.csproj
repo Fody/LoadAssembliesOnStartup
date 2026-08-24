@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catel.Core" Version="6.1.4" />
+    <PackageReference Include="Catel.Core" Version="7.0.0" />
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="All" />
   </ItemGroup>
   
