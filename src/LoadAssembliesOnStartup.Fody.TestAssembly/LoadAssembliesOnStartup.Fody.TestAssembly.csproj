@@ -13,8 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Catel.Core" Version="6.2.0" />
-    <PackageReference Include="Orc.FileSystem" Version="5.1.0" PrivateAssets="All" />
+    <PackageReference Include="Catel.Core" Version="7.0.0" />
+    <PackageReference Include="Orc.FileSystem" Version="6.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
