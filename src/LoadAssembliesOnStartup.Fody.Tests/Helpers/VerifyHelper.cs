@@ -9,7 +9,7 @@
     using Microsoft.Win32.SafeHandles;
     using Mono.Cecil;
     using Mono.Cecil.Rocks;
-    using VerifyNUnit;
+    using VerifyTUnit;
     using VerifyTests;
 
     public static class VerifyHelper

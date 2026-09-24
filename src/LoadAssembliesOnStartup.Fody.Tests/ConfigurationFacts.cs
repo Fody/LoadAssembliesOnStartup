@@ -2,13 +2,14 @@
 {
     using System.Xml.Linq;
     using Fody;
-    using NUnit.Framework;
+    using System.Threading.Tasks;
+    using TUnit.Assertions;
+    using TUnit.Core;
 
-    [TestFixture]
     public class ConfigurationFacts
     {
-        [TestCase]
-        public void ExcludeAssembliesNode()
+        [Test]
+        public async Task ExcludeAssembliesNode()
         {
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup>
@@ -20,25 +21,25 @@ Company.Tools.*
 </LoadAssembliesOnStartup>");
             var config = new Configuration(xElement);
 
-            Assert.That(config.ExcludeAssemblies[0], Is.EqualTo("Foo"));
-            Assert.That(config.ExcludeAssemblies[1], Is.EqualTo("Bar"));
-            Assert.That(config.ExcludeAssemblies[2], Is.EqualTo("Company.Tools.*"));
+            await Assert.That(config.ExcludeAssemblies[0]).IsEqualTo("Foo");
+            await Assert.That(config.ExcludeAssemblies[1]).IsEqualTo("Bar");
+            await Assert.That(config.ExcludeAssemblies[2]).IsEqualTo("Company.Tools.*");
         }
 
-        [TestCase]
-        public void ExcludeAssembliesAttribute()
+        [Test]
+        public async Task ExcludeAssembliesAttribute()
         {
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup ExcludeAssemblies='Foo|Bar|Company.Tools.*'/>");
             var config = new Configuration(xElement);
 
-            Assert.That(config.ExcludeAssemblies[0], Is.EqualTo("Foo"));
-            Assert.That(config.ExcludeAssemblies[1], Is.EqualTo("Bar"));
-            Assert.That(config.ExcludeAssemblies[2], Is.EqualTo("Company.Tools.*"));
+            await Assert.That(config.ExcludeAssemblies[0]).IsEqualTo("Foo");
+            await Assert.That(config.ExcludeAssemblies[1]).IsEqualTo("Bar");
+            await Assert.That(config.ExcludeAssemblies[2]).IsEqualTo("Company.Tools.*");
         }
 
-        [TestCase]
-        public void ExcludeAssembliesCombined()
+        [Test]
+        public async Task ExcludeAssembliesCombined()
         {
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup ExcludeAssemblies='Foo'>
@@ -48,12 +49,12 @@ Bar
 </LoadAssembliesOnStartup>");
             var config = new Configuration(xElement);
 
-            Assert.That(config.ExcludeAssemblies[0], Is.EqualTo("Foo"));
-            Assert.That(config.ExcludeAssemblies[1], Is.EqualTo("Bar"));
+            await Assert.That(config.ExcludeAssemblies[0]).IsEqualTo("Foo");
+            await Assert.That(config.ExcludeAssemblies[1]).IsEqualTo("Bar");
         }
 
-        [TestCase]
-        public void IncludeAssembliesNode()
+        [Test]
+        public async Task IncludeAssembliesNode()
         {
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup>
@@ -65,34 +66,34 @@ Company.Tools.*
 </LoadAssembliesOnStartup>");
             var config = new Configuration(xElement);
 
-            Assert.That(config.IncludeAssemblies[0], Is.EqualTo("Foo"));
-            Assert.That(config.IncludeAssemblies[1], Is.EqualTo("Bar"));
-            Assert.That(config.IncludeAssemblies[2], Is.EqualTo("Company.Tools.*"));
+            await Assert.That(config.IncludeAssemblies[0]).IsEqualTo("Foo");
+            await Assert.That(config.IncludeAssemblies[1]).IsEqualTo("Bar");
+            await Assert.That(config.IncludeAssemblies[2]).IsEqualTo("Company.Tools.*");
         }
 
-        [TestCase]
-        public void IncludeAssembliesAttribute()
+        [Test]
+        public async Task IncludeAssembliesAttribute()
         {
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup IncludeAssemblies='Foo|Bar|Company.Tools.*'/>");
             var config = new Configuration(xElement);
 
-            Assert.That(config.IncludeAssemblies[0], Is.EqualTo("Foo"));
-            Assert.That(config.IncludeAssemblies[1], Is.EqualTo("Bar"));
-            Assert.That(config.IncludeAssemblies[2], Is.EqualTo("Company.Tools.*"));
+            await Assert.That(config.IncludeAssemblies[0]).IsEqualTo("Foo");
+            await Assert.That(config.IncludeAssemblies[1]).IsEqualTo("Bar");
+            await Assert.That(config.IncludeAssemblies[2]).IsEqualTo("Company.Tools.*");
         }
 
-        [TestCase]
-        public void IncludeAndExcludeAssembliesAttribute()
+        [Test]
+        public async Task IncludeAndExcludeAssembliesAttribute()
         {
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup IncludeAssemblies='Bar' ExcludeAssemblies='Foo'/>");
 
-            Assert.Throws<WeavingException>(() => new Configuration(xElement));
+            await Assert.That(() => new Configuration(xElement)).Throws<WeavingException>();
         }
 
-        [TestCase]
-        public void IncludeAssembliesCombined()
+        [Test]
+        public async Task IncludeAssembliesCombined()
         {
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup  IncludeAssemblies='Foo'>
@@ -102,52 +103,52 @@ Bar
 </LoadAssembliesOnStartup>");
             var config = new Configuration(xElement);
 
-            Assert.That(config.IncludeAssemblies[0], Is.EqualTo("Foo"));
-            Assert.That(config.IncludeAssemblies[1], Is.EqualTo("Bar"));
+            await Assert.That(config.IncludeAssemblies[0]).IsEqualTo("Foo");
+            await Assert.That(config.IncludeAssemblies[1]).IsEqualTo("Bar");
         }
 
-        [TestCase]
-        public void ExcludeSystemAssemblies()
+        [Test]
+        public async Task ExcludeSystemAssemblies()
         {
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup ExcludeSystemAssemblies='false' />");
 
             var config = new Configuration(xElement);
 
-            Assert.That(config.ExcludeSystemAssemblies, Is.False);
+            await Assert.That(config.ExcludeSystemAssemblies).IsFalse();
         }
 
-        [TestCase]
-        public void ExcludePrivateAssemblies()
+        [Test]
+        public async Task ExcludePrivateAssemblies()
         {
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup ExcludePrivateAssemblies='false' />");
 
             var config = new Configuration(xElement);
 
-            Assert.That(config.ExcludePrivateAssemblies, Is.False);
+            await Assert.That(config.ExcludePrivateAssemblies).IsFalse();
         }
 
-        [TestCase]
-        public void ExcludeOptimizedAssemblies()
+        [Test]
+        public async Task ExcludeOptimizedAssemblies()
         {
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup ExcludeOptimizedAssemblies='true' />");
 
             var config = new Configuration(xElement);
 
-            Assert.That(config.ExcludeOptimizedAssemblies, Is.True);
+            await Assert.That(config.ExcludeOptimizedAssemblies).IsTrue();
         }
 
-        [TestCase]
-        public void WrapInTryCatch()
+        [Test]
+        public async Task WrapInTryCatch()
         {
             var xElement = XElement.Parse(@"
 <LoadAssembliesOnStartup WrapInTryCatch='true' />");
 
             var config = new Configuration(xElement);
 
-            Assert.That(config.WrapInTryCatch, Is.True);
+            await Assert.That(config.WrapInTryCatch).IsTrue();
         }
     }
 }

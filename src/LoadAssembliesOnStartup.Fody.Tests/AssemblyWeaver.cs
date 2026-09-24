@@ -7,6 +7,7 @@ using LoadAssembliesOnStartup.Fody;
 using LoadAssembliesOnStartup.Fody.TestAssembly;
 using Mono.Cecil;
 using Fody;
+using TestResult = Fody.TestResult;
 
 public class AssemblyWeaver
 {
@@ -95,7 +96,7 @@ public class AssemblyWeaver
 
                 if (testResult.Errors.Count > 0)
                 {
-                    throw new System.Exception("Received errors while weaving");
+                    throw new System.Exception("Received errors while weaving: " + string.Join("; ", testResult.Errors.Select(_ => _.Text)));
                 }
 
                 _assemblies[configString] = testResult;

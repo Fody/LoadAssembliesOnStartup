@@ -1,0 +1,27 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Catel.Analyzers" Version="7.0.0-alpha0322" />
+    <PackageVersion Include="CatenaLogic.Analyzers" Version="1.5.0" />
+    <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.15.0" />
+    <PackageVersion Include="WpfAnalyzers" Version="4.1.1" />
+    <PackageVersion Include="SourceLink.Copy.PdbFiles" Version="2.8.3" />
+    <PackageVersion Include="XAMLTools.MSBuild" Version="1.0.0-alpha0085" />
+    <PackageVersion Include="Catel.Core" Version="6.1.4" />
+    <PackageVersion Include="Orc.FileSystem" Version="6.0.0" />
+    <PackageVersion Include="ModuleInit.Fody" Version="2.1.1" />
+    <PackageVersion Include="Fody" Version="6.9.3" />
+    <PackageVersion Include="FodyHelpers" Version="6.9.3" />
+    <PackageVersion Include="FodyPackaging" Version="6.9.3" />
+    <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageVersion Include="Moq" Version="4.20.72" />
+    <!-- the TUnit metapackage is not used since it brings in a Mono.Cecil that conflicts with the Cecil used by Fody -->
+    <PackageVersion Include="TUnit.Core" Version="1.69.0" />
+    <PackageVersion Include="TUnit.Assertions" Version="1.69.0" />
+    <PackageVersion Include="TUnit.Engine" Version="1.69.0" />
+    <PackageVersion Include="Verify.TUnit" Version="31.28.0" />
+  </ItemGroup>
+</Project>

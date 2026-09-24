@@ -1,9 +1,9 @@
 ﻿namespace LoadAssembliesOnStartup.Fody.Tests
 {
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using TUnit.Assertions;
+    using TUnit.Core;
 
-    [TestFixture]
     public partial class WeavingFacts
     {
         [Test]
@@ -14,7 +14,7 @@
             await VerifyHelper.AssertIlCodeAsync(assemblyInfo.AssemblyPath);
         }
 
-        [Test, Explicit("Unable to resolve private assets during unit tests in .NET 5")]
+        [Test, Explicit]  // Unable to resolve private assets during unit tests in .NET 5
         public async Task IncludesPrivateAssembliesAsync()
         {
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("IncludesPrivateAssemblies", @"<LoadAssembliesOnStartup ExcludePrivateAssemblies='false' />");

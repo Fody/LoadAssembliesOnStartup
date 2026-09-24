@@ -1,9 +1,9 @@
 ﻿namespace LoadAssembliesOnStartup.Fody.Tests
 {
     using System.Threading.Tasks;
-    using NUnit.Framework;
+    using TUnit.Assertions;
+    using TUnit.Core;
 
-    [TestFixture]
     public partial class WeavingFacts
     {
         [Test]

@@ -305,6 +305,34 @@
             }
         }
 
+        private static string FindCentralPackageVersion(string projectFilePath, string packageName)
+        {
+            try
+            {
+                var directory = new FileInfo(projectFilePath).Directory;
+                while (directory is not null)
+                {
+                    var propsFilePath = Path.Combine(directory.FullName, "Directory.Packages.props");
+                    if (File.Exists(propsFilePath))
+                    {
+                        var packageVersionElement = XElement.Parse(File.ReadAllText(propsFilePath))
+                            .XPathSelectElements("//PackageVersion")
+                            .FirstOrDefault(_ => string.Equals(_.Attribute("Include")?.Value, packageName, StringComparison.OrdinalIgnoreCase));
+
+                        return packageVersionElement?.Attribute("Version")?.Value;
+                    }
+
+                    directory = directory.Parent;
+                }
+            }
+            catch (Exception ex)
+            {
+                FodyEnvironment.WriteError($"Failed to read the central package version of '{packageName}':\n{ex}");
+            }
+
+            return null;
+        }
+
         private IEnumerable<PrivateReference> FindPrivateReferences()
         {
             var csProj = _moduleWeaver.ProjectFilePath;
@@ -339,14 +367,14 @@
 
                         var packageName = includeAttribute.Value;
 
-                        var versionAttribute = packageReferenceElement.Attribute("Version");
-                        if (versionAttribute is null)
+                        // The version is either on the reference itself or, when using central package management, in Directory.Packages.props
+                        var version = (packageReferenceElement.Attribute("Version") ?? packageReferenceElement.Attribute("VersionOverride"))?.Value
+                            ?? FindCentralPackageVersion(csProj, packageName);
+                        if (string.IsNullOrWhiteSpace(version))
                         {
-                            FodyEnvironment.WriteWarning($"Could not find version attribute for '{packageName}'");
+                            FodyEnvironment.WriteWarning($"Could not find version for '{packageName}'");
                             continue;
                         }
-
-                        var version = versionAttribute.Value;
 
                         var privateAssetsAttribute = packageReferenceElement.Attribute("PrivateAssets");
                         if (privateAssetsAttribute is not null)

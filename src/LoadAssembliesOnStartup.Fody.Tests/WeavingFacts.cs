@@ -3,13 +3,14 @@
     using System;
     using System.Threading.Tasks;
     using Catel.Reflection;
-    using NUnit.Framework;
+    using TUnit.Assertions;
+    using TUnit.Core;
 
-    [TestFixture, NonParallelizable]
+    [NotInParallel]
     public partial class WeavingFacts
     {
-        [TestCase]
-        public void HasRegisteredTypesInIncludedReferences()
+        [Test]
+        public async Task HasRegisteredTypesInIncludedReferences()
         {
             // Load program to load assembly
             var assemblyInfo = AssemblyWeaver.Instance.GetAssembly("IncludedReferences", @"<LoadAssembliesOnStartup />");
@@ -18,10 +19,10 @@
             var programInstance = Activator.CreateInstance(programType);
 
             var propertyInfo = programType.GetPropertyEx("IsRightAssemblyLoaded", true, true);
-            Assert.That((bool)propertyInfo.GetValue(null, null), Is.True);
+            await Assert.That((bool)propertyInfo.GetValue(null, null)).IsTrue();
         }
 
-        [Test, Explicit("Unable to resolve private assets during unit tests in .NET 5")]
+        [Test, Explicit]  // Unable to resolve private assets during unit tests in .NET 5
         public async Task HasRegisteredOrcFileSystemViaWildCardsAsync()
         {
             // Load program to load assembly
@@ -39,8 +40,8 @@
             await VerifyHelper.AssertIlCodeAsync(assemblyInfo.AssemblyPath);
         }
 
-        //[TestCase]
-        //public void HasNotRegisteredTypesInExcludedReferences()
+        //[Test]
+        //public async Task HasNotRegisteredTypesInExcludedReferences()
         //{
         //    AssemblyWeaver.Initialize();
 
