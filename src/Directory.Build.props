@@ -3,6 +3,11 @@
     This file applies to all projects automatically. Project specific values should go into Directory.Build.project.props
   -->
 
+  <PropertyGroup>
+    <Verify_SponsorshipExemption>OpenSource</Verify_SponsorshipExemption>
+    <Verify_SponsorshipExemptionUntil>2027-08</Verify_SponsorshipExemptionUntil>
+  </PropertyGroup>
+
   <!-- ..\ -->
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.shared.implicit.props" 
           Condition="$(RepositoryTemplateIgnoreBuildImplicitProps) != 'true' And Exists('$(MSBuildProjectDirectory)\..\Directory.Build.shared.implicit.props')" />
