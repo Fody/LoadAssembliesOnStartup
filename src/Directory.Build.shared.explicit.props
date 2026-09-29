@@ -460,4 +460,4 @@
       <_FakeOutputPath Include="..\$(OutputPath)\$(_InstallerTargetFramework)\$(AssemblyName).exe" />
     </ItemGroup>
   </Target>
-</Project>
+</Project>
