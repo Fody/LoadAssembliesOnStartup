@@ -10,7 +10,7 @@
     <PackageVersion Include="WpfAnalyzers" Version="4.1.1" />
     <PackageVersion Include="SourceLink.Copy.PdbFiles" Version="2.8.3" />
     <PackageVersion Include="XAMLTools.MSBuild" Version="1.0.0-alpha0085" />
-    <PackageVersion Include="Catel.Core" Version="7.0.1" />
+    <PackageVersion Include="Catel.Core" Version="7.1.0" />
     <PackageVersion Include="Orc.FileSystem" Version="6.0.0" />
     <PackageVersion Include="ModuleInit.Fody" Version="2.1.1" />
     <PackageVersion Include="Fody" Version="6.9.3" />
@@ -19,9 +19,9 @@
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageVersion Include="Moq" Version="4.21.0" />
     <!-- the TUnit metapackage is not used since it brings in a Mono.Cecil that conflicts with the Cecil used by Fody -->
-    <PackageVersion Include="TUnit.Core" Version="1.78.0" />
-    <PackageVersion Include="TUnit.Assertions" Version="1.78.0" />
-    <PackageVersion Include="TUnit.Engine" Version="1.78.0" />
-    <PackageVersion Include="Verify.TUnit" Version="33.3.4" />
+    <PackageVersion Include="TUnit.Core" Version="1.87.12" />
+    <PackageVersion Include="TUnit.Assertions" Version="1.87.12" />
+    <PackageVersion Include="TUnit.Engine" Version="1.87.12" />
+    <PackageVersion Include="Verify.TUnit" Version="33.7.2" />
   </ItemGroup>
 </Project>
